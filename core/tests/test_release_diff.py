@@ -23,12 +23,12 @@ class ReleaseDiffTests(unittest.TestCase):
     def test_rd02_customer_edit_shows_editable_value(self):
         lab = RunReleaseLab()
         run = lab.to_review()
-        lab.plane.apply_changes("customer", CONFIG_ID, {"opening_hours": "Mo-Fr 9-18"}, "hours")
+        lab.plane.apply_changes("customer", CONFIG_ID, {"opening_hours": "Mon-Fri 9-18"}, "hours")
         result = lab.call("release_diff", run)
         self.assertTrue(result["stale"])
         self.assertEqual(result["changed"], ["opening_hours"])
-        self.assertEqual(result["values"]["opening_hours"]["from"], "Mo-Fr 8-17")
-        self.assertEqual(result["values"]["opening_hours"]["to"], "Mo-Fr 9-18")
+        self.assertEqual(result["values"]["opening_hours"]["from"], "Mon-Fri 8-17")
+        self.assertEqual(result["values"]["opening_hours"]["to"], "Mon-Fri 9-18")
         self.assertFalse(result["template_changed"])
         self.assertFalse(result["floor_changed"])
 
@@ -45,7 +45,7 @@ class ReleaseDiffTests(unittest.TestCase):
     def test_rd04_rollback_clears_stale(self):
         lab = RunReleaseLab()
         run = lab.to_review()
-        lab.plane.apply_changes("customer", CONFIG_ID, {"opening_hours": "Mo-Fr 9-18"}, "hours")
+        lab.plane.apply_changes("customer", CONFIG_ID, {"opening_hours": "Mon-Fri 9-18"}, "hours")
         lab.plane.rollback("konrad", CONFIG_ID, 1, "back")
         result = lab.call("release_diff", run)
         self.assertFalse(result["stale"])
@@ -71,20 +71,20 @@ class ReleaseDiffTests(unittest.TestCase):
         self.assertEqual(ctx.exception.code, "FORBIDDEN")
 
     def test_rd07_diff_function_edges(self):
-        old = {"values": {"opening_hours": "Mo-Fr 8-17"}, "field_access": {"opening_hours": "customer_editable"}}
+        old = {"values": {"opening_hours": "Mon-Fri 8-17"}, "field_access": {"opening_hours": "customer_editable"}}
         new = {
-            "values": {"opening_hours": "Mo-Fr 8-17", "shop_name": "Neu"},
+            "values": {"opening_hours": "Mon-Fri 8-17", "shop_name": "New"},
             "field_access": {"opening_hours": "customer_editable", "shop_name": "customer_editable"},
         }
         result = diff(old, new)
         self.assertEqual(result["changed"], ["shop_name"])
         self.assertIsNone(result["values"]["shop_name"]["from"])
-        self.assertEqual(result["values"]["shop_name"]["to"], "Neu")
+        self.assertEqual(result["values"]["shop_name"]["to"], "New")
         without_floor = {"values": {}}
         with_floor = {"values": {}, "core_floor_hash": "sha256:ab"}
         self.assertTrue(diff(without_floor, with_floor)["floor_changed"])
         locked_old = {"values": {"followup_questions": "Alt"}, "field_access": {"followup_questions": "locked"}}
-        locked_new = {"values": {"followup_questions": "Neu"}, "field_access": {"followup_questions": "locked"}}
+        locked_new = {"values": {"followup_questions": "New"}, "field_access": {"followup_questions": "locked"}}
         locked = diff(locked_old, locked_new)
         self.assertEqual(locked["changed"], ["followup_questions"])
         self.assertEqual(locked["values"], {})

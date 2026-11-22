@@ -9,7 +9,7 @@
       "access": "customer_editable",
       "type": "string",
       "required": true,
-      "enum": ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
+      "enum": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     },
     "results_storage": {"access": "customer_editable", "type": "string", "required": true},
     "control_channel": {

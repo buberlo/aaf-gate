@@ -21,8 +21,8 @@ def initial_values():
     return {
         "callback_hint": "We call back as soon as a slot is available.",
         "followup_questions": "Welche Arbeit? Welches Kennzeichen? Wann passt es?",
-        "opening_hours": "Mo-Fr 8-17",
-        "shop_name": "Synth-Werkstatt",
+        "opening_hours": "Mon-Fri 8-17",
+        "shop_name": "Synth-Workshop",
     }
 
 
@@ -92,7 +92,7 @@ class ConfigPrincipalTests(unittest.TestCase):
                 fn()
             self.assertEqual(caught.exception.code, "FORBIDDEN")
         active = self.plane.active("reader", "cfg-1")
-        self.assertEqual(active["values"]["shop_name"], "Synth-Werkstatt")
+        self.assertEqual(active["values"]["shop_name"], "Synth-Workshop")
 
     def test_cp05_customer_release_rollback_forbidden_apply_audited(self):
         self.store.add_principal("customer", "synth-cp", "human")
@@ -105,7 +105,7 @@ class ConfigPrincipalTests(unittest.TestCase):
         with self.assertRaises(ConfigError) as caught:
             self.plane.rollback("customer", "cfg-1", 1, "rb")
         self.assertEqual(caught.exception.code, "FORBIDDEN")
-        self.plane.apply_changes("customer", "cfg-1", {"opening_hours": "Mo-Fr 9-18"}, "ok")
+        self.plane.apply_changes("customer", "cfg-1", {"opening_hours": "Mon-Fri 9-18"}, "ok")
         conn = sqlite3.connect(str(Path(self.folder) / "cfg.sqlite"))
         rows = conn.execute(
             "SELECT principal_kind, acting_role, outcome FROM audit_events WHERE actor_id='customer' AND outcome='committed'"

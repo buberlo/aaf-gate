@@ -87,17 +87,17 @@ def decide(sources: list[dict], rules: dict) -> dict:
                     ignored.append(
                         {
                             "locator": locator,
-                            "reason": "quellentext_ist_keine_anweisung",
+                            "reason": "source_text_not_instruction",
                             "source_id": source["source_id"],
                         }
                     )
                     break
             non_supersede = re.findall(
-                r"ersetzt\s+([A-Za-z0-9_-]+)\s+nicht",
+                r"does not supersede\s+([A-Za-z0-9_-]+)",
                 text,
                 flags=re.IGNORECASE,
             )
-            for match in re.finditer(r"ersetzt\s+([A-Za-z0-9_-]+)", text, flags=re.IGNORECASE):
+            for match in re.finditer(r"supersedes\s+([A-Za-z0-9_-]+)", text, flags=re.IGNORECASE):
                 target = match.group(1)
                 if target in non_supersede:
                     continue
@@ -105,7 +105,7 @@ def decide(sources: list[dict], rules: dict) -> dict:
             for match in re.finditer(rules["quantity_pattern"], text):
                 claims.append(
                     {
-                        "claim_type": "pruefstuecke",
+                        "claim_type": "test_specimens",
                         "kind": "fact",
                         "references": [reference],
                         "reviewer_note": "",
@@ -129,7 +129,7 @@ def decide(sources: list[dict], rules: dict) -> dict:
         conflicts.append(
             {
                 "references": [claim["references"][0] for claim in active],
-                "type": "pruefstuecke",
+                "type": "test_specimens",
                 "values": sorted(values, key=int),
             }
         )
@@ -155,7 +155,7 @@ def decide(sources: list[dict], rules: dict) -> dict:
         bits = []
         for claim in active:
             ref = claim["references"][0]
-            bits.append(f"{claim['value']} (Quelle {ref['source_id']}, Locator {ref['locator']})")
+            bits.append(f"{claim['value']} (Source {ref['source_id']}, Locator {ref['locator']})")
         draft_parts.append("Test specimens: conflict between " + " and ".join(bits) + ".")
         draft_parts.append("No quantity adopted.")
     elif facts:

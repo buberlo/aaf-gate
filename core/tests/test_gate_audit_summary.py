@@ -146,7 +146,7 @@ class GateAuditSummaryTests(unittest.TestCase):
         self.assertEqual(body["summary"]["total"], 1005)
 
     def test_su06_no_secrets_observe_excluded(self):
-        secret = "geheim-thread-4711"
+        secret = "secret-thread-4711"
         tool = hermes_mcp.registered_name("gmail", "create_draft")
         req = {
             "schema_version": "gate-request-0.1-draft",

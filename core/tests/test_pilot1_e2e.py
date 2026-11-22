@@ -133,12 +133,12 @@ class Pilot1E2ETests(unittest.TestCase):
 
     def test_p1e04_no_raw_content_in_audit(self):
         cb = self._plugin_cb(self.keeper.bind("hermes-a", POLICY))
-        cb("mcp_gmail_search_threads", {"query": "from:geheim-absender-4711"})
-        cb("mcp_gmail_create_draft", {"body": "geheim-entwurf-0815", "to": "y@example.invalid"})
+        cb("mcp_gmail_search_threads", {"query": "from:secret-absender-4711"})
+        cb("mcp_gmail_create_draft", {"body": "secret-draft-0815", "to": "y@example.invalid"})
         cb("terminal", {"command": "cat ~/.hermes/mcp-tokens/gmail.json"})
         forbidden = (
-            "geheim-absender-4711",
-            "geheim-entwurf-0815",
+            "secret-absender-4711",
+            "secret-draft-0815",
             "y@example.invalid",
             "mcp-tokens",
         )

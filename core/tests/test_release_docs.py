@@ -96,10 +96,10 @@ class ReleaseDocsTests(unittest.TestCase):
         self.assertIn("reset", impl)
         self.assertNotIn("Pilot 1 start values open", impl)
         self.assertNotIn("not set yet", impl)
-        nicht = status.split("## Not included", 1)[1]
-        self.assertNotIn("Call limit start values", nicht)
+        not_included = status.split("## Not included", 1)[1]
+        self.assertNotIn("Call limit start values", not_included)
         for token in ("Sending mail", "Computer Use", "build_appliance_package"):
-            self.assertIn(token, nicht)
+            self.assertIn(token, not_included)
         readme = (self.root / "README.md").read_text(encoding="utf-8")
         self.assertNotIn("start values open", readme.lower())
 

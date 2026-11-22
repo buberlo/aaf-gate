@@ -185,7 +185,7 @@ class SecurityListTests(unittest.TestCase):
         bad_claims = flippy_values()
         bad_claims["claims_blocklist"] = [
             "Bestseller-Rang",
-            "ungepruefte Patent- oder Lernaussage",
+            "unverified patent or learner statement",
             "Bestseller-Rang",
         ]
         with self.assertRaises(ConfigError) as caught:

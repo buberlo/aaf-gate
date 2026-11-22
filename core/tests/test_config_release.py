@@ -23,8 +23,8 @@ def initial_values():
     return {
         "callback_hint": "We call back as soon as a slot is available.",
         "followup_questions": "Welche Arbeit? Welches Kennzeichen? Wann passt es?",
-        "opening_hours": "Mo-Fr 8-17",
-        "shop_name": "Synth-Werkstatt",
+        "opening_hours": "Mon-Fri 8-17",
+        "shop_name": "Synth-Workshop",
     }
 
 
@@ -101,19 +101,19 @@ class ConfigReleaseTests(unittest.TestCase):
         changed = self.plane.apply_changes(
             "cust",
             "cfg-1",
-            {"opening_hours": "Mo-Fr 9-18"},
+            {"opening_hours": "Mon-Fri 9-18"},
             "ok-1",
         )
         self.assertEqual(changed["release_no"], 2)
         self.assertNotEqual(changed["release_hash"], before["release_hash"])
-        self.assertEqual(self.plane.active("cust", "cfg-1")["values"]["opening_hours"], "Mo-Fr 9-18")
+        self.assertEqual(self.plane.active("cust", "cfg-1")["values"]["opening_hours"], "Mon-Fri 9-18")
         conn = sqlite3.connect(str(Path(self.folder) / "cfg.sqlite"))
         stored = conn.execute(
             "SELECT resolved_json FROM config_releases WHERE config_id=? AND release_no=1",
             ("cfg-1",),
         ).fetchone()[0]
-        self.assertIn("Mo-Fr 8-17", stored)
-        self.assertNotIn("Mo-Fr 9-18", stored)
+        self.assertIn("Mon-Fri 8-17", stored)
+        self.assertNotIn("Mon-Fri 9-18", stored)
         self.assertNotIn(CANARY, stored)
         audits = conn.execute(
             "SELECT operation, outcome, error_code, payload_hash FROM audit_events WHERE operation='config.apply'"
@@ -125,7 +125,7 @@ class ConfigReleaseTests(unittest.TestCase):
     def test_author_can_change_locked_field_and_rollback_restores_prior_release(self):
         self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         original = self.plane.active("konrad", "cfg-1")["release_hash"]
-        self.plane.apply_changes("cust", "cfg-1", {"shop_name": "Synth-Werkstatt Nord"}, "ok-name")
+        self.plane.apply_changes("cust", "cfg-1", {"shop_name": "Synth-Workshop Nord"}, "ok-name")
         updated = self.plane.apply_changes(
             "konrad",
             "cfg-1",
@@ -216,16 +216,16 @@ class ConfigReleaseTests(unittest.TestCase):
 
     def test_change_after_rollback_gets_next_number(self):
         self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
-        self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mo-Fr 9-18"}, "c1")
+        self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mon-Fri 9-18"}, "c1")
         stored = self.plane.release_record("konrad", "cfg-1", 2)
         self.plane.rollback("konrad", "cfg-1", 1, "b1")
-        changed = self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mo-Fr 7-16"}, "c2")
+        changed = self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mon-Fri 7-16"}, "c2")
         self.assertEqual(changed["release_no"], 3)
         active = self.plane.active("konrad", "cfg-1")
         self.assertEqual(active["release_no"], 3)
-        self.assertEqual(active["values"]["opening_hours"], "Mo-Fr 7-16")
+        self.assertEqual(active["values"]["opening_hours"], "Mon-Fri 7-16")
         self.assertEqual(self.plane.release_record("konrad", "cfg-1", 2), stored)
-        self.assertEqual(stored["document"]["values"]["opening_hours"], "Mo-Fr 9-18")
+        self.assertEqual(stored["document"]["values"]["opening_hours"], "Mon-Fri 9-18")
         self.assertEqual(self.plane.release_record("konrad", "cfg-1", 3)["document"]["base_release_no"], 1)
         conn = sqlite3.connect(str(Path(self.folder) / "cfg.sqlite"))
         count = conn.execute("SELECT COUNT(*) FROM config_releases WHERE config_id=?", ("cfg-1",)).fetchone()[0]
@@ -234,24 +234,24 @@ class ConfigReleaseTests(unittest.TestCase):
 
     def test_customer_change_after_rollback_works(self):
         self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
-        self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mo-Fr 9-18"}, "c1")
+        self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mon-Fri 9-18"}, "c1")
         self.plane.rollback("konrad", "cfg-1", 1, "b1")
-        changed = self.plane.apply_changes("cust", "cfg-1", {"opening_hours": "Mo-Fr 7-16"}, "c2")
+        changed = self.plane.apply_changes("cust", "cfg-1", {"opening_hours": "Mon-Fri 7-16"}, "c2")
         self.assertEqual(changed["release_no"], 3)
-        self.assertEqual(self.plane.active("cust", "cfg-1")["values"]["opening_hours"], "Mo-Fr 7-16")
+        self.assertEqual(self.plane.active("cust", "cfg-1")["values"]["opening_hours"], "Mon-Fri 7-16")
 
     def test_base_release_no_tracks_parent(self):
         self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         self.assertIsNone(self.plane.release_record("konrad", "cfg-1", 1)["document"]["base_release_no"])
-        self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mo-Fr 9-18"}, "c1")
+        self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mon-Fri 9-18"}, "c1")
         self.assertEqual(self.plane.release_record("konrad", "cfg-1", 2)["document"]["base_release_no"], 1)
 
     def test_replay_after_rollback_change_is_idempotent(self):
         self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
-        self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mo-Fr 9-18"}, "c1")
+        self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mon-Fri 9-18"}, "c1")
         self.plane.rollback("konrad", "cfg-1", 1, "b1")
-        changed = self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mo-Fr 7-16"}, "c2")
-        again = self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mo-Fr 7-16"}, "c2")
+        changed = self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mon-Fri 7-16"}, "c2")
+        again = self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mon-Fri 7-16"}, "c2")
         self.assertEqual(changed, again)
         conn = sqlite3.connect(str(Path(self.folder) / "cfg.sqlite"))
         count = conn.execute("SELECT COUNT(*) FROM config_releases WHERE config_id=?", ("cfg-1",)).fetchone()[0]

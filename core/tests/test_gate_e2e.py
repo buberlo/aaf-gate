@@ -84,8 +84,8 @@ class GateE2ETests(unittest.TestCase):
         cb = self._plugin_cb(self.keeper.bind("hermes-a", PILOT_POLICY))
         self.assertIsNone(cb("gmail_read", {"id": "m1"}))
         self.assertIsNone(cb("gmail_label", {"id": "m1", "label": "Rechnung"}))
-        self.assertIsNone(cb("gmail_draft", {"thread": "t1", "body": "geheim-entwurf-4711"}))
-        args_send = {"to": "x@example.invalid", "body": "geheim-body-0815"}
+        self.assertIsNone(cb("gmail_draft", {"thread": "t1", "body": "secret-draft-4711"}))
+        args_send = {"to": "x@example.invalid", "body": "secret-body-0815"}
         approve = cb("gmail_send", args_send)
         self.assertEqual(approve["action"], "approve")
         self.assertEqual(
@@ -104,7 +104,7 @@ class GateE2ETests(unittest.TestCase):
         calls = [
             ("gmail_read", {"id": "m1"}),
             ("gmail_label", {"id": "m1", "label": "Rechnung"}),
-            ("gmail_draft", {"thread": "t1", "body": "geheim-entwurf-4711"}),
+            ("gmail_draft", {"thread": "t1", "body": "secret-draft-4711"}),
             ("gmail_send", args_send),
         ]
         for row, (tool, args) in zip(rows, calls):
@@ -117,11 +117,11 @@ class GateE2ETests(unittest.TestCase):
 
     def test_e2e03_no_raw_content_in_audit(self):
         cb = self._plugin_cb(self.keeper.bind("hermes-a", PILOT_POLICY))
-        cb("gmail_draft", {"thread": "t1", "body": "geheim-entwurf-4711"})
-        cb("gmail_send", {"to": "x@example.invalid", "body": "geheim-body-0815"})
+        cb("gmail_draft", {"thread": "t1", "body": "secret-draft-4711"})
+        cb("gmail_send", {"to": "x@example.invalid", "body": "secret-body-0815"})
         forbidden = (
-            "geheim-entwurf-4711",
-            "geheim-body-0815",
+            "secret-draft-4711",
+            "secret-body-0815",
             "x@example.invalid",
             "Rechnung",
         )

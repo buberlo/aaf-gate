@@ -1,6 +1,6 @@
 {
   "auto-service-appointment-intake@1.1.0": "sha256:77cb26a16992e3a2ac7722473899d37745c2d098040560b1badd7648c1b9575d",
   "b2b-lead-research-client@0.1.0": "sha256:5927016da2bdad5194180c740a35a4cc0b8ec9478bd25422edb9c522e166f02d",
-  "b2b-lead-research@0.3.0": "sha256:7f4d02c9f0db075229a768cdb77a62355547456e0b4d0b447aa9964ee038dcfe",
-  "ecommerce-product-sales@0.3.0": "sha256:a84ba8d3aaf5cf0f23b6cd5b807fb252fe885111f247ab6103f63dca1234deb3"
+  "b2b-lead-research@0.3.0": "sha256:398eba8985351b0baf4a5a9a6bbcf4c6925879f1106b7d77441aff177b8322e0",
+  "ecommerce-product-sales@0.3.0": "sha256:29085236574433ba177fea32ab505153d0d045d6f9c9f6bce8e4e50e42086eb7"
 }

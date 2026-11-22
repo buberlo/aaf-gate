@@ -56,19 +56,19 @@ class ApplianceTenantIdentityTests(unittest.TestCase):
             "konrad",
             "cfg-1",
             named,
-            customer_profile="kunde",
+            customer_profile="client",
         )
         lines_named = dry_run_lines(named)
         mode_named = next(i for i, line in enumerate(lines_named) if line.startswith("device_mode "))
-        self.assertEqual(lines_named[mode_named + 3], "customer_profile kunde")
+        self.assertEqual(lines_named[mode_named + 3], "customer_profile client")
 
     def test_ti03_package_identity_fields(self):
         target = Path(self.folder) / "pkg"
-        build_appliance_package(self.plane, "konrad", "cfg-1", target, customer_profile="kunde")
+        build_appliance_package(self.plane, "konrad", "cfg-1", target, customer_profile="client")
         identity = package_identity(target)
         self.assertEqual(identity["tenant_id"], self.document_k["tenant_id"])
         self.assertEqual(identity["config_id"], self.document_k["config_id"])
-        self.assertEqual(identity["customer_profile"], "kunde")
+        self.assertEqual(identity["customer_profile"], "client")
 
     def test_ti04_package_identity_invalid_provenance_values(self):
         target = Path(self.folder) / "pkg"

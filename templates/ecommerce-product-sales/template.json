@@ -16,7 +16,7 @@
       "access": "customer_editable",
       "type": "string",
       "required": true,
-      "enum": ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
+      "enum": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     },
     "reorder_point_hint": {"access": "customer_editable", "type": "string", "required": true},
     "review_alert_max_stars": {"access": "customer_editable", "type": "integer", "required": true, "min": 1, "max": 5},

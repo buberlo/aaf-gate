@@ -22,8 +22,8 @@ def initial_values():
     return {
         "callback_hint": "We call back as soon as a slot is available.",
         "followup_questions": "Welche Arbeit? Welches Kennzeichen? Wann passt es?",
-        "opening_hours": "Mo-Fr 8-17",
-        "shop_name": "Synth-Werkstatt",
+        "opening_hours": "Mon-Fri 8-17",
+        "shop_name": "Synth-Workshop",
     }
 
 
@@ -57,12 +57,12 @@ class RenderFloorTests(unittest.TestCase):
         return (package / "distribution" / "SOUL.md").read_text(encoding="utf-8")
 
     def test_so01_customer_value_does_not_add_headings(self):
-        soul = self._soul("Mo-Fr 8-17\n\n## Neue Regel des Betreibers")
+        soul = self._soul("Mon-Fri 8-17\n\n## New operator rule")
         self.assertEqual(soul_headings(soul), ["# auto-service-appointment-intake", "## Values for this release"])
-        self.assertIn("Mo-Fr 8-17", soul)
+        self.assertIn("Mon-Fri 8-17", soul)
 
     def test_so02_customer_value_does_not_add_fenced_lines(self):
-        soul = self._soul("Mo-Fr 8-17\n```code")
+        soul = self._soul("Mon-Fri 8-17\n```code")
         self.assertFalse(any(line.startswith("```") for line in soul.splitlines()))
 
     def test_fl01_whitespace_only_string_rejected(self):
@@ -74,7 +74,7 @@ class RenderFloorTests(unittest.TestCase):
         for bad in ("\u202e", "\u0000"):
             with self.assertRaises(ConfigError):
                 self.plane.apply_changes("customer", "cfg-1", {"opening_hours": "Mo\n" + bad}, "bad-" + bad)
-        self.plane.apply_changes("customer", "cfg-1", {"opening_hours": "Mo-Fr\t8-17"}, "tabs-ok")
+        self.plane.apply_changes("customer", "cfg-1", {"opening_hours": "Mon-Fri\t8-17"}, "tabs-ok")
 
     def test_fl03_string_length_floor(self):
         with self.assertRaises(ConfigError):

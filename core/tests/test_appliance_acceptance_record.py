@@ -97,7 +97,7 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
         self.assertIn("ACCEPTANCE-RECORD.md", section)
         self.assertIn("verify-device", section)
         self.assertNotIn("CuaDriver", section)
-        self.assertNotIn("Eine Mail geht erst", section)
+        self.assertIn("Mail is sent only after confirmation by a human", section)
 
     def test_ar08_step_order_backup(self):
         order = list(ACCEPTANCE_STEP_ORDER)
@@ -114,7 +114,7 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
         record = (_build(self.folder) / "ACCEPTANCE-RECORD.md").read_text(encoding="utf-8")
         block = record.split("## Not covered", 1)[1].split("## Result", 1)[0]
         self.assertIn("Rebuild", block)
-        self.assertNotIn("folgen mit V1-4", block)
+        self.assertIn("06-APPLIANCE-TRACK-A.md", block)
 
     def test_ar10_checklist_backup_probe(self):
         gs = gate_service_tmp(self.folder)

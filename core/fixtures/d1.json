@@ -6,6 +6,6 @@
   "synthetic": true,
   "segments": [
     {"locator": "p1", "text": "Material inspection: 20 test specimens."},
-    {"locator": "p2", "text": "Lieferdatum noch offen."}
+    {"locator": "p2", "text": "Delivery date still open."}
   ]
 }

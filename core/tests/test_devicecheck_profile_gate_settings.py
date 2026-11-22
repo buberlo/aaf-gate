@@ -56,7 +56,7 @@ class DevicecheckProfileGateSettingsTests(unittest.TestCase):
         result = check_profile_plugins(home, REQUIRED)
         self.assertFalse(result["ok"])
         self.assertIn("gate_settings_in_profile", result["issues"])
-        profile_home = root / "profiles" / "kunde"
+        profile_home = root / "profiles" / "client"
         profile_home.mkdir(parents=True)
         (profile_home / "config.yaml").write_text(bad_text, encoding="utf-8")
         sub = check_profile_plugins(profile_home, REQUIRED)

@@ -29,8 +29,8 @@ def initial_values():
     return {
         "callback_hint": "We call back as soon as a slot is available.",
         "followup_questions": "Welche Arbeit? Welches Kennzeichen? Wann passt es?",
-        "opening_hours": "Mo-Fr 8-17",
-        "shop_name": "Synth-Werkstatt",
+        "opening_hours": "Mon-Fri 8-17",
+        "shop_name": "Synth-Workshop",
     }
 
 
@@ -138,7 +138,7 @@ class RunReleaseTests(unittest.TestCase):
         reviewed = lab.to_review()
         exported = lab.call("export_run", reviewed)
         start_hash = exported["run"]["release_hash"]
-        lab.plane.apply_changes("customer", CONFIG_ID, {"opening_hours": "Mo-Fr 9-18"}, "customer-hours")
+        lab.plane.apply_changes("customer", CONFIG_ID, {"opening_hours": "Mon-Fri 9-18"}, "customer-hours")
         with self.assertRaises(CommandError) as ctx:
             lab.approve(reviewed)
         self.assertEqual(ctx.exception.code, "STALE_RELEASE")
@@ -159,20 +159,20 @@ class RunReleaseTests(unittest.TestCase):
         reviewed = lab.to_review()
         exported = lab.call("export_run", reviewed)
         bound = exported["run"]["release_hash"]
-        lab.plane.apply_changes("customer", CONFIG_ID, {"opening_hours": "Mo-Fr 9-18"}, "chg")
+        lab.plane.apply_changes("customer", CONFIG_ID, {"opening_hours": "Mon-Fri 9-18"}, "chg")
         lab.plane.rollback("konrad", CONFIG_ID, 1, "back")
         conn = lab.store.connect()
         self.assertEqual(active_release_hash(conn, "demo-a", CONFIG_ID), bound)
         conn.close()
         approved = lab.approve(reviewed)
-        self.assertEqual(approved["state"], "FREIGEGEBEN")
+        self.assertEqual(approved["state"], "APPROVED")
 
     def test_rl04_stale_release_on_commit(self):
         lab = RunReleaseLab()
         reviewed = lab.to_review()
         approved = lab.approve(reviewed)
         exported = lab.call("export_run", approved)
-        lab.plane.apply_changes("customer", CONFIG_ID, {"opening_hours": "Mo-Fr 10-16"}, "late")
+        lab.plane.apply_changes("customer", CONFIG_ID, {"opening_hours": "Mon-Fri 10-16"}, "late")
         with self.assertRaises(CommandError) as ctx:
             lab.call(
                 "commit",
@@ -183,7 +183,7 @@ class RunReleaseTests(unittest.TestCase):
             )
         self.assertEqual(ctx.exception.code, "STALE_RELEASE")
         state = lab.call("export_run", approved)
-        self.assertEqual(state["run"]["state"], "FREIGEGEBEN")
+        self.assertEqual(state["run"]["state"], "APPROVED")
 
     def test_rl05_create_run_config_guards(self):
         lab = RunReleaseLab()
@@ -221,7 +221,7 @@ class RunReleaseTests(unittest.TestCase):
             expected_payload_revision=drafted["payload_revision"],
         )
         approved = lab.approve(reviewed)
-        self.assertEqual(approved["state"], "FREIGEGEBEN")
+        self.assertEqual(approved["state"], "APPROVED")
         exported = lab.call("export_run", approved)
         self.assertIsNone(exported["run"]["config_id"])
         self.assertIsNone(exported["run"]["release_hash"])

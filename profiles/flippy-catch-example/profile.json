@@ -37,7 +37,7 @@
       "SYN: gift shops"
     ],
     "retailer_exclusions": [],
-    "report_weekday": "Montag",
+    "report_weekday": "Monday",
     "reorder_point_hint": "SYN: reorder level per product to be supplied by example operator",
     "review_alert_max_stars": 3,
     "service_text_blocks": "SYN: text blocks not yet delivered",

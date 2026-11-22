@@ -70,17 +70,17 @@ AGENT_FORBIDDEN = frozenset(
     {"approve", "return_draft", "commit", "revise", "confirm_fact", "activate_rules", "withdraw_rules"}
 )
 TRANSITIONS = {
-    ("ERFASST", "validate"): "VALIDIERT",
-    ("VALIDIERT", "build_draft"): "ENTWURF",
-    ("ENTWURF", "request_review"): "REVIEW",
-    ("REVIEW", "return_draft"): "ENTWURF",
-    ("REVIEW", "approve"): "FREIGEGEBEN",
-    ("FREIGEGEBEN", "commit"): "GESPEICHERT",
-    ("FREIGEGEBEN", "revise"): "ENTWURF",
+    ("CAPTURED", "validate"): "VALIDATED",
+    ("VALIDATED", "build_draft"): "DRAFT",
+    ("DRAFT", "request_review"): "REVIEW",
+    ("REVIEW", "return_draft"): "DRAFT",
+    ("REVIEW", "approve"): "APPROVED",
+    ("APPROVED", "commit"): "STORED",
+    ("APPROVED", "revise"): "DRAFT",
 }
-BLOCKABLE = {"ERFASST", "VALIDIERT", "ENTWURF", "REVIEW", "FREIGEGEBEN"}
-BLOCK_REASONS = {"schema_unvollstaendig", "quelle_unbekannt", "locator_fehlt", "manuell_blockiert"}
-RESUME_REASONS = {"eingabe_korrigiert", "pruefung_wiederholt"}
+BLOCKABLE = {"CAPTURED", "VALIDATED", "DRAFT", "REVIEW", "APPROVED"}
+BLOCK_REASONS = {"schema_incomplete", "source_unknown", "locator_missing", "manually_blocked"}
+RESUME_REASONS = {"input_corrected", "check_repeated"}
 MAX_ENVELOPE = 256000
 
 
@@ -392,7 +392,7 @@ class Service:
             run_id,
             rules,
             empty,
-            "ERFASST",
+            "CAPTURED",
             1,
             0,
             None,
@@ -402,11 +402,11 @@ class Service:
             config_id,
             release_hash,
         )
-        result = {"result_revision": 1, "run_id": run_id, "state": "ERFASST", "state_version": 1}
-        return self._complete(conn, principal, command, request_hash, run_id, None, "ERFASST", 1, None, None, result)
+        result = {"result_revision": 1, "run_id": run_id, "state": "CAPTURED", "state_version": 1}
+        return self._complete(conn, principal, command, request_hash, run_id, None, "CAPTURED", 1, None, None, result)
 
     def _op_register_source(self, conn, principal, command, request_hash):
-        run = self._require_run(conn, principal, command, "ERFASST")
+        run = self._require_run(conn, principal, command, "CAPTURED")
         payload = self._payload(
             command,
             {"source_id", "source_revision", "origin_label", "captured_at", "synthetic", "segments"},
@@ -452,7 +452,7 @@ class Service:
         return self._complete(conn, principal, command, request_hash, run["run_id"], run["state"], run["state"], run["state_version"], run["rules_hash"], None, result, bump=False)
 
     def _op_validate(self, conn, principal, command, request_hash):
-        run = self._require_run(conn, principal, command, "ERFASST")
+        run = self._require_run(conn, principal, command, "CAPTURED")
         sources = self._run_sources(conn, principal, run)
         rules = json.loads(run["rules_body_json"])
         total = sum(len(json.dumps(source["segments"], ensure_ascii=False).encode("utf-8")) for source in sources)
@@ -463,7 +463,7 @@ class Service:
         return result
 
     def _op_build_draft(self, conn, principal, command, request_hash):
-        run = self._require_run(conn, principal, command, "VALIDIERT")
+        run = self._require_run(conn, principal, command, "VALIDATED")
         sources = self._run_sources(conn, principal, run)
         rules = json.loads(run["rules_body_json"])
         artifact = decide(sources, rules)
@@ -496,7 +496,7 @@ class Service:
         )
 
     def _op_request_review(self, conn, principal, command, request_hash):
-        run = self._require_run(conn, principal, command, "ENTWURF")
+        run = self._require_run(conn, principal, command, "DRAFT")
         if not run["artifact_hash"]:
             raise CommandError("INVALID_INPUT")
         return self._transition(conn, principal, command, request_hash, run, "request_review", {})
@@ -568,7 +568,7 @@ class Service:
             ).fetchone()
             if approval is not None and (approval["revoked_at"] or not self._approval_matches(approval, command)):
                 raise CommandError("APPROVAL_INVALID")
-        if run["state"] != "FREIGEGEBEN":
+        if run["state"] != "APPROVED":
             raise CommandError("INVALID_TRANSITION")
         if approval is None:
             raise CommandError("NOT_FOUND")
@@ -576,17 +576,17 @@ class Service:
             raise CommandError("APPROVAL_INVALID")
         self._check_release(conn, run)
         if self.testing_fault == "after_state":
-            self._cas(conn, run, "GESPEICHERT", {})
+            self._cas(conn, run, "STORED", {})
             raise Injected()
-        self._cas(conn, run, "GESPEICHERT", {})
+        self._cas(conn, run, "STORED", {})
         if self.testing_fault == "after_audit":
-            self._audit(conn, principal, run["run_id"], "commit", run["state"], "GESPEICHERT", run["state_version"] + 1, run["rules_hash"], run["artifact_hash"], "committed", None, approval["approval_id"])
+            self._audit(conn, principal, run["run_id"], "commit", run["state"], "STORED", run["state_version"] + 1, run["rules_hash"], run["artifact_hash"], "committed", None, approval["approval_id"])
             raise Injected()
         result = {
             "approval_id": approval["approval_id"],
             "result_revision": run["state_version"] + 1,
             "run_id": run["run_id"],
-            "state": "GESPEICHERT",
+            "state": "STORED",
             "state_version": run["state_version"] + 1,
         }
         return self._complete(
@@ -596,7 +596,7 @@ class Service:
             request_hash,
             run["run_id"],
             run["state"],
-            "GESPEICHERT",
+            "STORED",
             run["state_version"] + 1,
             run["rules_hash"],
             approval["approval_id"],
@@ -612,7 +612,7 @@ class Service:
         return self._transition(conn, principal, command, request_hash, run, "return_draft", {})
 
     def _op_revise(self, conn, principal, command, request_hash):
-        run = self._require_run(conn, principal, command, "FREIGEGEBEN")
+        run = self._require_run(conn, principal, command, "APPROVED")
         now = self.clock.now()
         conn.execute(
             "UPDATE approvals SET revoked_at=? WHERE tenant_id=? AND run_id=? AND revoked_at IS NULL",
@@ -663,7 +663,7 @@ class Service:
         return self._transition(conn, principal, command, request_hash, run, "resume", {"blocked_from": None}, target=target)
 
     def _op_supersede(self, conn, principal, command, request_hash):
-        run = self._require_run(conn, principal, command, "GESPEICHERT")
+        run = self._require_run(conn, principal, command, "STORED")
         rules = json.loads(run["rules_body_json"])
         new_id = str(uuid.uuid4())
         now = self.clock.now()
@@ -673,7 +673,7 @@ class Service:
             new_id,
             rules,
             hash_value([]),
-            "ERFASST",
+            "CAPTURED",
             1,
             0,
             None,
@@ -687,7 +687,7 @@ class Service:
             "origin_run_id": run["run_id"],
             "result_revision": 1,
             "run_id": new_id,
-            "state": "ERFASST",
+            "state": "CAPTURED",
             "state_version": 1,
         }
         return self._complete(conn, principal, command, request_hash, run["run_id"], run["state"], run["state"], run["state_version"], run["rules_hash"], None, result, bump=False)

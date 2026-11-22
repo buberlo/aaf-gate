@@ -25,8 +25,8 @@ def initial_values():
     return {
         "callback_hint": "We call back as soon as a slot is available.",
         "followup_questions": "Welche Arbeit? Welches Kennzeichen? Wann passt es?",
-        "opening_hours": "Mo-Fr 8-17",
-        "shop_name": "Synth-Werkstatt",
+        "opening_hours": "Mon-Fri 8-17",
+        "shop_name": "Synth-Workshop",
     }
 
 
@@ -102,7 +102,7 @@ class ReleaseBindingTests(unittest.TestCase):
         folder, plane = fresh_plane()
         plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "r1")
         first = plane.release_record("konrad", "cfg-1", 1)["document"]
-        plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mo-Fr 9-18"}, "r2")
+        plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mon-Fri 9-18"}, "r2")
         plane.rollback("konrad", "cfg-1", 1, "rb")
         rolled = plane.release_record("konrad", "cfg-1", 1)["document"]
         active = plane.active("konrad", "cfg-1")

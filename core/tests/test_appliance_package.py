@@ -23,8 +23,8 @@ def initial_values():
     return {
         "callback_hint": "We call back as soon as a slot is available.",
         "followup_questions": "Welche Arbeit? Welches Kennzeichen? Wann passt es?",
-        "opening_hours": "Mo-Fr 8-17",
-        "shop_name": "Synth-Werkstatt",
+        "opening_hours": "Mon-Fri 8-17",
+        "shop_name": "Synth-Workshop",
     }
 
 
@@ -55,7 +55,7 @@ class AppliancePackageTests(unittest.TestCase):
         self.assertEqual(built["package_hash"], again["package_hash"])
         self.assertEqual(built["release_hash"], self.plane.active("konrad", "cfg-1")["release_hash"])
         soul = (first / "distribution" / "SOUL.md").read_text(encoding="utf-8")
-        self.assertIn("Mo-Fr 8-17", soul)
+        self.assertIn("Mon-Fri 8-17", soul)
         self.assertIn("Welche Arbeit?", soul)
         managed = (first / "managed" / "config.yaml").read_text(encoding="utf-8")
         self.assertIn("mode: manual", managed)
@@ -78,11 +78,11 @@ class AppliancePackageTests(unittest.TestCase):
         self.assertEqual(dry_run_lines(first)[0], "DRY-RUN")
 
     def test_customer_edit_changes_profile_and_rollback_restores_it(self):
-        self.plane.apply_changes("cust", "cfg-1", {"opening_hours": "Mo-Fr 9-18"}, "hours")
+        self.plane.apply_changes("cust", "cfg-1", {"opening_hours": "Mon-Fri 9-18"}, "hours")
         updated = Path(self.folder) / "updated"
         built = build_appliance_package(self.plane, "konrad", "cfg-1", updated)
         soul = (updated / "distribution" / "SOUL.md").read_text(encoding="utf-8")
-        self.assertIn("Mo-Fr 9-18", soul)
+        self.assertIn("Mon-Fri 9-18", soul)
         rollback = json.loads((updated / "rollback.json").read_text(encoding="utf-8"))
         self.assertEqual(rollback["previous_release_no"], 1)
         self.assertIsNotNone(rollback["previous_release_hash"])
@@ -90,7 +90,7 @@ class AppliancePackageTests(unittest.TestCase):
         restored = Path(self.folder) / "restored"
         restored_build = build_appliance_package(self.plane, "konrad", "cfg-1", restored)
         self.assertNotEqual(restored_build["package_hash"], built["package_hash"])
-        self.assertIn("Mo-Fr 8-17", (restored / "distribution" / "SOUL.md").read_text(encoding="utf-8"))
+        self.assertIn("Mon-Fri 8-17", (restored / "distribution" / "SOUL.md").read_text(encoding="utf-8"))
         self.assertEqual(restored_build["release_no"], 1)
 
     def test_release_rejects_fixed_allow_values_in_profile(self):

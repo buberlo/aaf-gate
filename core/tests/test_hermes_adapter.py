@@ -132,12 +132,12 @@ class HermesAdapterTests(unittest.TestCase):
         )
         cb(
             "gmail",
-            {"to": "kunde@example.invalid", "body": "x"},
+            {"to": "client@example.invalid", "body": "x"},
         )
-        self.assertEqual(captured[0]["target"], "kunde@example.invalid")
+        self.assertEqual(captured[0]["target"], "client@example.invalid")
         captured.clear()
         cb2 = make_pre_tool_call(lambda req: (captured.append(req) or {"decision": "allow"}))
-        cb2("gmail", {"to": "kunde@example.invalid", "body": "x"})
+        cb2("gmail", {"to": "client@example.invalid", "body": "x"})
         self.assertEqual(captured[0]["target"], "")
 
     def test_ha10_e2e_gatekeeper(self):
