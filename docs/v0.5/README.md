@@ -1,29 +1,29 @@
-# v0.5 — umgesetzte Code-Schritte (Index)
+# v0.5 — implemented code steps (index)
 
-Dieses Verzeichnis ergänzt v0.4 um **Nachweise und Teil-Spezifikationen** zu bereits umgesetztem Code. v0.4 bleibt die Produktrichtung und wird hier nicht umgeschrieben. Stand 22.11.2026.
+This directory extends v0.4 with **evidence and partial specifications** for code already implemented. v0.4 remains product direction and is not rewritten here. As of 22.11.2026.
 
-## Einordnung
+## Placement
 
-- **lokal getestet:** `cd core && python3 -m unittest discover -s tests -q` → derzeit `Ran 719 tests`, `OK`
-- **am Gerät getestet:** nein (Mac-mini-Appliance noch nicht abgenommen)
-- **produktiv:** nein
+- **locally tested:** `cd core && python3 -m unittest discover -s tests -q` → currently `Ran 719 tests`, `OK`
+- **tested on device:** no (Mac mini appliance not yet accepted)
+- **production:** no
 
-## Themenblöcke (Commits, Auszug)
+## Topic blocks (commits, excerpt)
 
-| Bereich | Beispiel-Commits / Inhalt |
+| Area | Example commits / content |
 |---|---|
-| K1 & Release | Release-Nummerierung, Feldhoheit, Principals, Policy-Kern, Audit schreiben, Idempotenz |
-| Gerätemodus & Install | device-mode, verify-install, Installationsabgleich, Paket-Hashes (Dateien 96–98, 100–101) |
-| Gate-Kern | Gate-Entscheid, GateKeeper, Hermes-Adapter, Unix-Socket, gate-serve |
-| Hermes-Plugin | Paket `adapters/hermes/aaf-gate`, Digest, verify-plugin, Ledger/Observations, Socket aus Plugin-Settings (152a), Managed-Scope-Socket (152b) |
-| Appliance-Spur A | Paketbau, Launchd-Plist, gate-init, Checklisten (Gate, Pilot, Freigaben, Fremde Hooks), pin-audit, Relay/Telemetrie, Hermes-Commit, verify-device (Install, Managed, Dump, Launchd, Plugin, Profile, active_profile) |
-| Pin & Hooks | verify-hooks, pin-audit, raft-platform/disabled, Profil-Sperrlisten |
-| Stopp-Schalter (V1-1) | Kern 41575e0, CLI 17831ee, Gerätecheckliste und [168-stopp-schalter.md](168-stopp-schalter.md) |
-| Kostenlimit (V1-2) | Kern 58dccbe, Pilot-1-Policy und [171-call-limits.md](171-call-limits.md), dieser Commit |
+| K1 & release | Release numbering, field sovereignty, principals, policy core, audit write, idempotency |
+| Device mode & install | device-mode, verify-install, installation check, package hashes (files 96–98, 100–101) |
+| Gate core | Gate decision, GateKeeper, Hermes adapter, Unix socket, gate-serve |
+| Hermes plugin | Package `adapters/hermes/aaf-gate`, digest, verify-plugin, ledger/observations, socket from plugin settings (152a), managed-scope socket (152b) |
+| Appliance track A | Package build, launchd plist, gate-init, checklists (gate, pilot, approvals, foreign hooks), pin-audit, relay/telemetry, Hermes commit, verify-device (install, managed, dump, launchd, plugin, profile, active_profile) |
+| Pin & hooks | verify-hooks, pin-audit, raft-platform/disabled, profile blocklists |
+| Kill switch (V1-1) | Core 41575e0, CLI 17831ee, device checklist and [168-stop-switch.md](168-stop-switch.md) |
+| Call limits (V1-2) | Core 58dccbe, Pilot 1 policy and [171-call-limits.md](171-call-limits.md), this commit |
 
-Einzeldateien in diesem Ordner (z. B. `96-geraetemodus.md`, `97-paket-geraetemodus.md`) beschreiben jeweilige Inkremente im Entwurfswortlaut; maßgeblich für „was läuft“ bleibt der Code und [EVIDENCE-I1.md](../EVIDENCE-I1.md).
+Individual files here (e.g. `96-device-mode.md`, `97-package-device-mode.md`) describe increments in draft wording; what actually runs remains the code and [EVIDENCE-I1.md](../EVIDENCE-I1.md).
 
-## Nicht in diesem Baum
+## Not in this tree
 
-- Grafische Bedien-Konsole: nicht in diesem Baum
-- Agenten-Schleife, Provider-Anbindung, produktiver Hermes-Betrieb am Kunden-Mac
+- Graphical operator console: not in this tree
+- Agent loop, provider wiring, production Hermes operation on customer Mac

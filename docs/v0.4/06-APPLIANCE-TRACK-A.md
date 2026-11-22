@@ -1,86 +1,86 @@
-# Spur A · Appliance · v0.4
+# Track A · appliance · v0.4
 
-Stand 12.11.2026, 17:01 Europe/Berlin. Entwurf plus ein lokal geprüftes Paket ohne Mac. Produktiv ist nichts.
+As of 12.11.2026, 17:01 Europe/Berlin. Draft plus a locally checked package without a Mac. Nothing is production.
 
-## Ziel
+## Goal
 
-Der Kunde bekommt einen Mac mini, den Konrad fertig konfiguriert. Darauf läuft Hermes Agent mit einem Profil aus der Branchenvorlage. Der Kunde soll die Sperre im normalen Gebrauch nicht aushebeln. Später können andere Hardware oder eine VM dazukommen. Das ist nicht entworfen.
+The customer gets a Mac mini configured by Konrad. Hermes Agent runs on it with a profile from the industry template. The customer should not bypass the gate in normal use. Other hardware or a VM may follow. That is not designed.
 
-## Konten
+## Accounts
 
-Admin ist nur Konrad. Der Kunde arbeitet als Standardbenutzer ohne Adminrechte und ohne `sudo`. Ob macOS diese Trennung so durchsetzt, ist am Gerät zu prüfen. Physischer Zugriff des Kunden hebt eine reine Software-Sperre auf. Das ist eine ehrliche Grenze, kein Versprechen absoluter Sperre.
+Only Konrad is admin. The customer works as a standard user without admin rights and without `sudo`. Whether macOS enforces this separation must be verified on device. Physical access by the customer lifts a pure software gate. That is an honest limit, not a promise of absolute lockdown.
 
-## Hermes auf dem Gerät
+## Hermes on device
 
-Belegt ist Managed Scope als root-eigene Dateien, standardmäßig `/etc/hermes/config.yaml` und `/etc/hermes/.env`, Rechte Verzeichnis `0755` und Dateien `0644`. Nur die gepinnten Schlüssel gelten für alle Benutzer. `hermes config set` lehnt sie ab. `hermes doctor` zeigt das Verzeichnis.
+Documented: managed scope as root-owned files, default `/etc/hermes/config.yaml` and `/etc/hermes/.env`, directory mode `0755`, files `0644`. Only pinned keys apply to all users. `hermes config set` rejects them. `hermes doctor` shows the directory.
 
-Nicht belegt ist ein eigener macOS-Ort. Die Doku nennt v1 Linux/POSIX-first und native macOS-Lagen als außerhalb von v1. Deshalb installiert dieses Repository nichts nach `/etc` und behauptet nicht, dass der Mac mini die Sperre schon hat.
+Not documented: a dedicated macOS layout. Docs call v1 Linux/POSIX-first and native macOS layouts out of v1 scope. This repository therefore does not install under `/etc` and does not claim the Mac mini already has the gate.
 
-`HERMES_MANAGED_DIR` muss Konrad festlegen. Kann der Kunde die Variable setzen, ist die Sperre weg.
+Konrad must set `HERMES_MANAGED_DIR`. If the customer can set the variable, the gate is gone.
 
-Die Managed-`.env` ist lokal für jeden lesbar. Geheimnisse und die Zugangsdaten des Kunden gehören nicht dorthin. Sie bleiben im Profil des Kunden auf seinem Gerät. Das Paket enthält keine `.env` und keine `auth.json`.
+The managed `.env` is locally readable by everyone. Secrets and the customer’s credentials do not belong there. They stay in the customer profile on their machine. The package contains no `.env` and no `auth.json`.
 
-Die Branchenvorlage für Hermes ist eine Profile Distribution: `distribution.yaml`, `SOUL.md`, `config.yaml`. Versionierung über Git-Tag oder Commit ist belegt. `hermes profile update` lässt Erinnerungen, Sitzungen und Zugangsdaten liegen. Neu gelieferte Cron-Jobs kommen pausiert an. Ob wir Cron nutzen, ist offen.
+The industry template for Hermes is a profile distribution: `distribution.yaml`, `SOUL.md`, `config.yaml`. Versioning via Git tag or commit is documented. `hermes profile update` leaves reminders, sessions, and credentials untouched. Newly delivered cron jobs arrive paused. Whether we use cron is open.
 
-## Freigabe für Computer und Mail
+## Approval for computer and mail
 
-Computer Use ist für macOS belegt. Bedienungshilfen und Bildschirmaufnahme müssen für CuaDriver gesetzt sein. Nach einem Treiberupdate können die Rechte veralten. Klick, Tastatur, Ziehen und Scrollen verlangen dieselbe Freigabe wie gefährliche Befehle. Ohne Antwort wird die Aktion abgelehnt, außer jemand schaltet den unsicheren Modus ein. Diesen Modus pinnt das Paket nicht. Es setzt `approvals.mode: manual`, `cron_mode: deny` und `unattended_mode: deny`, sofern die Vorlage kein unbeaufsichtigtes Senden erlaubt. Das ist unsere Zuordnung belegter Schlüssel.
+Computer Use is documented for macOS. Accessibility and screen recording must be granted for CuaDriver. After a driver update rights may expire. Click, keyboard, drag, and scroll need the same approval as dangerous commands. Without response the action is rejected unless someone enables unsafe mode. The package does not pin this mode. It sets `approvals.mode: manual`, `cron_mode: deny`, and `unattended_mode: deny` unless the template allows unattended sending. That is our mapping of documented keys.
 
-## Pilot 1: Gmail-Anbindung (Leistungsumfang)
+## Pilot 1: Gmail integration (scope)
 
-Pilot 1 nutzt für Gmail den offiziellen Gmail-MCP-Server von Google (`https://gmailmcp.googleapis.com/mcp/v1`, in Hermes als MCP-Server `gmail` registriert). Dieser Dienst ist eine Developer Preview. Die Teilnahme muss bei Google beantragt und freigegeben werden; ohne Freigabe ist die Anbindung nicht nutzbar.
+Pilot 1 uses Google’s official Gmail MCP server (`https://gmailmcp.googleapis.com/mcp/v1`, registered in Hermes as MCP server `gmail`). This service is a Developer Preview. Participation must be requested and granted by Google; without approval the integration is not usable.
 
-Es gibt keine Zusage, dass der Dienst verfügbar, stabil oder unverändert bleibt. Google kann Preview-Bedingungen, Umfang oder den Betrieb jederzeit ändern oder einstellen.
+There is no commitment that the service stays available, stable, or unchanged. Google may change or end preview terms, scope, or operation at any time.
 
-Der offizielle Gmail-MCP liefert in der für Pilot 1 relevanten Werkzeugliste kein Senden-Tool; das passt zum Pilotziel Entwürfe und Lesen ohne automatisches Senden. Zugangsdaten und OAuth entstehen auf dem Mac des Kunden, nicht im Appliance-Paket. Senden über andere Wege unterliegt weiterhin Freigaben (Gate, Hermes `approvals.mode`), sofern überhaupt angeboten.
+The official Gmail MCP has no send tool in the tool list relevant to Pilot 1; that fits the pilot goal of drafts and reads without automatic sending. Credentials and OAuth are created on the customer’s Mac, not in the appliance package. Sending via other paths still needs approvals (gate, Hermes `approvals.mode`) if offered at all.
 
-Label-Werkzeuge (`label_message`, `label_thread`, `unlabel_message`, `unlabel_thread`) dürfen nur Label-IDs setzen oder entfernen, die in `plugins.entries.aaf-gate.settings.label_ids` der zusammengeführten Hermes-Konfiguration stehen. Systemlabels (INBOX, SPAM, TRASH, UNREAD, CATEGORY_* und vergleichbare reservierte IDs) sind nie freigebbar. Ohne gültige `label_ids`-Einstellung lehnt das Gate alle Label-Aufrufe mit `action_class_unknown` ab. Ob Hermes `ctx.get_config` für Listen aus YAML eine Python-Liste liefert, ist am Gerät zu bestätigen.
+Label tools (`label_message`, `label_thread`, `unlabel_message`, `unlabel_thread`) may set or remove only label IDs listed in `plugins.entries.aaf-gate.settings.label_ids` in the merged Hermes config. System labels (INBOX, SPAM, TRASH, UNREAD, CATEGORY_*, and comparable reserved IDs) are never allowed. Without valid `label_ids` the gate rejects all label calls with `action_class_unknown`. Whether Hermes delivers YAML lists from `ctx.get_config` as Python lists must be confirmed on device.
 
-### label_ids im Managed Scope
+### label_ids in managed scope
 
-Mit Gate-Dienst schreibt `build_appliance_package` optional `label_ids` (sortierte Positivliste eigener Label-Namen) nach `plugins.entries.aaf-gate.settings.label_ids` in `managed/config.yaml`. Ohne Paketparameter ist das `[]` und sperrt Label-Aufrufe, bis ein Paket mit Liste gebaut wird. `label_ids` ohne Gate-Dienst wird mit `LABEL_IDS_WITHOUT_GATE` abgelehnt; ungültige Werte mit `LABEL_IDS_INVALID`. Ob Hermes Listen im Managed Scope mit Benutzerlisten zusammenführt, ist in der Hermes-Doku nicht beschrieben (offener Punkt im Paket, ASSUMPTIONS.md). verify-device meldet `gate_settings_in_profile`, wenn die Benutzer- oder eine Profil-`config.yaml` `aaf-gate`, `socket_path` oder `label_ids` außerhalb der Zeile `    - aaf-gate` der enabled-Liste enthält; alle aaf-gate-Einstellungen kommen ausschließlich aus dem Managed Scope.
+With gate service, `build_appliance_package` optionally writes `label_ids` (sorted allowlist of custom label names) to `plugins.entries.aaf-gate.settings.label_ids` in `managed/config.yaml`. Without a package parameter that is `[]` and blocks label calls until a package is built with a list. `label_ids` without gate service is rejected with `LABEL_IDS_WITHOUT_GATE`; invalid values with `LABEL_IDS_INVALID`. Whether Hermes merges lists in managed scope with user lists is not described in Hermes docs (open point in package, ASSUMPTIONS.md). `verify-device` reports `gate_settings_in_profile` if user or profile `config.yaml` contains `aaf-gate`, `socket_path`, or `label_ids` outside the `    - aaf-gate` enabled line; all aaf-gate settings come only from managed scope.
 
-## Betrieb
+## Operations
 
-FileVault, Updates, ein Fernzugang nur für Konrad und nur mit Zustimmung des Kunden, Backup, Wiederherstellung und Neuaufsetzen sind Anforderungen an die Appliance. Sie sind nicht als Hermes-Funktionen belegt. Updates von Hermes und macOS können Verhalten ändern. Sie werden nicht automatisch eingespielt.
+FileVault, updates, remote access for Konrad only and only with customer consent, backup, restore, and rebuild are appliance requirements. They are not documented as Hermes features. Hermes and macOS updates can change behavior. They are not applied automatically.
 
-Der Stopp ist eine Anforderung: der Kunde muss die Hilfe anhalten und die Aufgabe von Hand weiterführen können. Der Stopp ist im Kern implementiert und lokal getestet (gate-stop, gate-resume, gate-status). Am Gerät ist er nicht abgenommen.
+Stop is a requirement: the customer must halt assistance and continue the task by hand. Stop is implemented in core and locally tested (`gate-stop`, `gate-resume`, `gate-status`). It is not accepted on device.
 
-## Lieferung und Eigentum
+## Delivery and ownership
 
-Einrichtung so weit wie möglich aus der Ferne, nachdem der Mac beim Kunden steht. Der erste Admin-Schritt kann einen kurzen lokalen Anteil brauchen. Ob der Kunde die Hardware kauft oder mietet, ist eine offene Geschäftsentscheidung. Kein Preis.
+Setup as far as possible remotely after the Mac is at the customer. The first admin step may need a short local part. Whether the customer buys or rents hardware is an open business decision. No pricing.
 
-## Was der Code heute tut
+## What the code does today
 
-Der Kern erzeugt aus der freigegebenen Release ein Verzeichnis mit Distribution, Managed-Config, Annahmen, Rollback-Hinweis und einem Dry-Run-Skript. Der Dry-Run führt kein `sudo` aus und schreibt nicht nach `/etc`. Das ist implementiert und lokal getestet. Es ist keine Installation.
+Core builds from the released version a directory with distribution, managed config, assumptions, rollback note, and a dry-run script. Dry-run does not run `sudo` and does not write under `/etc`. That is implemented and locally tested. It is not an installation.
 
-## Manuelle Abnahme am Mac mini
+## Manual acceptance on Mac mini
 
-Diese Liste ist nicht ausgeführt. Ausführen am Gerät ist Konrads Schritt.
+This list has not been executed. Running on device is Konrad’s step.
 
-Pilot 1 ist ohne Senden und ohne Computer Use: Hermes bekommt keine Bedienungshilfen- und keine Bildschirmaufnahme-Freigabe; ein Sendewerkzeug ist nicht freigeschaltet.
+Pilot 1 is without sending and without Computer Use: Hermes gets no accessibility or screen-recording grants; no send tool is enabled.
 
-- Admin nur Konrad, Kunde ohne Admin und ohne `sudo`.
-- FileVault an. Wiederherstellungsschlüssel nur bei den Beteiligten.
-- `hermes doctor` zeigt das von Konrad festgelegte Managed-Verzeichnis.
-- Der Standardbenutzer kann die Managed-Datei nicht ändern.
-- `hermes config set` auf `approvals.mode` wird abgelehnt.
-- Der Kunde kann `HERMES_MANAGED_DIR` nicht setzen.
-- Die Schritte aus `MANUAL-MAC-CHECKS.md` des Pakets in dieser Reihenfolge: `verify-hermes-dump`, Geräteproben G1–G3, Stopp-Probe S1–S9 (Kunde kann stoppen, Aufheben nur berechtigte Rolle), `gate-audit` mit `--anchor`, Backup-Probe B1–B3, Abschluss `verify-device`.
-- Nachweise in `ACCEPTANCE-RECORD.md` des Pakets eintragen, Kopie außerhalb des Geräts.
-- Backup und Wiederherstellung der Kern-Datenbank: Backup-Probe B1–B3 aus `MANUAL-MAC-CHECKS.md` (`gate-backup`, `gate-restore`; lokal getestet, am Gerät offen).
-- Ein Hermes-Update läuft nicht von allein.
+- Admin only Konrad; customer without admin and without `sudo`.
+- FileVault on. Recovery key only with the parties involved.
+- `hermes doctor` shows the managed directory set by Konrad.
+- Standard user cannot change the managed file.
+- `hermes config set` on `approvals.mode` is rejected.
+- Customer cannot set `HERMES_MANAGED_DIR`.
+- Steps from the package `MANUAL-MAC-CHECKS.md` in this order: `verify-hermes-dump`, device probes G1–G3, stop probe S1–S9 (customer can stop; resume only authorized role), `gate-audit` with `--anchor`, backup probe B1–B3, finish with `verify-device`.
+- Record evidence in package `ACCEPTANCE-RECORD.md`; copy off device.
+- Core database backup and restore: backup probe B1–B3 from `MANUAL-MAC-CHECKS.md` (`gate-backup`, `gate-restore`; locally tested, open on device).
+- Hermes update does not run on its own.
 
-## Neuaufsetzen aus der letzten Release
+## Rebuild from last release
 
-Diese Anleitung ist nicht am Gerät ausgeführt. Ausführen ist Konrads Schritt.
+This guide has not been executed on device. Running it is Konrad’s step.
 
-1. macOS neu einrichten, Konten wie in Manuelle Abnahme: Admin nur Konrad, Kunde ohne Admin, FileVault an.
-2. Hermes in der festgelegten Version installieren. Das Update läuft nicht von allein.
-3. Die aufbewahrte Paketkopie der letzten aktiven Release einspielen. `verify-install` mit dem `package_hash` aus dem letzten `ACCEPTANCE-RECORD.md` meldet ok true. Ein CLI-Kommando zum Neubau des Pakets gibt es noch nicht.
-4. Schritt 1 der Startkette (`gate-init`) entfällt, weil `gate-init` eine vorhandene Datenbank mit `db_exists` ablehnt. Stattdessen `gate-restore --backup <letzte Sicherung> --db <Datenbankpfad laut Paket> --expect-anchor <tenant_id>=<Anker aus dem Manifest>`. Bei `anchor_mismatch` oder `chain_invalid` abbrechen. Die Ausgabe muss den `tenant_id` aus `ACCEPTANCE-RECORD.md` enthalten; `gate-restore` prüft das nicht selbst.
-5. `gate-status --tenant <tenant_id>`. War vor dem Ausfall ein Stopp aktiv, der in der Sicherung fehlt, wird `gate-stop` erneut gesetzt.
-6. Startkette ab Schritt 2. Den Gmail-Zugang richtet der Kunde auf dem Gerät neu ein, er ist weder im Paket noch in der Sicherung.
-7. Vollständige Manuelle Abnahme mit neuem `ACCEPTANCE-RECORD.md`. `verify-device` mit `--audit-anchor <Anker aus Schritt 4>`.
+1. Set up macOS again; accounts as in manual acceptance: admin only Konrad, customer without admin, FileVault on.
+2. Install Hermes at the pinned version. Update does not run on its own.
+3. Apply the kept package copy of the last active release. `verify-install` with `package_hash` from the last `ACCEPTANCE-RECORD.md` reports ok true. There is no CLI command yet to rebuild the package.
+4. Startup step 1 (`gate-init`) is skipped because `gate-init` rejects an existing database with `db_exists`. Instead `gate-restore --backup <last backup> --db <database path per package> --expect-anchor <tenant_id>=<anchor from manifest>`. Abort on `anchor_mismatch` or `chain_invalid`. Output must include `tenant_id` from `ACCEPTANCE-RECORD.md`; `gate-restore` does not check that itself.
+5. `gate-status --tenant <tenant_id>`. If a stop active before failure is missing from backup, set `gate-stop` again.
+6. Startup chain from step 2. Customer sets up Gmail access on device again; it is neither in package nor backup.
+7. Full manual acceptance with new `ACCEPTANCE-RECORD.md`. `verify-device` with `--audit-anchor <anchor from step 4>`.
 
-Grenze: Ereignisse nach der letzten Sicherung sind verloren. Wie oft gesichert wird, ist offen.
+Limit: events after the last backup are lost. Backup cadence is open.

@@ -1,7 +1,7 @@
-# Release-Bindung (Entwurf v0.5, Schritt 28a)
+# Release binding (draft v0.5, step 28a)
 
-Das Release-Dokument enthält `template_body_hash`, `core_schema_version` und `core_floor_hash` neben Werten und Metadaten. Gleich benannte Vorlagen mit unterschiedlichem Inhalt oder Grenzen ergeben verschiedene `release_hash`. Rollback aktiviert ein gespeichertes Dokument unverändert inklusive der Bindungsfelder.
+The release document contains `template_body_hash`, `core_schema_version`, and `core_floor_hash` beside values and metadata. Same-named templates with different content or bounds yield different `release_hash`. Rollback activates a stored document unchanged including binding fields.
 
-Offen (28b): Lauf bindet `release_hash` bei `create_run`, `STALE_RELEASE` bei Freigabe/Abschluss nach neuem Release, Regelsatz-Hash im Release.
+Open (28b): run binds `release_hash` at `create_run`, `STALE_RELEASE` on approve/close after new release, rule-set hash in release.
 
-Status: implementiert und getestet im PR-Branch, nicht produktiv freigegeben.
+Status: implemented and tested on PR branch, not released for production.

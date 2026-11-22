@@ -1,7 +1,7 @@
-# Paket liefert Gerätemodus mit (Entwurf v0.5, Schritt 97)
+# Package ships device mode (draft v0.5, step 97)
 
-`build_appliance_package(..., expected=...)` schreibt bei gesetzter Hash-Liste `device/device-mode.json` und `device/HASHES.json` ins Paket. `provenance.json` trägt `device_mode` (`appliance` oder `unlisted`) und `hashes_file_hash` (Hash der Liste oder `null`). Auf dem Gerät kann `ConfigPlane.for_device` die mitgelieferten Dateien nach Rechteanpassung nutzen.
+`build_appliance_package(..., expected=...)` writes when hash list is set `device/device-mode.json` and `device/HASHES.json` into the package. `provenance.json` carries `device_mode` (`appliance` or `unlisted`) and `hashes_file_hash` (hash of list or `null`). On device, `ConfigPlane.for_device` can use delivered files after permission fix.
 
-Offen: Installation setzt sichere Dateirechte und Eigentümer (Punkt 22); Liste ist weiterhin unsigniert (Punkt 23).
+Open: installation sets secure file permissions and owner (point 22); list still unsigned (point 23).
 
-Status: implementiert und getestet im PR-Branch, nicht produktiv freigegeben.
+Status: implemented and tested on PR branch, not released for production.

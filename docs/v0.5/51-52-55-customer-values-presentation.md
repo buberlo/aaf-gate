@@ -1,8 +1,8 @@
-# Kundenwerte im Agenten-Kontext (Entwurf v0.5)
+# Customer values in agent context (draft v0.5)
 
-- Jeder Wert erscheint in SOUL.md als JSON-Darstellung in einer Zeile (canon.render_value). Zeilenumbrüche sind maskiert, Kundenwerte erzeugen keine Überschriften, Listen oder Codeblöcke.
-- Die Maskierung macht fremden Text für ein Modell nicht harmlos. Sie trennt Daten und Anweisung im Dokument eindeutig. Die Sicherung bleibt bei Policy-Floor, Gate und fehlender Sendeoperation.
-- Kern-Floor für Texte: nicht leer, keine Steuer- und Formatzeichen außer Zeilenumbruch und Tab, höchstens 4000 Zeichen je Text, 200 Elemente je Liste, 500 Zeichen je Element. Das sind Annahmen, keine Messwerte. Vorlagen dürfen nur verschärfen.
-- Bezeichner haben ein enges Muster: template_id aus a-z, 0-9 und Bindestrich, Feldnamen aus a-z, 0-9 und Unterstrich, je bis 63 Zeichen.
+- Every value appears in SOUL.md as JSON on one line (`canon.render_value`). Newlines are escaped; customer values do not create headings, lists, or code blocks.
+- Escaping does not make foreign text harmless for a model. It separates data from instructions in the document. Protection stays with policy floor, gate, and no send operation.
+- Core floor for text: non-empty, no control/format characters except newline and tab, at most 4000 characters per text, 200 elements per list, 500 characters per element. These are assumptions, not measurements. Templates may only tighten.
+- Identifiers follow a narrow pattern: `template_id` from a-z, 0-9, hyphen; field names from a-z, 0-9, underscore; up to 63 characters each.
 
-Status: implementiert und getestet nur im PR-Branch, nicht produktiv freigegeben.
+Status: implemented and tested only on PR branch, not released for production.

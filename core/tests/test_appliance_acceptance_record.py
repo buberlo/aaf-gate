@@ -68,7 +68,7 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
     def test_ar04_step_order(self):
         package = _build(self.folder)
         record = (package / "ACCEPTANCE-RECORD.md").read_text(encoding="utf-8")
-        section = record.split("## Prüfschritte", 1)[1].split("## Nicht abgedeckt", 1)[0]
+        section = record.split("## Check steps", 1)[1].split("## Not covered", 1)[0]
         found = re.findall(r"^- ([^:]+):", section, re.MULTILINE)
         self.assertEqual(found, list(ACCEPTANCE_STEP_ORDER))
         self.assertEqual(len(found), len(set(found)))
@@ -90,9 +90,9 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
     def test_ar07_docs_section(self):
         root = Path(__file__).resolve().parents[2]
         doc = (root / "docs/v0.4/06-APPLIANCE-TRACK-A.md").read_text(encoding="utf-8")
-        start = doc.index("## Manuelle Abnahme am Mac mini")
+        start = doc.index("## Manual acceptance on Mac mini")
         rest = doc[start:]
-        next_heading = rest.find("\n## ", len("## Manuelle Abnahme am Mac mini"))
+        next_heading = rest.find("\n## ", len("## Manual acceptance on Mac mini"))
         section = rest if next_heading < 0 else rest[:next_heading]
         self.assertIn("ACCEPTANCE-RECORD.md", section)
         self.assertIn("verify-device", section)
@@ -112,8 +112,8 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
 
     def test_ar09_not_covered_text(self):
         record = (_build(self.folder) / "ACCEPTANCE-RECORD.md").read_text(encoding="utf-8")
-        block = record.split("## Nicht abgedeckt", 1)[1].split("## Ergebnis", 1)[0]
-        self.assertIn("Neuaufsetzen", block)
+        block = record.split("## Not covered", 1)[1].split("## Result", 1)[0]
+        self.assertIn("Rebuild", block)
         self.assertNotIn("folgen mit V1-4", block)
 
     def test_ar10_checklist_backup_probe(self):
@@ -170,7 +170,7 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
     def test_ar11_docs_reinstall_section(self):
         root = Path(__file__).resolve().parents[2]
         doc = (root / "docs/v0.4/06-APPLIANCE-TRACK-A.md").read_text(encoding="utf-8")
-        start = doc.index("## Neuaufsetzen aus der letzten Release")
+        start = doc.index("## Rebuild from last release")
         section = doc[start:]
         for token in (
             "gate-restore",
@@ -180,8 +180,8 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
             "verify-install",
         ):
             self.assertIn(token, section)
-        manual_start = doc.index("## Manuelle Abnahme am Mac mini")
-        manual_end = doc.index("## Neuaufsetzen aus der letzten Release")
+        manual_start = doc.index("## Manual acceptance on Mac mini")
+        manual_end = doc.index("## Rebuild from last release")
         manual = doc[manual_start:manual_end]
         self.assertNotIn("folgt.", manual)
         self.assertIn("B1–B3", manual)

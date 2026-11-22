@@ -1,9 +1,9 @@
-# Sicherheitslisten mit Mindestinhalt (Entwurf v0.5)
+# Security lists with minimum content (draft v0.5)
 
-- Vorlagen können Array-Felder mit `contains` (Pflichtelemente), `unique` und `item_type: domain` führen.
-- Pflichtelemente kann der Autor ergänzen, aber nicht entfernen. Entfernen geht nur über eine neue Vorlagenversion. Das ist schwächer als `fixed` und erlaubt projektspezifische Ergänzungen.
-- Domains werden nicht normalisiert, sondern bei falschem Format abgelehnt. So bleibt der gespeicherte Wert gleich dem eingegebenen.
-- `b2b-lead-research` 0.3.0 verlangt `linkedin.com` in `blocked_domains`. `ecommerce-product-sales` 0.3.0 verlangt eine nicht leere Domainliste ohne festgelegte Pflichteinträge (offene Entscheidung).
-- Die Listen haben im Kern noch keine Laufzeitwirkung. Sie wirken erst über den Paketbau (Hermes website_blocklist) und das Konnektor-Gate.
+- Templates may declare array fields with `contains` (required elements), `unique`, and `item_type: domain`.
+- The author may add required elements but not remove them. Removal requires a new template version. Weaker than `fixed` and allows project-specific additions.
+- Domains are not normalized; invalid format is rejected so stored value matches input.
+- `b2b-lead-research` 0.3.0 requires `linkedin.com` in `blocked_domains`. `ecommerce-product-sales` 0.3.0 requires a non-empty domain list without fixed required entries (open decision).
+- Lists have no runtime effect in core yet. They apply via package build (Hermes website_blocklist) and connector gate.
 
-Status: implementiert und getestet nur im PR-Branch, nicht produktiv freigegeben.
+Status: implemented and tested only on PR branch, not released for production.

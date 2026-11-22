@@ -5,12 +5,16 @@
   "template_id": "b2b-lead-research-client",
   "template_version": "0.1.0",
   "values": {
-    "client_label": "Auftraggeber C",
-    "offer": "SYN: Angebot nicht belegt",
-    "industries": ["SYN: Beispielbranche C"],
-    "company_size": "SYN: nicht festgelegt",
-    "region": "SYN: nicht festgelegt",
-    "target_roles": ["SYN: Rolle C"],
+    "client_label": "Client C",
+    "offer": "SYN: offer not documented",
+    "industries": [
+      "SYN: example industry C"
+    ],
+    "company_size": "SYN: not set",
+    "region": "SYN: not set",
+    "target_roles": [
+      "SYN: role C"
+    ],
     "exclusions": [],
     "tone": "Sie",
     "goal": "Webinar",

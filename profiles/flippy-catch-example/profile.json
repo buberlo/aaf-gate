@@ -1,7 +1,7 @@
 {
   "profile_id": "flippy-catch-example",
   "synthetic": true,
-  "note": "Marken- und Produktnamen stammen aus der öffentlichen Spezifikation vom 12.11.2026. Mit SYN gekennzeichnete Werte sind Platzhalter.",
+  "note": "Brand and product names from public specification 12.11.2026. Values marked SYN are placeholders.",
   "template_id": "ecommerce-product-sales",
   "template_version": "0.3.0",
   "values": {
@@ -16,30 +16,46 @@
       "Flippy Baumwoll-Saeckchen",
       "Flippy Halter S"
     ],
-    "brand_voice": "SYN: Du, vom Beispielbetreiber zu bestaetigen",
+    "brand_voice": "SYN: informal you, to be confirmed by example operator",
     "target_audiences": [
-      "Kinder und Jugendliche",
-      "Eltern",
-      "Schulen und Jugendeinrichtungen",
-      "Geschenkkäufer"
+      "Children and teenagers",
+      "Parents",
+      "Schools and youth organizations",
+      "Gift buyers"
     ],
-    "competitor_set": ["SYN: Kendama", "SYN: Yo-Yo", "SYN: Diabolo"],
-    "seed_keywords": ["SYN: Geschicklichkeitsspiel", "SYN: Fangspiel"],
-    "retailer_segments": ["SYN: Spielwarenfachhandel", "SYN: Geschenkläden"],
+    "competitor_set": [
+      "SYN: Kendama",
+      "SYN: Yo-Yo",
+      "SYN: Diabolo"
+    ],
+    "seed_keywords": [
+      "SYN: skill game",
+      "SYN: catching game"
+    ],
+    "retailer_segments": [
+      "SYN: toy retail",
+      "SYN: gift shops"
+    ],
     "retailer_exclusions": [],
     "report_weekday": "Montag",
-    "reorder_point_hint": "SYN: Meldebestand je Produkt vom Beispielbetreiber zu nennen",
+    "reorder_point_hint": "SYN: reorder level per product to be supplied by example operator",
     "review_alert_max_stars": 3,
-    "service_text_blocks": "SYN: Textbausteine noch nicht geliefert",
-    "marketplaces": ["flippy-catch.com", "Amazon, ASIN offen"],
+    "service_text_blocks": "SYN: text blocks not yet delivered",
+    "marketplaces": [
+      "flippy-catch.com",
+      "Amazon, ASIN open"
+    ],
     "data_access_mode": "manual_csv",
     "claims_blocklist": [
-      "Bestseller-Rang",
-      "ungepruefte Patent- oder Lernaussage",
-      "Rabatt gegen Bewertung"
+      "Bestseller rank",
+      "unverified patent or learning claim",
+      "discount for review"
     ],
-    "blocked_automation_domains": ["amazon.de", "amazon.com"],
+    "blocked_automation_domains": [
+      "amazon.de",
+      "amazon.com"
+    ],
     "pii_in_reports": false,
-    "toy_safety_checklist": "Entwurf, keine Rechtsauskunft: Altersangabe, Warnhinweis, Herstellerangabe und belegbare Werbeaussage je Produkt gegen Shop, Marktplatz und Haendlerseite halten."
+    "toy_safety_checklist": "Draft, not legal advice: age label, warning, manufacturer, and supportable ad claims per product against shop, marketplace, and retailer page."
   }
 }

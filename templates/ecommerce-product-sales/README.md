@@ -1,21 +1,21 @@
-# Vorlage ecommerce-product-sales
+# ecommerce-product-sales 0.3.0
 
-Status: Entwurf. Variante Spielzeug ist der zusätzliche Prüfkasten im gesperrten Textfeld, keine Rechtsauskunft.
+Status: draft. Toy variant is the extra checklist in the locked text field, not legal advice.
 
-Zweck: Verkauf eines physischen Produkts über einen eigenen Shop und einen Marktplatz. Berichte und Entwürfe, keine stillen Änderungen am Angebot.
+Purpose: sell a physical product via own shop and marketplace. Reports and drafts, no silent listing changes.
 
-Aufgaben: Listing-Texte vergleichen, Werbeberichte lesen, Bewertungen beobachten, öffentlich suchen, Händlerlisten vorbereiten, Social-Entwürfe, Bestände aus gelieferten Dateien, Antwortentwürfe.
+Tasks: compare listing texts, read ad reports, watch reviews, public search, prepare retailer lists, social drafts, stock from delivered files, reply drafts.
 
-Autonomie zum Start: nur lesen und Entwürfe. Senden, Veröffentlichen, Listing, Preis, Gebot, Einkauf und Bewertungsanfragen sind gesperrt.
+Autonomy at start: read and drafts only. Send, publish, listing, price, bid, purchase, and review requests are locked.
 
-Gesperrt und im Kern geprüft: diese Verbote, `manual_csv` als einziger Datenzugang, die Domains `amazon.de` und `amazon.com` für Automation, die Claim-Sperrliste, keine Personendaten in Berichten, die Spielzeug-Prüfliste.
+Locked and core-checked: these prohibitions, `manual_csv` as only data access, domains `amazon.de` and `amazon.com` for automation, claim blocklist, no personal data in reports, toy safety checklist.
 
-Änderbar: Markenname, Katalog, Stimme, Zielgruppen, Wettbewerber, Keywords, Händlersegmente und Ausschlüsse, Berichtstag, Hinweis zum Meldebestand, Sterne-Schwelle von 1 bis 5, Textbausteine.
+Editable: brand name, catalog, voice, audiences, competitors, keywords, retailer segments and exclusions, report weekday, reorder hint, star threshold 1–5, text blocks.
 
-Freigabe: neue Release nur durch den Autor. Zurückrollen nur durch den Autor.
+Release: new version author only. Rollback author only.
 
-Konnektoren: keine API ist angeschlossen. Computer Use ist nicht Teil dieser Vorlage. Ob ein Marktplatz die Bedienung der Seller-Oberfläche erlaubt, ist nicht belegt.
+Connectors: no API attached. Computer Use not part of this template. Whether a marketplace allows seller UI control is not documented.
 
-Grenzen: Der Kern verhindert die gesperrten Schalter. Er zieht keine Berichte und schickt keine Nachricht.
+Limits: core checks fields. No live shop or marketplace operation.
 
-Offen: Aufbewahrungsfrist, spätere offizielle Marktplatz-API, ob Computer Use lesend genutzt werden darf.
+Open: retention, future official marketplace API, whether Computer Use may be used read-only.

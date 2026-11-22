@@ -1,9 +1,9 @@
-# Idempotenz je Principal (Entwurf v0.5, Schritt 67)
+# Idempotency per principal (draft v0.5, step 67)
 
-Rechteprüfung, dann Lookup über (tenant_id, principal_id, operation, idempotency_key), Request-Hash-Vergleich, bei Treffer Replay mit Audit (`outcome=replayed`), sonst Arbeit und Receipt. Abgelehnte Config-Operationen in `_with_key` werden auditiert (`rejected`), der Schlüssel bleibt frei.
+Rights check, then lookup over (tenant_id, principal_id, operation, idempotency_key), request-hash compare, on hit replay with audit (`outcome=replayed`), else work and receipt. Rejected config operations in `_with_key` are audited (`rejected`); the key stays free.
 
-Service-Receipts und `config_idempotency` binden `actor_id` in den Primärschlüssel. Veraltetes Schema bricht mit `schema_idempotency_outdated` ab.
+Service receipts and `config_idempotency` bind `actor_id` in the primary key. Outdated schema fails with `schema_idempotency_outdated`.
 
-Offen: Schlüsselablauf (Backlog 68).
+Open: key expiry (backlog 68).
 
-Status: implementiert und getestet im PR-Branch, nicht produktiv freigegeben.
+Status: implemented and tested on PR branch, not released for production.

@@ -1,7 +1,7 @@
-# Installationsabgleich (Entwurf v0.5, Schritt 98)
+# Installation verification (draft v0.5, step 98)
 
-`installcheck.verify_installation` vergleicht ein installiertes Verzeichnis mit dem gebauten Appliance-Paket: fehlende oder geänderte Dateien, unerwartete Dateien in dokumentierten Top-Level-Bereichen (`device/`, `distribution/`, `managed/`), optionaler Abgleich des `package_hash`, und im Appliance-Modus eine fail-closed-Prüfung der mitgelieferten `device-mode.json`. Leere Ergebnisliste bedeutet bestandenen Dateiabgleich.
+`installcheck.verify_installation` compares an installed directory with the built appliance package: missing or changed files, unexpected files in documented top-level areas (`device/`, `distribution/`, `managed/`), optional `package_hash` check, and in appliance mode fail-closed check of delivered `device-mode.json`. Empty result list means file check passed.
 
-Grenzen: keine Prüfung von Eigentümern, Konten oder Hermes-Laufzeit (Punkt 22); Vertrauen hängt vom ausführenden Konto ab.
+Limits: no check of owners, accounts, or Hermes runtime (point 22); trust depends on executing account.
 
-Status: implementiert und getestet im PR-Branch, nicht am Gerät erprobt, nicht produktiv freigegeben.
+Status: implemented and tested on PR branch, not yet tried on device, not released for production.

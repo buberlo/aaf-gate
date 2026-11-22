@@ -1,36 +1,36 @@
-# ADR-002 · Zweigleisig: Appliance und eigener Kern
+# ADR-002 · Two tracks: appliance and own core
 
-Stand 12.11.2026, 17:01 Europe/Berlin. Ersetzt die frühere Fassung vom selben Tag, die Hermes nur als späteren Kanal vorsah. Die Recherche zu Basisplattformen bleibt Datenmaterial. Lizenzen wurden hier nicht erneut abgerufen.
+As of 12.11.2026, 17:01 Europe/Berlin. Replaces the earlier same-day version that treated Hermes only as a later channel. Platform research remains data material. Licenses were not re-checked here.
 
-## Entscheidung
+## Decision
 
-Spur A hat Vorrang für den Start. Ein Kunde erhält einen von Konrad fertig eingerichteten Mac mini mit Hermes Agent und einem gesperrten Profil. Computerbedienung und eine Mail-Anbindung sind das Ziel, soweit sie auf dem Gerät geprüft sind. Hermes ist dafür die Startplattform.
+Track A has priority for the start. A customer receives a Mac mini set up by Konrad with Hermes Agent and a locked profile. Computer control and a mail integration are the goal insofar as verified on device. Hermes is the starting platform for that.
 
-Spur B läuft daneben. Der eigene Kern bleibt die Quelle für Branchenvorlage, Kundenwerte, Sperre, Release, Hash und Rollback. Dieselbe Release erzeugt das Paket für Spur A. Eine eigene Agentenschleife mit denselben Fähigkeiten ist der spätere Ersatz, nicht die heutige Laufzeit. Hermes wird dann austauschbar.
+Track B runs alongside. The in-house core remains the source for industry template, customer values, gate, release, hash, and rollback. The same release produces the package for track A. An own agent loop with the same capabilities is the later replacement, not today’s runtime. Hermes becomes replaceable then.
 
-Keine der geprüften Fremdplattformen mit Weiterverkaufsgrenze wird zur Basis. Das stützt sich auf die Recherche, nicht auf eine neue Lizenzprüfung.
+None of the reviewed third-party platforms with resale limits becomes the base. That rests on research, not a new license review.
 
-## Belegte Hermes-Grundlage
+## Documented Hermes basis
 
-Geprüft am 12.11.2026 gegen die öffentliche Doku, nicht gegen ein installiertes Programm:
+Checked 12.11.2026 against public docs, not an installed program:
 
-- Managed Scope unter `/etc/hermes`, root-owned, blattweise stärker als die Benutzerkonfiguration. `hermes config set` lehnt einen gepinnten Schlüssel ab. `hermes doctor` zeigt das Verzeichnis.
-- Wer `HERMES_MANAGED_DIR` setzen kann, hebt die Sperre auf. Die Doku verlangt, dass der Administrator diese Variable festlegt.
-- Eine defekte Managed-Datei blockiert den Start nicht.
-- Die Managed-`.env` ist für alle lokal lesbar. Sie taugt nicht für Geheimnisse.
-- Profile Distribution ist ein Git-Repo mit `distribution.yaml`, `SOUL.md` und `config.yaml`. Versionen sind Tags, Branches oder Commit-SHAs. `auth.json` und `.env` bleiben beim Benutzer.
-- `approvals.mode` kennt `manual`, `smart` und `off`. `cron_mode` und `unattended_mode` kennen `deny` und `approve`.
-- Computer Use ist für macOS beschrieben. Bedienungshilfen und Bildschirmaufnahme gelten für CuaDriver. Zerstörende Bedienung läuft über dieselbe Freigabe wie gefährliche Befehle.
-- Der Google-Workspace-Skill beschreibt Gmail. Senden soll erst nach Bestätigung erfolgen.
+- Managed scope under `/etc/hermes`, root-owned, leaf-wise stronger than user config. `hermes config set` rejects a pinned key. `hermes doctor` shows the directory.
+- Whoever can set `HERMES_MANAGED_DIR` lifts the gate. Docs require the administrator to set this variable.
+- A broken managed file does not block startup.
+- Managed `.env` is locally readable by all. It is unsuitable for secrets.
+- Profile distribution is a Git repo with `distribution.yaml`, `SOUL.md`, and `config.yaml`. Versions are tags, branches, or commit SHAs. `auth.json` and `.env` stay with the user.
+- `approvals.mode` knows `manual`, `smart`, and `off`. `cron_mode` and `unattended_mode` know `deny` and `approve`.
+- Computer Use is described for macOS. Accessibility and screen recording apply to CuaDriver. Destructive control uses the same approval as dangerous commands.
+- The Google Workspace skill describes Gmail. Sending should happen only after confirmation.
 
-## Offen oder nur Annahme
+## Open or assumption only
 
-- Native Managed-Scope-Orte für macOS sind in v1 ausdrücklich nicht enthalten. Ob `/etc/hermes` auf einem Mac mini gleich wirkt, ist am Gerät zu prüfen.
-- Ob `approvals.mode` den Gmail-Skill zwingend erfasst, ist nicht belegt.
-- Hermes sperrt `SOUL.md` nicht. Texte dort sind ein Prompt.
-- FileVault, Benutzerkonten, Fernwartung und Backup sind macOS, nicht Hermes.
-- Die Zuordnung „kein unbeaufsichtigtes Senden“ auf `approvals.mode: manual` ist unsere Nutzung belegter Schlüssel, keine Hermes-Funktion dieses Namens.
+- Native managed-scope locations for macOS are explicitly out of v1 scope. Whether `/etc/hermes` on a Mac mini has the same effect must be checked on device.
+- Whether `approvals.mode` necessarily covers the Gmail skill is not documented.
+- Hermes does not lock `SOUL.md`. Text there is a prompt.
+- FileVault, user accounts, remote maintenance, and backup are macOS, not Hermes.
+- Mapping “no unattended sending” to `approvals.mode: manual` is our use of documented keys, not a Hermes function of that name.
 
-## Folge
+## Consequence
 
-K1 bleibt das Vorlagenmodell. Dazu erzeugt der Kern ein Appliance-Paket und einen Dry-Run ohne Systemeingriff. Ein echter Mac mini ist damit nicht abgenommen.
+K1 remains the template model. Core additionally produces an appliance package and dry-run without system changes. A real Mac mini is not accepted with that alone.

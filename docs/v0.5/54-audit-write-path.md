@@ -1,7 +1,7 @@
-# Gemeinsame Audit-Schreibfunktion (Entwurf v0.5, Schritt 54)
+# Shared audit write function (draft v0.5, step 54)
 
-Ein Schreibpfad `audit.append` für Service und ConfigPlane. Die Sequenz läuft je Mandant über `audit_heads`; `event_id` ist `hash_value({"sequence", "tenant_id"})`. ConfigPlane-Ereignisse aus `_with_key` tragen `command_id` (Idempotenzschlüssel). Vorbereitung für Hash-Kette (47) und Kettenkopf-Export (38).
+One write path `audit.append` for service and ConfigPlane. Sequence per tenant via `audit_heads`; `event_id` is `hash_value({"sequence", "tenant_id"})`. ConfigPlane events from `_with_key` carry `command_id` (idempotency key). Preparation for hash chain (47) and chain copy export (38).
 
-Hinweis: Zeilen in einer gemeinsamen Datenbank sind keine Mandantenisolation.
+Note: rows in a shared database are not tenant isolation.
 
-Status: implementiert und getestet im PR-Branch, nicht produktiv freigegeben.
+Status: implemented and tested on PR branch, not released for production.

@@ -1,23 +1,23 @@
-# Vorlage b2b-lead-research
+# b2b-lead-research 0.3.0
 
-Status: Entwurf. Nichts davon ist eine laufende Recherche und nichts ist produktiv.
+Status: draft. Not production.
 
-Zweck: Wiederkehrende Suche nach passenden Kontakten für B2B-Anbieter, mit Texten zum Kopieren. Kein Login bei einer Plattform und kein Versand durch die Hilfe.
+Purpose: recurring search for suitable contacts for B2B providers, with copy-paste texts. No platform login and no sending by the assistant.
 
-Aufgaben: Zielkunde aufnehmen, öffentliche Quellen sammeln, Ausschlüsse prüfen, einen Entwurf für eine kurze Nachricht vorbereiten, Status nur nach menschlicher Bestätigung fortschreiben.
+Tasks: capture target customer, collect public sources, check exclusions, prepare a short message draft, advance status only after human confirmation.
 
-Autonomie: Lesen öffentlicher Seiten außer der gesperrten Domain. Texte bleiben Entwürfe. Der Mensch sendet selbst.
+Autonomy: read public pages except blocked domain. Texts stay drafts. Human sends.
 
-Gesperrt und im Kern geprüft: Tagesobergrenze 10, Zeichenobergrenze 300, Quellenpflicht an, Sperrliste an, Follow-up erst nach Annahme, Login aus, Versand aus, Domain `linkedin.com`, Telegram ohne Personendaten. Der Kunde kann diese Felder nicht ändern.
+Locked and core-checked: daily cap 10, character cap 300, source requirement on, blocklist on, follow-up only after acceptance, login off, send off, domain `linkedin.com`, Telegram without personal data. Customer cannot change these fields.
 
-Vom Kunden änderbar, innerhalb der Grenzen: Name der bedienenden Person, Wochentag des Briefings, Ablageort, Tageszahl bis 10, Standard-Zeichenlimit bis 300.
+Customer-editable within bounds: operator name, briefing weekday, storage location, daily count up to 10, default character limit up to 300.
 
-Freigabe: Eine neue Release macht der Autor. Zurückrollen kann nur der Autor.
+Release: new version by author. Rollback author only.
 
-Konnektoren: nicht eingerichtet. Ein Telegram-Kanal ist nur der festgelegte Wert `telegram`. Ob Hermes ihn so sperrt, ist nicht geprüft. Computer Use ist für diese Vorlage nicht vorgesehen.
+Connectors: none configured. Telegram channel is only the fixed value `telegram`. Whether Hermes blocks it that way is not verified. Computer Use not planned for this template.
 
-Grenzen: Der Kern prüft die Konfiguration, nicht einen echten Recherchelauf. Zeichenzählen an einem fertigen Text, Dubletten, Statusketten und eine Browser-Sperrliste in Hermes sind offen. Aktivität auf einer Plattform wird nicht automatisch geprüft.
+Limits: core checks configuration, not a live research run. Character count on finished text, duplicates, status chains, and browser blocklist in Hermes are open. Platform activity is not auto-checked.
 
-Offen: Aufbewahrungsfrist. Ohne vereinbarte Zahl gibt es dafür kein Feld. Ob die bedienende Person die Freigabe zur Recherche selbst setzen darf, ist ebenfalls offen. Das Unterprofil hält das Feld gesperrt.
+Open: retention. Without agreed number there is no field. Whether the operator may set live-research approval later is open. Child profile keeps that field locked.
 
-Die Werte in den Profilen sind Vorschläge oder synthetisch, nicht von einer Kundin bestätigt.
+Profile values are suggestions or synthetic, not confirmed by a customer.

@@ -51,7 +51,7 @@ class VersionTests(unittest.TestCase):
         readme = (root / "README.md").read_text(encoding="utf-8")
         spur = (root / "docs/v0.4/06-APPLIANCE-TRACK-A.md").read_text(encoding="utf-8")
         self.assertNotIn("Agentenschleife, Kanäle, Versand, Stopp", readme)
-        self.assertNotIn("Der Schalter ist nicht implementiert.", spur)
+        self.assertNotIn("The switch is not implemented.", spur)
 
 
 if __name__ == "__main__":

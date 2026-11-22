@@ -5,12 +5,16 @@
   "template_id": "b2b-lead-research-client",
   "template_version": "0.1.0",
   "values": {
-    "client_label": "Auftraggeber A",
-    "offer": "SYN: Angebot nicht belegt",
-    "industries": ["SYN: Beispielbranche A"],
-    "company_size": "SYN: nicht festgelegt",
-    "region": "SYN: nicht festgelegt",
-    "target_roles": ["SYN: Rolle A"],
+    "client_label": "Client A",
+    "offer": "SYN: offer not documented",
+    "industries": [
+      "SYN: example industry A"
+    ],
+    "company_size": "SYN: not set",
+    "region": "SYN: not set",
+    "target_roles": [
+      "SYN: role A"
+    ],
     "exclusions": [],
     "tone": "Sie",
     "goal": "Austausch",

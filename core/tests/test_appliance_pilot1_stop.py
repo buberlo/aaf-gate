@@ -111,18 +111,18 @@ class AppliancePilot1StopTests(unittest.TestCase):
 
     def test_ps05_docs(self):
         root = Path(__file__).resolve().parents[2]
-        doc = (root / "docs/v0.5/168-stopp-schalter.md").read_text(encoding="utf-8")
+        doc = (root / "docs/v0.5/168-stop-switch.md").read_text(encoding="utf-8")
         for token in ("gate-stop", "gate-resume", "gate-status", "role_forbidden"):
             self.assertIn(token, doc)
-        self.assertIn("Nicht am Gerät getestet.", doc)
+        self.assertIn("Not tested on device.", doc)
         mandant = (root / "docs/v0.4/04-TENANT-UPDATE-STOP.md").read_text(encoding="utf-8")
-        self.assertIn("../v0.5/168-stopp-schalter.md", mandant)
+        self.assertIn("../v0.5/168-stop-switch.md", mandant)
         self.assertIn(
-            "Dieser Schalter ist in diesem Inkrement nicht implementiert.",
+            "This switch is not implemented in this increment.",
             mandant,
         )
         readme = (root / "docs/v0.5/README.md").read_text(encoding="utf-8")
-        self.assertIn("168-stopp-schalter.md", readme)
+        self.assertIn("168-stop-switch.md", readme)
 
 
 if __name__ == "__main__":

@@ -5,18 +5,31 @@
   "template_id": "b2b-lead-research",
   "template_version": "0.3.0",
   "values": {
-    "operator_name": "Beispielperson",
+    "operator_name": "Example person",
     "briefing_weekday": "Freitag",
-    "results_storage": "SYN: lokaler JSON-Store und CSV-Export, nicht bestaetigt",
+    "results_storage": "SYN: local JSON store and CSV export, not confirmed",
     "control_channel": "telegram",
     "daily_limit_per_client": 10,
     "daily_limit_max": 10,
     "request_char_limit_default": 200,
     "request_char_limit_max": 300,
     "score_weights": "firma:40; rolle:30; anlass:30",
-    "activity_categories": ["kuerzlich aktiv", "aeltere Aktivitaet", "keine Aktivitaet gesehen", "nicht pruefbar"],
-    "allowed_source_types": ["Firmenwebsite", "News", "Presse", "Stellenanzeige", "offene Websuche"],
-    "blocked_domains": ["linkedin.com"],
+    "activity_categories": [
+      "recently active",
+      "older activity",
+      "no activity seen",
+      "not verifiable"
+    ],
+    "allowed_source_types": [
+      "Company website",
+      "News",
+      "Press",
+      "Job posting",
+      "open web search"
+    ],
+    "blocked_domains": [
+      "linkedin.com"
+    ],
     "require_source_per_claim": true,
     "followup_requires_accept": true,
     "objection_blocklist_enabled": true,

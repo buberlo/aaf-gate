@@ -1,21 +1,21 @@
-# Produkt · anpassbarer Assistent · v0.4
+# Product · customizable assistant · v0.4
 
-Stand 12.11.2026 Europe/Berlin. Entwurf der Produktrichtung. Nichts davon ist produktiv freigegeben. Es gibt keine Kunden, keine Preise und keine gemessene Wirkung.
+As of 12.11.2026 Europe/Berlin. Product direction draft. Nothing here is released for production. There are no customers, no prices, and no measured outcomes.
 
-Konrad verkauft einen Assistenten für wiederkehrende Aufgaben. Die Aufgabe kommt aus einer Branchenvorlage. Konrad passt die Vorlage für einen Kunden an, gibt eine Fassung frei und kann auf eine frühere Fassung zurück. Der Kunde ändert danach nur Felder, die in dieser Fassung ausdrücklich für ihn frei sind.
+Konrad sells an assistant for recurring tasks. The task comes from an industry template. Konrad adapts the template for a customer, releases a version, and can roll back to an earlier one. After that the customer changes only fields explicitly marked editable for them in that release.
 
-Zwei Spuren nutzen dieselbe Vorlage. Spur A startet auf einem von Konrad eingerichteten Mac mini mit Hermes. Spur B ist der eigene Kern, der dieselben Fähigkeiten später ohne Hermes tragen soll. Einzelheiten zur Appliance stehen in [06-APPLIANCE-TRACK-A.md](06-APPLIANCE-TRACK-A.md).
+Two tracks share the same template. Track A starts on a Mac mini set up by Konrad with Hermes. Track B is the in-house core that should carry the same capabilities without Hermes later. Appliance details are in [06-APPLIANCE-TRACK-A.md](06-APPLIANCE-TRACK-A.md).
 
-KI wird nur benutzt, wenn sie für diese Aufgabe hilft. Reicht eine feste Regel, bleibt es bei der Regel. Der Assistent schickt nichts allein los.
+AI is used only when it helps for the task. If a fixed rule suffices, the rule stays. The assistant does not send anything on its own.
 
 ## Status
 
-| Teil | Stand |
+| Part | State |
 |---|---|
-| Diese Beschreibung | Entwurf |
-| Konfigurationsmodell im Kern | implementiert und lokal getestet, siehe Nachweis |
-| Appliance-Paket für Hermes | lokal erzeugt und im Dry-Run geprüft, nicht auf einem Mac installiert |
-| Hermes auf einem Mac mini, Computer Use, Gmail | Ziel von Spur A, am Gerät nicht geprüft |
-| Eigene Agentenschleife | nicht implementiert |
-| Echte Kundentrennung | nicht implementiert und nicht behauptet |
-| Produktivbetrieb | nein |
+| This description | draft |
+| Configuration model in core | implemented and locally tested; see evidence |
+| Hermes appliance package | built locally and dry-run checked, not installed on a Mac |
+| Hermes on Mac mini, Computer Use, Gmail | Track A target, not verified on device |
+| Own agent loop | not implemented |
+| Real customer separation | not implemented and not claimed |
+| Production operation | no |

@@ -1,25 +1,25 @@
-# Schichten, Sperre und Rechte · v0.4
+# Layers, locks, and roles · v0.4
 
-Stand 12.11.2026 Europe/Berlin. Entwurf, außer wo der Nachweis einen Test nennt.
+As of 12.11.2026 Europe/Berlin. Draft, except where evidence names a test.
 
-## Drei Schichten
+## Three layers
 
-1. Kern. Er prüft die Fassung, lehnt verbotene Änderungen ab, schreibt Audit und kennt keine Branchenbesonderheit.
-2. Branchenvorlage. Sie benennt die Felder einer Aufgabenart und je Feld, ob es gesperrt oder für den Kunden freigegeben ist. Die Vorlage ist versioniert und wird nicht still überschrieben.
-3. Kundenkonfiguration. Sie füllt die Felder für einen synthetischen oder späteren echten Kunden. Wirksam ist nur eine freigegebene Release, nicht ein Entwurf.
+1. Core. It validates the release, rejects forbidden changes, writes audit, and knows no industry specifics.
+2. Industry template. It names fields for a task type and, per field, whether it is locked or customer-editable. The template is versioned and is not silently overwritten.
+3. Customer configuration. It fills fields for a synthetic or later real customer. Only a released version is effective, not a draft.
 
-## Wer was ändert
+## Who may change what
 
-| Rolle | Darf |
+| Role | May |
 |---|---|
-| Autor, Konrad | Vorlage registrieren, jede Feldänderung in eine neue Release geben, zurückrollen |
-| Kunde | Nur Felder mit `customer_editable` ändern. Das erzeugt eine neue Release. Gesperrte Felder werden abgelehnt. |
-| Ohne Rolle | Nichts |
+| Author, Konrad | Register template, put any field change into a new release, roll back |
+| Customer | Change only fields with `customer_editable`. That creates a new release. Locked fields are rejected. |
+| No role | Nothing |
 
-Eine Änderung an einem gesperrten Feld durch die Kundenrolle ändert die aktive Fassung nicht. Sie wird als Ablehnung protokolliert. Der Versuchstext steht nicht in der Fehlermeldung.
+A customer-role change to a locked field does not change the active release. It is logged as a rejection. The attempted text is not in the error message.
 
-Im ersten Inkrement gibt es keine Warteschlange für gesperrte Änderungswünsche. Sie werden abgelehnt. Eine spätere Prüfung durch Konrad ist ein eigenes Inkrement.
+In the first increment there is no queue for locked change requests. They are rejected. Later review by Konrad is a separate increment.
 
-## Was nicht gilt
+## What does not apply
 
-Eine Rolle oder eine Kennung in derselben Datei ist keine eigene Kundenumgebung. Das steht auch in ADR-002.
+A role or principal id in the same file is not a separate customer environment. ADR-002 states the same.

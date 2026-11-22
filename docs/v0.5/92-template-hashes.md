@@ -1,7 +1,7 @@
-# Erwartete Vorlagen-Hashes (Entwurf v0.5, Schritt 92)
+# Expected template hashes (draft v0.5, step 92)
 
-`templates/HASHES.json` listet pro `template_id@template_version` den freigegebenen `body_hash` nach `validate_template` und `hash_value`. Tests (`check_template`) und optional `build_appliance_package(..., expected=...)` vergleichen registrierte Vorlagen bzw. Release-Dokumente mit dieser Liste. Abweichungen ergeben `TEMPLATE_HASH_MISMATCH`, unbekannte Versionen `TEMPLATE_UNLISTED`.
+`templates/HASHES.json` lists per `template_id@template_version` the released `body_hash` after `validate_template` and `hash_value`. Tests (`check_template`) and optional `build_appliance_package(..., expected=...)` compare registered templates or release documents to this list. Mismatches yield `TEMPLATE_HASH_MISMATCH`, unknown versions `TEMPLATE_UNLISTED`.
 
-Jede inhaltliche Vorlagenänderung braucht eine neue Versionsnummer und einen aktualisierten Hash-Eintrag. Die Datei ist nicht signiert; sie schützt vor Versehen und Drift im Repo, nicht vor einem Schreibberechtigten am Repository (Signatur: geplanter Punkt 23).
+Every content template change needs a new version number and updated hash entry. The file is not signed; it guards against mistakes and repo drift, not a write-capable attacker on the repository (signature: planned point 23).
 
-Status: implementiert und getestet im PR-Branch, nicht produktiv freigegeben.
+Status: implemented and tested on PR branch, not released for production.

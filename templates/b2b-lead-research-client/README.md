@@ -1,21 +1,19 @@
-# Vorlage b2b-lead-research-client
+# b2b-lead-research-client 0.1.0
 
-Status: Entwurf. Jedes Unterprofil ist ein synthetischer Platzhalter, kein echter Auftraggeber.
+Status: draft.
 
-Zweck: Zielkunde, Ton und Grenzen je Auftraggeber der bedienenden Person.
+Purpose: one client under a lead-research operator. Each client is its own profile with parent template `b2b-lead-research-client`.
 
-Aufgaben: Angebot, Branchen, Größe, Region, Rollen, Ausschlüsse, Ton und Ziel festhalten. Recherche bleibt aus, solange `approved_for_live_research` falsch ist.
+Tasks: capture offer, industries, size, region, roles, exclusions, tone, and goal. Research stays off while `approved_for_live_research` is false.
 
-Autonomie: keine Live-Recherche in den Platzhaltern A bis D.
+Autonomy: configuration only. No live search without approval true.
 
-Änderbar: die beschreibenden Felder, das Zeichenlimit bis 300 und das Aktivitätsfenster in Tagen. Ton nur `Sie` oder `Du`. Ziel nur `Austausch`, `Produkt` oder `Webinar`.
+Editable: descriptive fields, character limit up to 300, activity window in days. Tone only `Sie` or `Du`. Goal only `Austausch`, `Produkt`, or `Webinar`.
 
-Gesperrt: die Freigabe zur Live-Recherche. Die Kundenrolle kann sie nicht auf wahr setzen.
+Locked: `approved_for_live_research` false.
 
-Freigabe: nur eine neue Release durch den Autor.
+Release: author only. Rollback author only.
 
-Konnektoren und Computer Use: keine.
+Limits: core checks these fields. It does not search contacts or count real messages.
 
-Grenzen: Der Kern prüft diese Felder. Er sucht keine Kontakte und zählt keine echten Nachrichten.
-
-Offen: ob die bedienende Person die Recherchefreigabe später selbst setzen darf.
+Open: whether the operator may set research approval later.

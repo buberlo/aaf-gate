@@ -1,25 +1,25 @@
-# Pilot 1: Messung und pilot-baseline
+# Pilot 1: measurement and pilot-baseline
 
-Stand November 2026. Ergänzung zu den Abnahmezeilen im Appliance-Paket (Pilot-1-Checkliste, Punkte 4 und 5) und zum CLI-Befehl `pilot-baseline`.
+November 2026. Supplement to acceptance lines in the appliance package (Pilot 1 checklist, points 4 and 5) and the CLI command `pilot-baseline`.
 
 ## gate-audit --summary
 
-Am Ende der Pilotphase wird eine Zusammenfassung mit `gate-audit --summary` erzeugt. Darin stehen unter anderem `summary.total`, `summary.by_class`, `summary.by_tool` und seit der Gate-Beobachtungszählung `summary.observations` mit `gate_mismatch`, `gate_unseen` und `other`.
+At the end of the pilot phase, produce a summary with `gate-audit --summary`. It includes among others `summary.total`, `summary.by_class`, `summary.by_tool`, and since gate observation counting `summary.observations` with `gate_mismatch`, `gate_unseen`, and `other`.
 
 ## pilot-baseline
 
-Der Befehl `python3 -m framework.cli pilot-baseline --summary <Datei> --timesheet <Datei>` rechnet aus der bestätigten Summary und einer Zeiterfassungsdatei (`schema_version` 1 oder 2, Einheit `minutes`) Median- und Handarbeitsminuten je Werkzeugklasse. Optional `--min-samples` (Standard 5).
+The command `python3 -m framework.cli pilot-baseline --summary <file> --timesheet <file>` computes from the confirmed summary and a timesheet file (`schema_version` 1 or 2, unit `minutes`) median and manual minutes per tool class. Optional `--min-samples` (default 5).
 
-Die Ausgabe enthält unter `baseline` unter anderem `manual_minutes_total`, `net_minutes_total` (bei schema_version 2 mit ausreichenden Review-Stichproben) sowie `observations` und `observations_clean`, sofern die Summary `summary.observations` enthält.
+Output under `baseline` includes among others `manual_minutes_total`, `net_minutes_total` (for schema_version 2 with enough review samples), and `observations` and `observations_clean` when the summary contains `summary.observations`.
 
-## Vorbedingung für Minutenangaben nach außen
+## Prerequisite for external minute figures
 
-Minutenzahlen aus `pilot-baseline` (Einzelklassen, `manual_minutes_total`, `net_minutes_total`) dürfen nur verwendet oder an Kunden weitergegeben werden, wenn `baseline.observations_clean` genau `true` ist. Ist `observations_clean` `false` oder `null`, werden keine Minutenzahlen nach außen gegeben; die Summary und das Audit sind dann zuerst zu klären (z. B. mit `gate-audit` ohne `--summary` wie in Punkt 4 der Checkliste).
+Minute numbers from `pilot-baseline` (per class, `manual_minutes_total`, `net_minutes_total`) may be used or given to customers only when `baseline.observations_clean` is exactly `true`. If `observations_clean` is `false` or `null`, no minute figures go outward; clarify the summary and audit first (e.g. with `gate-audit` without `--summary` as in checklist point 4).
 
 ## --require-clean
 
-`--require-clean` beendet `pilot-baseline` mit Exit-Code 1 und `{"error": "observations_not_clean", "ok": false}`, wenn `observations_clean` nicht `true` ist (einschließlich fehlender oder alter Summaries ohne `observations`). Die Rechenfelder werden in diesem Fall nicht als erfolgreiche Abnahme ausgegeben.
+`--require-clean` exits `pilot-baseline` with code 1 and `{"error": "observations_not_clean", "ok": false}` when `observations_clean` is not `true` (including missing or old summaries without `observations`). Computed fields are not reported as successful acceptance in that case.
 
-## Freigegebene Ausführungen
+## Approved executions
 
-Enthält die Summary `summary.approvals_by_class`, liefert `pilot-baseline` je Klasse zusätzlich `approved_executed`, `manual_minutes_approved` und `net_minutes_approved` sowie auf Top-Level `approved_incomplete`, `manual_minutes_approved_total` und `net_minutes_approved_total`. Diese Approved-Minuten sind getrennt von `manual_minutes_total` und `net_minutes_total`; sie sind eine Obergrenze, weil `approval_granted` auch fehlgeschlagene Ausführungen (`post_tool_call` mit `status` `error`) umfasst. Die Approved-Felder sind nur intern; sie werden nicht an Kunden weitergegeben. Dafür gilt zusätzlich die Regel zu `observations_clean`.
+When the summary contains `summary.approvals_by_class`, `pilot-baseline` adds per class `approved_executed`, `manual_minutes_approved`, and `net_minutes_approved`, and at top level `approved_incomplete`, `manual_minutes_approved_total`, and `net_minutes_approved_total`. These approved minutes are separate from `manual_minutes_total` and `net_minutes_total`; they are an upper bound because `approval_granted` also includes failed executions (`post_tool_call` with `status` `error`). Approved fields are internal only and are not given to customers. The `observations_clean` rule applies in addition.

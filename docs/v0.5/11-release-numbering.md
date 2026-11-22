@@ -1,6 +1,6 @@
-# Release-Nummerierung (Entwurf v0.5)
-- release_no je Config streng steigend: MAX(release_no)+1, unabhängig vom aktiven Zeiger.
-- Rollback bewegt nur den aktiven Zeiger und erzeugt kein Release.
-- Jedes Release-Dokument trägt base_release_no (aktives Release beim Ändern, beim ersten Release null); das Feld ist Teil von release_hash.
-- Geplant, nicht implementiert: expected_release_hash mit Fehler STALE_BASE; Abbildung von Datenbankfehlern auf INTERNAL_ERROR mit Audit.
-Status: implementiert und getestet nur im PR-Branch, nicht produktiv freigegeben.
+# Release numbering (draft v0.5)
+- `release_no` per config strictly increasing: MAX(release_no)+1, independent of active pointer.
+- Rollback only moves the active pointer and does not create a release.
+- Every release document carries `base_release_no` (active release when changing; null on first release); the field is part of `release_hash`.
+- Planned, not implemented: `expected_release_hash` with error `STALE_BASE`; mapping database errors to `INTERNAL_ERROR` with audit.
+Status: implemented and tested only on PR branch, not released for production.

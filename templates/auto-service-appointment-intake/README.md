@@ -1,21 +1,19 @@
-# Vorlage auto-service-appointment-intake
+# auto-service-appointment-intake 1.1.0
 
-Status: Entwurf. Die Datei `template.json` ist die bisherige synthetische Vorlage, nur an diesen Ort verschoben. Kein Kunde, kein Produktversprechen.
+Status: draft. Not set up or tested on a device.
 
-Zweck: Terminannahme und Rückfragen für eine Werkstatt als Beispiel, nicht als einzige Branche.
+Purpose: appointment intake and follow-up questions for a workshop as an example, not the only industry.
 
-Aufgaben: Anfrage in feste Punkte legen, fehlende Angaben sichtbar lassen, nichts selbst versenden.
+Scope: hours, pickup or customer number, vehicle model, workshop location.
 
-Autonomie: Rückfragen dürfen vorbereitet werden. Senden bleibt gesperrt (`allow_unattended_send` falsch und gesperrt).
+Autonomy: follow-up questions may be prepared. Sending stays locked (`allow_unattended_send` false and locked).
 
-Änderbar durch den Kunden: Name, Öffnungszeiten, Hinweistext. Gesperrt: die festen Fragen und das Senden.
+Customer-editable: name, opening hours, notice text. Locked: fixed questions and sending.
 
-Freigabe: Eine neue Fassung entsteht nur über den Kern. Zurückrollen kann nur die Autorrolle.
+Release: a new version only via core. Rollback author role only.
 
-Konnektoren: keine. Computer Use: nicht vorgesehen.
+Connectors: none. Computer Use: not configured. Telegram only as a field value if set later.
 
-Grenzen: keine echte Werkstatt, keine Kalenderanbindung.
+Boundary: core enforces configuration, not a live mail run.
 
-Offen: ob diese Vorlage später eine Hermes-Distribution mit weiteren Dateien braucht.
-
-Tests: die bestehenden K1- und Pakettests laden diese Datei.
+Open: whether this template later needs a Hermes distribution with more files.

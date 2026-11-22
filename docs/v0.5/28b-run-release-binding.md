@@ -1,7 +1,7 @@
-# Lauf an Konfigurations-Release binden (Entwurf v0.5, Schritt 28b)
+# Bind run to configuration release (draft v0.5, step 28b)
 
-`create_run` kann optional `config_id` mitgeben; der Lauf speichert dann `config_id` und das aktive `release_hash` zum Startzeitpunkt. `approve` und `commit` vergleichen per `releases.active_release_hash` mit dem gebundenen Hash und lehnen mit `STALE_RELEASE` ab, wenn ein anderes Release aktiv ist. Rollback auf ein inhaltsgleiches Release (gleicher Hash) gilt nicht als veraltet.
+`create_run` may pass optional `config_id`; the run stores `config_id` and active `release_hash` at start time. `approve` and `commit` compare via `releases.active_release_hash` with bound hash and reject with `STALE_RELEASE` when another release is active. Rollback to content-equal release (same hash) is not stale.
 
-Offen: `rules_hash`/`policy_hash` in die Freigabe binden (30), Regelsatz-Scope (88).
+Open: bind `rules_hash`/`policy_hash` into approval (30), rule-set scope (88).
 
-Status: implementiert und getestet im PR-Branch, nicht produktiv freigegeben.
+Status: implemented and tested on PR branch, not released for production.

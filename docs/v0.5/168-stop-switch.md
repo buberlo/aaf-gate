@@ -1,33 +1,33 @@
-# 168 Stopp-Schalter (V1-1)
+# 168 Kill switch (V1-1)
 
 ## Status
 
-Implementiert und lokal getestet (Kern 41575e0, CLI 17831ee, Doku und Gerätecheckliste in diesem Commit). Nicht am Gerät getestet. Nicht produktiv.
+Implemented and locally tested (core 41575e0, CLI 17831ee, docs and device checklist in this commit). Not tested on device. Not released for production.
 
-## Wirkung
+## Effect
 
-Der Stopp gilt je Tenant. Solange er aktiv ist, lehnt das Gate jede Anfrage mit dem Grund `stopped` ab und schreibt einen Audit-Eintrag mit `operation` `gate_decide` und `error_code` `stopped`.
+Stop applies per tenant. While active, the gate rejects every request with reason `stopped` and writes an audit entry with `operation` `gate_decide` and `error_code` `stopped`.
 
-## Rollen
+## Roles
 
-Stoppen darf jeder menschliche Principal des Tenants, der mindestens eine der Rollen `operator`, `reviewer`, `author` oder `customer` hat. Aufheben darf nur ein menschlicher Principal mit Rolle `author`. Agent- und Service-Principals dürfen weder stoppen noch aufheben. Stopp und Aufheben werden als `gate_stop` bzw. `gate_resume` protokolliert, ebenso abgelehnte Versuche.
+Any human principal of the tenant with at least one of `operator`, `reviewer`, `author`, or `customer` may stop. Only a human principal with role `author` may resume. Agent and service principals may neither stop nor resume. Stop and resume are logged as `gate_stop` and `gate_resume`, as are rejected attempts.
 
-## Befehle
+## Commands
 
-- `gate-principal-add`: legt einen menschlichen Principal mit Rollen an.
-- `gate-stop`: setzt den Stopp für den Tenant des Principals.
-- `gate-resume`: hebt den Stopp auf (nur Rolle `author`).
-- `gate-status`: liest den Stopp-Zustand (nur lesend, ohne Migration).
-- `gate-audit --summary`: enthält `summary.stops` mit `stop`, `resume`, `rejected`, `denied_while_stopped` und dem aktuellen `stopped`.
+- `gate-principal-add`: create a human principal with roles.
+- `gate-stop`: set stop for the tenant of the principal.
+- `gate-resume`: clear stop (author role only).
+- `gate-status`: read stop state (read-only, no migration).
+- `gate-audit --summary`: includes `summary.stops` with `stop`, `resume`, `rejected`, `denied_while_stopped`, and current `stopped`.
 
-## Exit-Codes (gate-stop / gate-resume)
+## Exit codes (gate-stop / gate-resume)
 
-- `0`, wenn `ok` true ist (auch bei `noop` mit `changed` false).
-- `1` bei `principal_unknown`, `principal_kind_forbidden` oder `role_forbidden`.
-- `2` bei Vorprüfungs-, Speicher- oder Auditfehlern.
+- `0` when `ok` is true (also for `noop` with `changed` false).
+- `1` for `principal_unknown`, `principal_kind_forbidden`, or `role_forbidden`.
+- `2` for precheck, storage, or audit errors.
 
-## Offene Grenzen
+## Open limits
 
-Das Anlegen von Principals und Rollenbindungen über `gate-principal-add` wird nicht auditiert und ist nicht atomar (bekannt, nach v1). Die Zustimmung des Kunden-Admins beim Aufheben ist organisatorisch. Wie Hermes die Ablehnung im Stopp anzeigt, ist am Gerät zu prüfen. Die Gerätecheckliste enthält die Stopp-Probe im Abschnitt Pilot 1.
+Creating principals and role bindings via `gate-principal-add` is not audited and is not atomic (known, post-v1). Customer admin consent on resume is organizational. How Hermes shows rejection while stopped must be checked on device. The device checklist includes the stop probe under Pilot 1.
 
-Nicht am Gerät getestet.
+Not tested on device.

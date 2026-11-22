@@ -5,13 +5,19 @@
   "template_id": "b2b-lead-research-client",
   "template_version": "0.1.0",
   "values": {
-    "client_label": "Auftraggeber B",
-    "offer": "SYN: Angebot nicht belegt",
-    "industries": ["SYN: Beispielbranche B"],
-    "company_size": "SYN: nicht festgelegt",
-    "region": "SYN: nicht festgelegt",
-    "target_roles": ["SYN: Rolle B"],
-    "exclusions": ["SYN: Ausschluss B"],
+    "client_label": "Client B",
+    "offer": "SYN: offer not documented",
+    "industries": [
+      "SYN: example industry B"
+    ],
+    "company_size": "SYN: not set",
+    "region": "SYN: not set",
+    "target_roles": [
+      "SYN: role B"
+    ],
+    "exclusions": [
+      "SYN: Ausschluss B"
+    ],
     "tone": "Du",
     "goal": "Produkt",
     "account_char_limit": 250,

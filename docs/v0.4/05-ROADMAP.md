@@ -1,14 +1,14 @@
 # Roadmap · v0.4
 
-Stand 12.11.2026 Europe/Berlin. Kleine Inkremente. Abnahme heißt: der genannte Testlauf ist grün und der Nachweis trennt Entwurf, implementiert und getestet. Produktiv ist keines davon.
+As of 12.11.2026 Europe/Berlin. Small increments. Acceptance means: the named test run is green and evidence separates draft, implemented, and tested. None of this is production.
 
-| Inkrement | Inhalt | Abnahme |
+| Increment | Content | Acceptance |
 |---|---|---|
-| K1 | Schema, Validierung, Sperre, Release mit Hash, Rollback, Audit, synthetische Werkstattvorlage | Tests grün, T01–T15 grün |
-| A1, dieser Lauf | Dieselbe Release erzeugt ein Hermes-Paket und einen Dry-Run ohne Systemeingriff | Pakettest grün, keine Mac-Abnahme |
-| A2 | Manuelle Abnahme auf einem echten Mac mini | Liste in der Appliance-Beschreibung, heute offen |
-| K2 | Stopp-Schalter und einfaches Budget | Test verweigert die Aktion und schreibt Audit, ohne Netz |
-| K3 | Wunsch für ein gesperrtes Feld bleibt liegen, bis der Autor eine neue Release freigibt | Kunde allein ändert das Feld nicht |
-| B1 | Eigene Agentenschleife mit denselben Fähigkeiten, Hermes danach austauschbar | Dieselben Freigabe- und Sperrtests ohne Versand |
+| K1 | Schema, validation, locks, release with hash, rollback, audit, synthetic workshop template | tests green, T01–T15 green |
+| A1, this track | Same release produces a Hermes package and dry-run without system changes | package test green, no Mac acceptance |
+| A2 | Manual acceptance on a real Mac mini | list in appliance doc, open today |
+| K2 | Kill switch and simple budget | test refuses action and writes audit, no network |
+| K3 | Request for locked field waits until author releases new version | customer alone does not change field |
+| B1 | Own agent loop with same capabilities, Hermes replaceable later | same release and lock tests without sending |
 
-Spur A hat für den Start Vorrang. Spur B bleibt die gemeinsame Vorlagenquelle.
+Track A has priority for the start. Track B remains the shared template source.

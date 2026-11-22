@@ -1,9 +1,9 @@
-# Prüfreihenfolge Feldänderungen und activate_rules (Entwurf v0.5, Schritt 24b)
+# Check order for field changes and activate_rules (draft v0.5, step 24b)
 
-ConfigPlane wertet `changes` in sortierter Feldreihenfolge aus: unbekanntes Feld → INVALID_CONFIG; `fixed` → INVALID_CONFIG; für Kunden alles außer `customer_editable` → LOCKED_FIELD; danach Typ, Grenzen und Floor wie bisher.
+ConfigPlane evaluates `changes` in sorted field order: unknown field → `INVALID_CONFIG`; `fixed` → `INVALID_CONFIG`; for customers anything except `customer_editable` → `LOCKED_FIELD`; then type, bounds, and floor as before.
 
-`activate_rules` erfordert die Rolle `author` (nicht `reviewer`); Agenten mit `author` bleiben ausgeschlossen. Rechte werden vor jedem Replay neu geprüft — `unbind_role` und erneuter Aufruf mit gleichem Idempotenz-Schlüssel → FORBIDDEN, kein Replay.
+`activate_rules` requires role `author` (not `reviewer`); agents with `author` remain excluded. Rights are rechecked before every replay — `unbind_role` and repeat call with same idempotency key → `FORBIDDEN`, no replay.
 
-Offen: `rule_sets` weiterhin global; Scope je Vorlage/Tenant eigener Schritt. Schlüsselablauf (68).
+Open: `rule_sets` still global; scope per template/tenant is a separate step. Key expiry (68).
 
-Status: implementiert und getestet im PR-Branch, nicht produktiv freigegeben.
+Status: implemented and tested on PR branch, not released for production.
