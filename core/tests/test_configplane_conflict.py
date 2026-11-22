@@ -24,7 +24,7 @@ class ConfigPlaneConflictTests(unittest.TestCase):
     def test_cc01_integrity_maps_to_conflict(self):
         with patch.object(self.plane, "_release_new", side_effect=sqlite3.IntegrityError("synthetic")):
             with self.assertRaises(ConfigError) as ctx:
-                self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+                self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
             self.assertEqual(ctx.exception.code, "CONFLICT")
         conn = sqlite3.connect(self.path)
         rows = conn.execute(
@@ -40,7 +40,7 @@ class ConfigPlaneConflictTests(unittest.TestCase):
         before = sqlite3.connect(self.path).execute("SELECT COUNT(*) FROM audit_events").fetchone()[0]
         with patch.object(self.plane, "_release_new", side_effect=sqlite3.OperationalError("synthetic")):
             with self.assertRaises(ConfigError) as ctx:
-                self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+                self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
             self.assertEqual(ctx.exception.code, "STORAGE_UNAVAILABLE")
         conn = sqlite3.connect(self.path)
         after = conn.execute("SELECT COUNT(*) FROM audit_events").fetchone()[0]
@@ -54,8 +54,8 @@ class ConfigPlaneConflictTests(unittest.TestCase):
     def test_cc03_rolled_back_release_can_succeed(self):
         with patch.object(self.plane, "_release_new", side_effect=sqlite3.IntegrityError("synthetic")):
             with self.assertRaises(ConfigError):
-                self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+                self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         conn = sqlite3.connect(self.path)
         count = conn.execute("SELECT COUNT(*) FROM config_releases").fetchone()[0]
         conn.close()
@@ -64,24 +64,24 @@ class ConfigPlaneConflictTests(unittest.TestCase):
     def test_cc04_connect_failure_storage_unavailable(self):
         with patch.object(self.store, "connect", side_effect=sqlite3.OperationalError("synthetic")):
             with self.assertRaises(ConfigError) as ctx:
-                self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+                self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
             self.assertEqual(ctx.exception.code, "STORAGE_UNAVAILABLE")
 
     def test_su01_release_connect_failure_storage_unavailable(self):
         with patch.object(self.store, "connect", side_effect=sqlite3.OperationalError("synthetic")):
             with self.assertRaises(ConfigError) as ctx:
-                self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-su-1")
+                self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-su-1")
             self.assertEqual(ctx.exception.code, "STORAGE_UNAVAILABLE")
 
     def test_su02_active_connect_failure_storage_unavailable(self):
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         with patch.object(self.store, "connect", side_effect=sqlite3.OperationalError("synthetic")):
             with self.assertRaises(ConfigError) as ctx:
                 self.plane.active("konrad", "cfg-1")
             self.assertEqual(ctx.exception.code, "STORAGE_UNAVAILABLE")
 
     def test_su03_release_record_connect_failure_storage_unavailable(self):
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         with patch.object(self.store, "connect", side_effect=sqlite3.OperationalError("synthetic")):
             with self.assertRaises(ConfigError) as ctx:
                 self.plane.release_record("konrad", "cfg-1")
@@ -90,7 +90,7 @@ class ConfigPlaneConflictTests(unittest.TestCase):
     def test_su04_resolve_failure_storage_unavailable(self):
         with patch("framework.configplane.resolve", side_effect=sqlite3.OperationalError("synthetic")):
             with self.assertRaises(ConfigError) as ctx:
-                self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+                self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
             self.assertEqual(ctx.exception.code, "STORAGE_UNAVAILABLE")
 
 

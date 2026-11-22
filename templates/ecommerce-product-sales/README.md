@@ -1,4 +1,4 @@
-# Vorlage ecommerce-produktverkauf
+# Vorlage ecommerce-product-sales
 
 Status: Entwurf. Variante Spielzeug ist der zusätzliche Prüfkasten im gesperrten Textfeld, keine Rechtsauskunft.
 

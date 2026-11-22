@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def template_body():
-    return json.loads((ROOT / "templates" / "kfz-terminannahme" / "template.json").read_text(encoding="utf-8"))
+    return json.loads((ROOT / "templates" / "auto-service-appointment-intake" / "template.json").read_text(encoding="utf-8"))
 
 
 def initial_values():
@@ -45,7 +45,7 @@ class AppliancePackageTests(unittest.TestCase):
             ),
         )
         self.plane.register_template("konrad", template_body())
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
 
     def test_package_matches_release_and_contains_no_secrets(self):
         first = Path(self.folder) / "pkg-a"
@@ -65,7 +65,7 @@ class AppliancePackageTests(unittest.TestCase):
         self.assertFalse((first / "distribution" / ".env").exists())
         self.assertFalse((first / "distribution" / "auth.json").exists())
         manifest = (first / "distribution" / "distribution.yaml").read_text(encoding="utf-8")
-        self.assertIn('name: "kfz-terminannahme"', manifest)
+        self.assertIn('name: "auto-service-appointment-intake"', manifest)
         assumptions = (first / "ASSUMPTIONS.md").read_text(encoding="utf-8")
         self.assertIn("nicht belegt", assumptions.lower())
         self.assertIn("macOS", assumptions)
@@ -97,19 +97,19 @@ class AppliancePackageTests(unittest.TestCase):
         values = dict(initial_values())
         values["allow_unattended_send"] = True
         with self.assertRaises(ConfigError) as caught:
-            self.plane.release("konrad", "cfg-open", "kfz-terminannahme", "1.1.0", values, "open")
+            self.plane.release("konrad", "cfg-open", "auto-service-appointment-intake", "1.1.0", values, "open")
         self.assertEqual(caught.exception.code, "INVALID_CONFIG")
 
     def test_packages_carry_allow_false_from_release(self):
         lead = load("profiles/lead-scout-example/profile.json")
         flippy = load("profiles/flippy-catch-example/profile.json")
         for relative in (
-            "templates/b2b-lead-recherche/template.json",
-            "templates/ecommerce-produktverkauf/template.json",
+            "templates/b2b-lead-research/template.json",
+            "templates/ecommerce-product-sales/template.json",
         ):
             self.plane.register_template("konrad", load(relative))
         cases = (
-            ("cfg-kfz", "kfz-terminannahme", "1.1.0", initial_values()),
+            ("cfg-kfz", "auto-service-appointment-intake", "1.1.0", initial_values()),
             (lead["profile_id"], lead["template_id"], lead["template_version"], lead["values"]),
             (flippy["profile_id"], flippy["template_id"], flippy["template_version"], flippy["values"]),
         )

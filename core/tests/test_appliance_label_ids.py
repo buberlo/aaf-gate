@@ -36,7 +36,7 @@ class ApplianceLabelIdsTests(unittest.TestCase):
         self.plane = ConfigPlane(self.store, FixedClock("2026-11-12T16:00:00Z"))
         seed_config(self.store, (("konrad", "synth-tenant", "human", ("author",)),))
         self.plane.register_template("konrad", template_body())
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         self.gs = gate_service()
 
     def test_li01_managed_with_ids(self):

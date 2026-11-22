@@ -2,7 +2,7 @@
   "profile_id": "lead-scout-example",
   "synthetic": true,
   "confirmed_by_customer": false,
-  "template_id": "b2b-lead-recherche",
+  "template_id": "b2b-lead-research",
   "template_version": "0.3.0",
   "values": {
     "operator_name": "Beispielperson",

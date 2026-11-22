@@ -2,7 +2,7 @@
   "profile_id": "lead-scout-example-a",
   "synthetic": true,
   "placeholder": "A",
-  "template_id": "b2b-lead-recherche-auftraggeber",
+  "template_id": "b2b-lead-research-client",
   "template_version": "0.1.0",
   "values": {
     "client_label": "Auftraggeber A",

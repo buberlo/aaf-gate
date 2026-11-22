@@ -19,9 +19,9 @@ Dieses Verzeichnis ergänzt v0.4 um **Nachweise und Teil-Spezifikationen** zu be
 | Appliance-Spur A | Paketbau, Launchd-Plist, gate-init, Checklisten (Gate, Pilot, Freigaben, Fremde Hooks), pin-audit, Relay/Telemetrie, Hermes-Commit, verify-device (Install, Managed, Dump, Launchd, Plugin, Profile, active_profile) |
 | Pin & Hooks | verify-hooks, pin-audit, raft-platform/disabled, Profil-Sperrlisten |
 | Stopp-Schalter (V1-1) | Kern 41575e0, CLI 17831ee, Gerätecheckliste und [168-stopp-schalter.md](168-stopp-schalter.md) |
-| Kostenlimit (V1-2) | Kern 58dccbe, Pilot-1-Policy und [171-kostenlimit.md](171-kostenlimit.md), dieser Commit |
+| Kostenlimit (V1-2) | Kern 58dccbe, Pilot-1-Policy und [171-call-limits.md](171-call-limits.md), dieser Commit |
 
-Einzeldateien in diesem Ordner (z. B. `96-geraetemodus.md`, `97-paket-geraetemodus.md`) beschreiben jeweilige Inkremente im Entwurfswortlaut; maßgeblich für „was läuft“ bleibt der Code und [NACHWEIS-I1.md](../NACHWEIS-I1.md).
+Einzeldateien in diesem Ordner (z. B. `96-geraetemodus.md`, `97-paket-geraetemodus.md`) beschreiben jeweilige Inkremente im Entwurfswortlaut; maßgeblich für „was läuft“ bleibt der Code und [EVIDENCE-I1.md](../EVIDENCE-I1.md).
 
 ## Nicht in diesem Baum
 

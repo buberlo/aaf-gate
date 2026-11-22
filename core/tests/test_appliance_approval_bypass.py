@@ -25,7 +25,7 @@ class ApplianceApprovalBypassTests(unittest.TestCase):
             ),
         )
         self.plane.register_template("konrad", template_body())
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
 
     def test_ab01_single_query_mode_in_config(self):
         target = Path(self.folder) / "pkg"

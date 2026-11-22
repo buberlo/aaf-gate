@@ -58,7 +58,7 @@ class AppliancePluginsDisabledTests(unittest.TestCase):
             (("konrad", "synth-tenant", "human", ("author",)),),
         )
         plane.register_template("konrad", template_body())
-        plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         self.target = Path(self.folder) / "pkg"
         build_appliance_package(plane, "konrad", "cfg-1", self.target)
 

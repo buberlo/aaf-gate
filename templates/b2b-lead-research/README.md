@@ -1,4 +1,4 @@
-# Vorlage b2b-lead-recherche
+# Vorlage b2b-lead-research
 
 Status: Entwurf. Nichts davon ist eine laufende Recherche und nichts ist produktiv.
 

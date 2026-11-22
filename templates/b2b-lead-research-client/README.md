@@ -1,4 +1,4 @@
-# Vorlage b2b-lead-recherche-auftraggeber
+# Vorlage b2b-lead-research-client
 
 Status: Entwurf. Jedes Unterprofil ist ein synthetischer Platzhalter, kein echter Auftraggeber.
 

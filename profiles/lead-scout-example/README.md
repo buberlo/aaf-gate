@@ -2,7 +2,7 @@
 
 Status: Entwurf. Synthetisches Beispielprofil ohne Bezug zu einer realen Person. Kein Nachname, keine Telefonnummer und keine Adresse.
 
-Zweck: Kundenprofil für eine Person, die für ihre Auftraggeber Kontakte sucht und Texte zum Kopieren braucht. Die Branche steckt in der Vorlage `b2b-lead-recherche`. Dieses Profil setzt nur ihre Arbeitsweise.
+Zweck: Kundenprofil für eine Person, die für ihre Auftraggeber Kontakte sucht und Texte zum Kopieren braucht. Die Branche steckt in der Vorlage `b2b-lead-research`. Dieses Profil setzt nur ihre Arbeitsweise.
 
 Belegt und hier verwendet: synthetischer Beispielname, Wunsch nach täglich bis zu 10 Kontakten je Auftraggeber, Nachrichten bis 300 Zeichen, kein Plattform-Login durch das System, Follow-up erst nach Annahme, Status nur nach menschlicher Bestätigung.
 

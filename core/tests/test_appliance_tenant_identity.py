@@ -28,8 +28,8 @@ class ApplianceTenantIdentityTests(unittest.TestCase):
         body = template_body()
         self.plane.register_template("konrad", body)
         self.plane.register_template("mira", body)
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-k")
-        self.plane.release("mira", "cfg-werk", "kfz-terminannahme", "1.1.0", initial_values(), "rel-m")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-k")
+        self.plane.release("mira", "cfg-werk", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-m")
         self.document_k = self.plane.release_record("konrad", "cfg-1")["document"]
         self.document_m = self.plane.release_record("mira", "cfg-werk")["document"]
 

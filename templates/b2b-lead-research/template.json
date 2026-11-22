@@ -1,8 +1,8 @@
 {
-  "template_id": "b2b-lead-recherche",
+  "template_id": "b2b-lead-research",
   "template_version": "0.3.0",
   "synthetic": true,
-  "title": "Entwurf: B2B-Lead-Recherche ohne Plattform-Login",
+  "title": "Draft: B2B lead research without platform login",
   "fields": {
     "operator_name": {"access": "customer_editable", "type": "string", "required": true},
     "briefing_weekday": {

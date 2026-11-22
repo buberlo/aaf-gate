@@ -23,7 +23,7 @@ class ReleaseDiffTests(unittest.TestCase):
     def test_rd02_customer_edit_shows_editable_value(self):
         lab = RunReleaseLab()
         run = lab.to_review()
-        lab.plane.apply_changes("kunde", CONFIG_ID, {"opening_hours": "Mo-Fr 9-18"}, "hours")
+        lab.plane.apply_changes("customer", CONFIG_ID, {"opening_hours": "Mo-Fr 9-18"}, "hours")
         result = lab.call("release_diff", run)
         self.assertTrue(result["stale"])
         self.assertEqual(result["changed"], ["opening_hours"])
@@ -37,7 +37,7 @@ class ReleaseDiffTests(unittest.TestCase):
         run = lab.to_review()
         values = dict(initial_values())
         values["followup_questions"] = "Neue Leitfragen"
-        lab.plane.release("konrad", CONFIG_ID, "kfz-terminannahme", "1.1.0", values, "rel-lock")
+        lab.plane.release("konrad", CONFIG_ID, "auto-service-appointment-intake", "1.1.0", values, "rel-lock")
         result = lab.call("release_diff", run)
         self.assertIn("followup_questions", result["changed"])
         self.assertNotIn("followup_questions", result["values"])
@@ -45,7 +45,7 @@ class ReleaseDiffTests(unittest.TestCase):
     def test_rd04_rollback_clears_stale(self):
         lab = RunReleaseLab()
         run = lab.to_review()
-        lab.plane.apply_changes("kunde", CONFIG_ID, {"opening_hours": "Mo-Fr 9-18"}, "hours")
+        lab.plane.apply_changes("customer", CONFIG_ID, {"opening_hours": "Mo-Fr 9-18"}, "hours")
         lab.plane.rollback("konrad", CONFIG_ID, 1, "back")
         result = lab.call("release_diff", run)
         self.assertFalse(result["stale"])

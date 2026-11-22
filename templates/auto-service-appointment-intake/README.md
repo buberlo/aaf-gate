@@ -1,4 +1,4 @@
-# Vorlage kfz-terminannahme
+# Vorlage auto-service-appointment-intake
 
 Status: Entwurf. Die Datei `template.json` ist die bisherige synthetische Vorlage, nur an diesen Ort verschoben. Kein Kunde, kein Produktversprechen.
 

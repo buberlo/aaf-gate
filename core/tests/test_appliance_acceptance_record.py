@@ -21,7 +21,7 @@ def _build(folder, gate=True, label_ids=None):
     plane = ConfigPlane(store, FixedClock("2026-11-12T16:00:00Z"))
     seed_config(store, (("konrad", "synth-tenant", "human", ("author",)),))
     plane.register_template("konrad", template_body())
-    plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+    plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
     target = Path(folder) / "pkg"
     kwargs = {}
     if gate:
@@ -89,7 +89,7 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
 
     def test_ar07_docs_section(self):
         root = Path(__file__).resolve().parents[2]
-        doc = (root / "docs/v0.4/06-APPLIANCE-SPUR-A.md").read_text(encoding="utf-8")
+        doc = (root / "docs/v0.4/06-APPLIANCE-TRACK-A.md").read_text(encoding="utf-8")
         start = doc.index("## Manuelle Abnahme am Mac mini")
         rest = doc[start:]
         next_heading = rest.find("\n## ", len("## Manuelle Abnahme am Mac mini"))
@@ -157,7 +157,7 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
         plane = ConfigPlane(store, FixedClock("2026-11-12T16:00:00Z"))
         seed_config(store, (("konrad", "synth-tenant", "human", ("author",)),))
         plane.register_template("konrad", template_body())
-        plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         target = Path(folder) / "pkg"
         return build_appliance_package(
             plane,
@@ -169,7 +169,7 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
 
     def test_ar11_docs_reinstall_section(self):
         root = Path(__file__).resolve().parents[2]
-        doc = (root / "docs/v0.4/06-APPLIANCE-SPUR-A.md").read_text(encoding="utf-8")
+        doc = (root / "docs/v0.4/06-APPLIANCE-TRACK-A.md").read_text(encoding="utf-8")
         start = doc.index("## Neuaufsetzen aus der letzten Release")
         section = doc[start:]
         for token in (

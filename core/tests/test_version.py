@@ -49,7 +49,7 @@ class VersionTests(unittest.TestCase):
     def test_ve06_docs_and_readme_updated(self):
         root = Path(__file__).resolve().parents[2]
         readme = (root / "README.md").read_text(encoding="utf-8")
-        spur = (root / "docs/v0.4/06-APPLIANCE-SPUR-A.md").read_text(encoding="utf-8")
+        spur = (root / "docs/v0.4/06-APPLIANCE-TRACK-A.md").read_text(encoding="utf-8")
         self.assertNotIn("Agentenschleife, Kanäle, Versand, Stopp", readme)
         self.assertNotIn("Der Schalter ist nicht implementiert.", spur)
 

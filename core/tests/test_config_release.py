@@ -16,7 +16,7 @@ CANARY = "GESPERRT-WERT-9f3c"
 
 
 def template_body():
-    return json.loads((ROOT / "templates" / "kfz-terminannahme" / "template.json").read_text(encoding="utf-8"))
+    return json.loads((ROOT / "templates" / "auto-service-appointment-intake" / "template.json").read_text(encoding="utf-8"))
 
 
 def initial_values():
@@ -71,20 +71,20 @@ class ConfigReleaseTests(unittest.TestCase):
         self.assertEqual(caught.exception.code, "INVALID_CONFIG")
 
     def test_release_is_immutable_and_deterministic(self):
-        first = self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
-        again = self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        first = self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
+        again = self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         self.assertEqual(first, again)
         self.assertEqual(self.plane.active("konrad", "cfg-1")["release_no"], 1)
         twin_store = Store(str(Path(self.folder) / "other.sqlite"))
         seed_config(twin_store, (("konrad", "synth-tenant", "human", ("author",)),))
         twin = ConfigPlane(twin_store, FixedClock("2026-11-12T15:00:00Z"))
         twin.register_template("konrad", template_body())
-        second = twin.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        second = twin.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         self.assertEqual(first["release_hash"], second["release_hash"])
         self.assertTrue(first["release_hash"].startswith("sha256:"))
 
     def test_customer_cannot_change_locked_field_and_can_change_released_field(self):
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         before = self.plane.active("cust", "cfg-1")
         with self.assertRaises(ConfigError) as caught:
             self.plane.apply_changes(
@@ -123,7 +123,7 @@ class ConfigReleaseTests(unittest.TestCase):
         self.assertTrue(all(CANARY not in "".join(str(part) for part in row) for row in audits))
 
     def test_author_can_change_locked_field_and_rollback_restores_prior_release(self):
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         original = self.plane.active("konrad", "cfg-1")["release_hash"]
         self.plane.apply_changes("cust", "cfg-1", {"shop_name": "Synth-Werkstatt Nord"}, "ok-name")
         updated = self.plane.apply_changes(
@@ -154,7 +154,7 @@ class ConfigReleaseTests(unittest.TestCase):
         self.assertIn("rejected", rollback_outcomes)
 
     def test_other_tenant_sees_nothing(self):
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         with self.assertRaises(ConfigError) as caught:
             self.plane.active("other", "cfg-1")
         self.assertEqual(caught.exception.code, "NOT_FOUND")
@@ -182,24 +182,24 @@ class ConfigReleaseTests(unittest.TestCase):
         values = dict(initial_values())
         values["allow_unattended_send"] = True
         with self.assertRaises(ConfigError) as caught:
-            self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", values, "rel-open")
+            self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", values, "rel-open")
         self.assertEqual(caught.exception.code, "INVALID_CONFIG")
 
     def test_customer_cannot_change_fixed_field(self):
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         with self.assertRaises(ConfigError) as caught:
             self.plane.apply_changes("cust", "cfg-1", {"allow_unattended_send": True}, "fixed-1")
         self.assertEqual(caught.exception.code, "INVALID_CONFIG")
 
     def test_fixed_value_in_release_and_hash_tracks_template_version(self):
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         record = self.plane.release_record("konrad", "cfg-1", 1)
         self.assertIs(record["document"]["values"]["allow_unattended_send"], False)
         self.assertEqual(record["document"]["field_access"]["allow_unattended_send"], "fixed")
         other = dict(template_body())
         other["template_version"] = "1.2.0"
         self.plane.register_template("konrad", other)
-        second = self.plane.release("konrad", "cfg-2", "kfz-terminannahme", "1.2.0", initial_values(), "rel-2")
+        second = self.plane.release("konrad", "cfg-2", "auto-service-appointment-intake", "1.2.0", initial_values(), "rel-2")
         first = self.plane.release_record("konrad", "cfg-1", 1)
         self.assertNotEqual(second["release_hash"], first["release_hash"])
 
@@ -215,7 +215,7 @@ class ConfigReleaseTests(unittest.TestCase):
         self.assertEqual(caught.exception.code, "INVALID_CONFIG")
 
     def test_change_after_rollback_gets_next_number(self):
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mo-Fr 9-18"}, "c1")
         stored = self.plane.release_record("konrad", "cfg-1", 2)
         self.plane.rollback("konrad", "cfg-1", 1, "b1")
@@ -233,7 +233,7 @@ class ConfigReleaseTests(unittest.TestCase):
         self.assertEqual(count, 3)
 
     def test_customer_change_after_rollback_works(self):
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mo-Fr 9-18"}, "c1")
         self.plane.rollback("konrad", "cfg-1", 1, "b1")
         changed = self.plane.apply_changes("cust", "cfg-1", {"opening_hours": "Mo-Fr 7-16"}, "c2")
@@ -241,13 +241,13 @@ class ConfigReleaseTests(unittest.TestCase):
         self.assertEqual(self.plane.active("cust", "cfg-1")["values"]["opening_hours"], "Mo-Fr 7-16")
 
     def test_base_release_no_tracks_parent(self):
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         self.assertIsNone(self.plane.release_record("konrad", "cfg-1", 1)["document"]["base_release_no"])
         self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mo-Fr 9-18"}, "c1")
         self.assertEqual(self.plane.release_record("konrad", "cfg-1", 2)["document"]["base_release_no"], 1)
 
     def test_replay_after_rollback_change_is_idempotent(self):
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mo-Fr 9-18"}, "c1")
         self.plane.rollback("konrad", "cfg-1", 1, "b1")
         changed = self.plane.apply_changes("konrad", "cfg-1", {"opening_hours": "Mo-Fr 7-16"}, "c2")

@@ -1,8 +1,8 @@
 {
-  "template_id": "b2b-lead-recherche-auftraggeber",
+  "template_id": "b2b-lead-research-client",
   "template_version": "0.1.0",
   "synthetic": true,
-  "title": "Entwurf: Zielkunde je Auftraggeber",
+  "title": "Draft: target account per client",
   "fields": {
     "client_label": {"access": "customer_editable", "type": "string", "required": true},
     "offer": {"access": "customer_editable", "type": "string", "required": true},

@@ -1,8 +1,8 @@
 {
-  "template_id": "kfz-terminannahme",
+  "template_id": "auto-service-appointment-intake",
   "template_version": "1.1.0",
   "synthetic": true,
-  "title": "Synthetische Vorlage: Terminannahme und Rückfragen",
+  "title": "Synthetic template: appointment intake and follow-up questions",
   "fields": {
     "shop_name": {"access": "customer_editable", "type": "string", "required": true},
     "opening_hours": {"access": "customer_editable", "type": "string", "required": true},

@@ -114,7 +114,7 @@ class DeviceCheckSocketTests(unittest.TestCase):
         plane = ConfigPlane(store, FixedClock("2026-11-12T16:00:00Z"))
         seed_config(store, (("konrad", "synth-tenant", "human", ("author",)),))
         plane.register_template("konrad", template_body())
-        plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         source = write_pin_fixture(Path(tempfile.mkdtemp(dir="/tmp")))
         gs = gate_service_tmp(folder)
         package = folder / "pkg"

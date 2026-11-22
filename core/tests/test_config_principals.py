@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def template_body():
-    return json.loads((ROOT / "templates" / "kfz-terminannahme" / "template.json").read_text(encoding="utf-8"))
+    return json.loads((ROOT / "templates" / "auto-service-appointment-intake" / "template.json").read_text(encoding="utf-8"))
 
 
 def initial_values():
@@ -43,7 +43,7 @@ class ConfigPrincipalTests(unittest.TestCase):
             self.plane.release(
                 "nobody",
                 "cfg-1",
-                "kfz-terminannahme",
+                "auto-service-appointment-intake",
                 "1.1.0",
                 initial_values(),
                 "k1",
@@ -81,10 +81,10 @@ class ConfigPrincipalTests(unittest.TestCase):
         self.store.add_principal("reader", "synth-cp", "agent")
         self.store.bind_role("reader", "customer")
         self.plane.register_template("konrad", template_body())
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel")
         for op, fn in (
             ("register_template", lambda: self.plane.register_template("bot", template_body())),
-            ("release", lambda: self.plane.release("bot", "cfg-2", "kfz-terminannahme", "1.1.0", initial_values(), "x")),
+            ("release", lambda: self.plane.release("bot", "cfg-2", "auto-service-appointment-intake", "1.1.0", initial_values(), "x")),
             ("rollback", lambda: self.plane.rollback("bot", "cfg-1", 1, "rb")),
             ("apply", lambda: self.plane.apply_changes("bot", "cfg-1", {"opening_hours": "immer"}, "a")),
         ):
@@ -95,20 +95,20 @@ class ConfigPrincipalTests(unittest.TestCase):
         self.assertEqual(active["values"]["shop_name"], "Synth-Werkstatt")
 
     def test_cp05_customer_release_rollback_forbidden_apply_audited(self):
-        self.store.add_principal("kunde", "synth-cp", "human")
-        self.store.bind_role("kunde", "customer")
+        self.store.add_principal("customer", "synth-cp", "human")
+        self.store.bind_role("customer", "customer")
         self.plane.register_template("konrad", template_body())
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel")
         with self.assertRaises(ConfigError) as caught:
-            self.plane.release("kunde", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "bad")
+            self.plane.release("customer", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "bad")
         self.assertEqual(caught.exception.code, "FORBIDDEN")
         with self.assertRaises(ConfigError) as caught:
-            self.plane.rollback("kunde", "cfg-1", 1, "rb")
+            self.plane.rollback("customer", "cfg-1", 1, "rb")
         self.assertEqual(caught.exception.code, "FORBIDDEN")
-        self.plane.apply_changes("kunde", "cfg-1", {"opening_hours": "Mo-Fr 9-18"}, "ok")
+        self.plane.apply_changes("customer", "cfg-1", {"opening_hours": "Mo-Fr 9-18"}, "ok")
         conn = sqlite3.connect(str(Path(self.folder) / "cfg.sqlite"))
         rows = conn.execute(
-            "SELECT principal_kind, acting_role, outcome FROM audit_events WHERE actor_id='kunde' AND outcome='committed'"
+            "SELECT principal_kind, acting_role, outcome FROM audit_events WHERE actor_id='customer' AND outcome='committed'"
         ).fetchall()
         conn.close()
         self.assertTrue(any(row[0] == "human" and row[1] == "customer" for row in rows))
@@ -117,18 +117,18 @@ class ConfigPrincipalTests(unittest.TestCase):
         self.store.add_principal("bea", "tenant-b", "human")
         self.store.bind_role("bea", "customer")
         self.plane.register_template("konrad", template_body())
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel")
         with self.assertRaises(ConfigError) as caught:
             self.plane.active("bea", "cfg-1")
         self.assertEqual(caught.exception.code, "NOT_FOUND")
 
     def test_cp07_appliance_package_forbidden_no_destination(self):
         self.plane.register_template("konrad", template_body())
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel")
         self.store.add_principal("bot", "synth-cp", "agent")
         self.store.bind_role("bot", "author")
-        self.store.add_principal("kunde", "synth-cp", "human")
-        self.store.bind_role("kunde", "customer")
+        self.store.add_principal("customer", "synth-cp", "human")
+        self.store.bind_role("customer", "customer")
         agent_dir = Path(self.folder) / "agent-pkg"
         cust_dir = Path(self.folder) / "cust-pkg"
         with self.assertRaises(ConfigError) as caught:
@@ -136,7 +136,7 @@ class ConfigPrincipalTests(unittest.TestCase):
         self.assertEqual(caught.exception.code, "FORBIDDEN")
         self.assertFalse(agent_dir.exists())
         with self.assertRaises(ConfigError) as caught:
-            build_appliance_package(self.plane, "kunde", "cfg-1", cust_dir)
+            build_appliance_package(self.plane, "customer", "cfg-1", cust_dir)
         self.assertEqual(caught.exception.code, "FORBIDDEN")
         self.assertFalse(cust_dir.exists())
 

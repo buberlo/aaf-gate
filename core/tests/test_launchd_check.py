@@ -101,7 +101,7 @@ class LaunchdCheckTests(unittest.TestCase):
             ),
         )
         plane.register_template("konrad", template_body())
-        plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         with_gs = Path(self.folder) / "with-gs"
         gs = gate_service()
         build_appliance_package(plane, "konrad", "cfg-1", with_gs, gate_service=gs)
@@ -138,7 +138,7 @@ class LaunchdCheckTests(unittest.TestCase):
             (("konrad", "synth-tenant", "human", ("author",)),),
         )
         plane.register_template("konrad", template_body())
-        plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         package = Path(self.folder) / "pkg"
         gs = gate_service()
         build_appliance_package(plane, "konrad", "cfg-1", package, gate_service=gs)

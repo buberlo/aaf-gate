@@ -2,7 +2,7 @@
   "profile_id": "flippy-catch-example",
   "synthetic": true,
   "note": "Marken- und Produktnamen stammen aus der öffentlichen Spezifikation vom 12.11.2026. Mit SYN gekennzeichnete Werte sind Platzhalter.",
-  "template_id": "ecommerce-produktverkauf",
+  "template_id": "ecommerce-product-sales",
   "template_version": "0.3.0",
   "values": {
     "brand_name": "Flippy / Flippy Catch",

@@ -2,7 +2,7 @@
 
 Status: Entwurf. Nicht eingerichtet und nicht getestet auf einem Gerät.
 
-Zweck: Kundenprofil für die Marke Flippy / Flippy Catch. Öffentlich beschrieben sind ein eigener Shop und Verkauf über Amazon, ein physisches Geschicklichkeitsspiel und die genannten Produktnamen. Die Vorlage ist `ecommerce-produktverkauf`.
+Zweck: Kundenprofil für die Marke Flippy / Flippy Catch. Öffentlich beschrieben sind ein eigener Shop und Verkauf über Amazon, ein physisches Geschicklichkeitsspiel und die genannten Produktnamen. Die Vorlage ist `ecommerce-product-sales`.
 
 Keine Telefonnummer, keine Straße und keine privaten Adressen. Preise stehen hier nicht, weil sie sich ändern und keine Konfiguration sind.
 

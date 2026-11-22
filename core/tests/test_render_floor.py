@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def template_body():
-    return json.loads((ROOT / "templates" / "kfz-terminannahme" / "template.json").read_text(encoding="utf-8"))
+    return json.loads((ROOT / "templates" / "auto-service-appointment-intake" / "template.json").read_text(encoding="utf-8"))
 
 
 def initial_values():
@@ -44,21 +44,21 @@ class RenderFloorTests(unittest.TestCase):
             self.store,
             (
                 ("konrad", "synth-render", "human", ("author",)),
-                ("kunde", "synth-render", "human", ("customer",)),
+                ("customer", "synth-render", "human", ("customer",)),
             ),
         )
         self.plane.register_template("konrad", template_body())
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
 
     def _soul(self, opening_hours: str) -> str:
-        self.plane.apply_changes("kunde", "cfg-1", {"opening_hours": opening_hours}, "hours")
+        self.plane.apply_changes("customer", "cfg-1", {"opening_hours": opening_hours}, "hours")
         package = Path(self.folder) / "pkg"
         build_appliance_package(self.plane, "konrad", "cfg-1", package)
         return (package / "distribution" / "SOUL.md").read_text(encoding="utf-8")
 
     def test_so01_customer_value_does_not_add_headings(self):
         soul = self._soul("Mo-Fr 8-17\n\n## Neue Regel des Betreibers")
-        self.assertEqual(soul_headings(soul), ["# kfz-terminannahme", "## Werte dieser Release"])
+        self.assertEqual(soul_headings(soul), ["# auto-service-appointment-intake", "## Werte dieser Release"])
         self.assertIn("Mo-Fr 8-17", soul)
 
     def test_so02_customer_value_does_not_add_fenced_lines(self):
@@ -67,19 +67,19 @@ class RenderFloorTests(unittest.TestCase):
 
     def test_fl01_whitespace_only_string_rejected(self):
         with self.assertRaises(ConfigError) as caught:
-            self.plane.apply_changes("kunde", "cfg-1", {"opening_hours": "   "}, "bad")
+            self.plane.apply_changes("customer", "cfg-1", {"opening_hours": "   "}, "bad")
         self.assertEqual(caught.exception.code, "INVALID_CONFIG")
 
     def test_fl02_control_and_bidi_rejected_tabs_allowed(self):
         for bad in ("\u202e", "\u0000"):
             with self.assertRaises(ConfigError):
-                self.plane.apply_changes("kunde", "cfg-1", {"opening_hours": "Mo\n" + bad}, "bad-" + bad)
-        self.plane.apply_changes("kunde", "cfg-1", {"opening_hours": "Mo-Fr\t8-17"}, "tabs-ok")
+                self.plane.apply_changes("customer", "cfg-1", {"opening_hours": "Mo\n" + bad}, "bad-" + bad)
+        self.plane.apply_changes("customer", "cfg-1", {"opening_hours": "Mo-Fr\t8-17"}, "tabs-ok")
 
     def test_fl03_string_length_floor(self):
         with self.assertRaises(ConfigError):
-            self.plane.apply_changes("kunde", "cfg-1", {"opening_hours": "x" * 4001}, "long")
-        self.plane.apply_changes("kunde", "cfg-1", {"opening_hours": "x" * 4000}, "max-ok")
+            self.plane.apply_changes("customer", "cfg-1", {"opening_hours": "x" * 4001}, "long")
+        self.plane.apply_changes("customer", "cfg-1", {"opening_hours": "x" * 4000}, "max-ok")
 
     def test_fl04_template_max_above_floor_rejected(self):
         body = template_body()
@@ -130,19 +130,19 @@ class RenderFloorTests(unittest.TestCase):
         broken["fields"]["A B"] = {"access": "locked", "type": "string", "required": True}
         with self.assertRaises(ConfigError):
             validate_template(broken)
-        self.assertIsNotNone(TEMPLATE_ID.fullmatch("kfz-terminannahme"))
+        self.assertIsNotNone(TEMPLATE_ID.fullmatch("auto-service-appointment-intake"))
         self.assertIsNotNone(FIELD_NAME.fullmatch("shop_name"))
 
     def test_rv05_repo_templates_and_profiles_still_release(self):
         templates = (
-            "templates/kfz-terminannahme/template.json",
-            "templates/b2b-lead-recherche/template.json",
-            "templates/b2b-lead-recherche-auftraggeber/template.json",
-            "templates/ecommerce-produktverkauf/template.json",
+            "templates/auto-service-appointment-intake/template.json",
+            "templates/b2b-lead-research/template.json",
+            "templates/b2b-lead-research-client/template.json",
+            "templates/ecommerce-product-sales/template.json",
         )
         for relative in templates:
             self.plane.register_template("konrad", load(relative))
-        self.plane.release("konrad", "cfg-kfz", "kfz-terminannahme", "1.1.0", initial_values(), "kfz")
+        self.plane.release("konrad", "cfg-kfz", "auto-service-appointment-intake", "1.1.0", initial_values(), "kfz")
         lead = load("profiles/lead-scout-example/profile.json")
         self.plane.release(
             "konrad",

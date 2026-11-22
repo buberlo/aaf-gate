@@ -1,8 +1,8 @@
 {
-  "template_id": "ecommerce-produktverkauf",
+  "template_id": "ecommerce-product-sales",
   "template_version": "0.3.0",
   "synthetic": true,
-  "title": "Entwurf: Produktverkauf eigener Shop und Marktplatz, Variante Spielzeug",
+  "title": "Draft: own-shop and marketplace product sales, toys variant",
   "fields": {
     "brand_name": {"access": "customer_editable", "type": "string", "required": true},
     "product_catalog": {"access": "customer_editable", "type": "array", "item_type": "string", "required": true},

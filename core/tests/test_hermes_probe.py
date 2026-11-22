@@ -64,7 +64,7 @@ def _build_package(folder, gate=True):
     plane = ConfigPlane(store, FixedClock("2026-11-12T16:00:00Z"))
     seed_config(store, (("konrad", "synth-tenant", "human", ("author",)),))
     plane.register_template("konrad", template_body())
-    plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+    plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
     target = Path(folder) / "pkg"
     kwargs = {}
     if gate:

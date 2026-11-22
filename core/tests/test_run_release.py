@@ -22,7 +22,7 @@ CONFIG_ID = "cfg-run"
 
 
 def template_body():
-    return json.loads((TEMPLATE_ROOT / "templates" / "kfz-terminannahme" / "template.json").read_text(encoding="utf-8"))
+    return json.loads((TEMPLATE_ROOT / "templates" / "auto-service-appointment-intake" / "template.json").read_text(encoding="utf-8"))
 
 
 def initial_values():
@@ -44,7 +44,7 @@ class RunReleaseLab:
             self.store,
             (
                 ("konrad", "demo-a", "human", ("author",)),
-                ("kunde", "demo-a", "human", ("customer",)),
+                ("customer", "demo-a", "human", ("customer",)),
             ),
         )
         rules = load_rules(FIXTURES / "material-prep-1.json")
@@ -54,7 +54,7 @@ class RunReleaseLab:
         released = self.plane.release(
             "konrad",
             CONFIG_ID,
-            "kfz-terminannahme",
+            "auto-service-appointment-intake",
             "1.1.0",
             initial_values(),
             "rel-1",
@@ -138,7 +138,7 @@ class RunReleaseTests(unittest.TestCase):
         reviewed = lab.to_review()
         exported = lab.call("export_run", reviewed)
         start_hash = exported["run"]["release_hash"]
-        lab.plane.apply_changes("kunde", CONFIG_ID, {"opening_hours": "Mo-Fr 9-18"}, "customer-hours")
+        lab.plane.apply_changes("customer", CONFIG_ID, {"opening_hours": "Mo-Fr 9-18"}, "customer-hours")
         with self.assertRaises(CommandError) as ctx:
             lab.approve(reviewed)
         self.assertEqual(ctx.exception.code, "STALE_RELEASE")
@@ -159,7 +159,7 @@ class RunReleaseTests(unittest.TestCase):
         reviewed = lab.to_review()
         exported = lab.call("export_run", reviewed)
         bound = exported["run"]["release_hash"]
-        lab.plane.apply_changes("kunde", CONFIG_ID, {"opening_hours": "Mo-Fr 9-18"}, "chg")
+        lab.plane.apply_changes("customer", CONFIG_ID, {"opening_hours": "Mo-Fr 9-18"}, "chg")
         lab.plane.rollback("konrad", CONFIG_ID, 1, "back")
         conn = lab.store.connect()
         self.assertEqual(active_release_hash(conn, "demo-a", CONFIG_ID), bound)
@@ -172,7 +172,7 @@ class RunReleaseTests(unittest.TestCase):
         reviewed = lab.to_review()
         approved = lab.approve(reviewed)
         exported = lab.call("export_run", approved)
-        lab.plane.apply_changes("kunde", CONFIG_ID, {"opening_hours": "Mo-Fr 10-16"}, "late")
+        lab.plane.apply_changes("customer", CONFIG_ID, {"opening_hours": "Mo-Fr 10-16"}, "late")
         with self.assertRaises(CommandError) as ctx:
             lab.call(
                 "commit",

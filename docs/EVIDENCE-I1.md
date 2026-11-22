@@ -57,7 +57,7 @@ Die Tests laufen auf einem lokalen Python 3.12 gegen eine temporäre SQLite-Date
 
 Stand 12.11.2026 Europe/Berlin. Implementiert und lokal getestet. Nicht produktiv.
 
-Eine synthetische Branchenvorlage `kfz-terminannahme` und eine synthetische Kundenkonfiguration durchlaufen Registrierung, Release mit Hash, Ablehnung eines gesperrten Feldes, Änderung eines freigegebenen Feldes und Rollback. Die ältere Release bleibt unverändert. Eine fremde Kennung sieht die Fassung nicht. Das ist keine eigene Kundenumgebung.
+Eine synthetische Branchenvorlage `auto-service-appointment-intake` und eine synthetische Kundenkonfiguration durchlaufen Registrierung, Release mit Hash, Ablehnung eines gesperrten Feldes, Änderung eines freigegebenen Feldes und Rollback. Die ältere Release bleibt unverändert. Eine fremde Kennung sieht die Fassung nicht. Das ist keine eigene Kundenumgebung.
 
 Befehl: `cd core && python3 -m unittest discover -s tests -v`. Ergebnis 12.11.2026, erster K1-Lauf: `Ran 21 tests`, `OK`. Der Appliance-Dry-Run kommt im selben Befehl dazu und ist unten nur beschrieben, wenn der Lauf ihn enthält.
 

@@ -36,7 +36,7 @@ class ApplianceCustomerProfileTests(unittest.TestCase):
             (("konrad", "synth-tenant", "human", ("author",)),),
         )
         self.plane.register_template("konrad", template_body())
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
 
     def test_cp01_without_customer_profile(self):
         target = Path(self.folder) / "plain"
@@ -192,7 +192,7 @@ class ApplianceCustomerProfileTests(unittest.TestCase):
         plane = ConfigPlane(store, FixedClock("2026-11-12T16:00:00Z"))
         seed_config(store, (("konrad", "synth-tenant", "human", ("author",)),))
         plane.register_template("konrad", template_body())
-        plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         pkg = Path(folder) / "pkg"
         build_appliance_package(plane, "konrad", "cfg-1", pkg, customer_profile="kunde")
         env = {"PATH": os.environ.get("PATH", "")}

@@ -18,7 +18,7 @@ CANARY_47 = "KANARIE-47-a8d2"
 
 
 def template_body():
-    return json.loads((ROOT / "templates" / "kfz-terminannahme" / "template.json").read_text(encoding="utf-8"))
+    return json.loads((ROOT / "templates" / "auto-service-appointment-intake" / "template.json").read_text(encoding="utf-8"))
 
 
 def initial_values():
@@ -127,7 +127,7 @@ class AuditChainTests(unittest.TestCase):
         )
         plane = ConfigPlane(store, FixedClock("2026-11-14T09:30:00Z"))
         plane.register_template("konrad", template_body())
-        plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel")
+        plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel")
         with self.assertRaises(ConfigError):
             plane.apply_changes("cust", "cfg-1", {"followup_questions": CANARY_47}, "c3")
         raw = Path(lab.path).read_bytes()
@@ -148,7 +148,7 @@ class AuditChainTests(unittest.TestCase):
         plane = ConfigPlane(cfg_store, FixedClock("2026-11-14T09:30:00Z"))
         seed_config(cfg_store, (("konrad", "synth-tenant", "human", ("author",)),))
         plane.register_template("konrad", template_body())
-        plane.release("konrad", "cfg-x", "kfz-terminannahme", "1.1.0", initial_values(), "rk")
+        plane.release("konrad", "cfg-x", "auto-service-appointment-intake", "1.1.0", initial_values(), "rk")
         conn = cfg_store.connect()
         for tenant in ("demo-a", "demo-b", "synth-tenant"):
             result = verify(conn, tenant)
