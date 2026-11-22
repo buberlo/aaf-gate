@@ -81,7 +81,7 @@ class DeviceCheckTests(unittest.TestCase):
         plane = ConfigPlane(store, FixedClock("2026-11-12T16:00:00Z"))
         seed_config(store, (("konrad", "synth-tenant", "human", ("author",)),))
         plane.register_template("konrad", template_body())
-        plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         source = write_pin_fixture(Path(tempfile.mkdtemp(dir="/tmp")))
         package = Path(folder) / "pkg"
         gs = gate_service_tmp(folder)
@@ -343,12 +343,12 @@ class DeviceCheckTests(unittest.TestCase):
         plane = ConfigPlane(store, FixedClock("2026-11-12T16:00:00Z"))
         seed_config(store, (("konrad", "synth-tenant", "human", ("author",)),))
         plane.register_template("konrad", template_body())
-        plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         target = Path(folder) / "pkg"
         build_appliance_package(plane, "konrad", "cfg-1", target)
         manual = (target / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
-        self.assertIn("verify-device --package <Pfad dieses Pakets>", manual)
-        self.assertIn("package_hash, release_hash und hermes_commit", manual)
+        self.assertIn("verify-device --package <path to this package>", manual)
+        self.assertIn("package_hash, release_hash and hermes_commit", manual)
 
     def test_vd07_install_managed_and_package(self):
         folder, package, built = self.build_fixture_package()
@@ -561,7 +561,7 @@ class DeviceCheckTests(unittest.TestCase):
         folder, package, built = self.build_fixture_package()
         profile_text = _profile_config()
         hermes_home = make_hermes_home(Path(folder), profile_text)
-        profiles = hermes_home / "profiles" / "kunde"
+        profiles = hermes_home / "profiles" / "client"
         make_profile_dir(profiles, config_text=profile_text)
         dump = Path(folder) / "dump.txt"
         dump.write_text(GOOD_DUMP, encoding="utf-8")
@@ -576,13 +576,13 @@ class DeviceCheckTests(unittest.TestCase):
             {"OTEL_SDK_DISABLED": "true"},
         )
         self.assertTrue(result["checks"]["profile_plugins:."].get("ok"))
-        self.assertTrue(result["checks"]["profile_plugins:profiles/kunde"].get("ok"))
+        self.assertTrue(result["checks"]["profile_plugins:profiles/client"].get("ok"))
 
     def test_vd13_profile_plugins_issues(self):
         folder, package, built = self.build_fixture_package()
         base_config = (package / "managed" / "config.yaml").read_text(encoding="utf-8")
         hermes_home = make_hermes_home(Path(folder), base_config)
-        profiles = hermes_home / "profiles" / "kunde"
+        profiles = hermes_home / "profiles" / "client"
         make_profile_dir(profiles, foreign=False)
         required = disabled_from_config(base_config)
         missing = check_profile_plugins(profiles, required)
@@ -628,10 +628,10 @@ class DeviceCheckTests(unittest.TestCase):
     def test_vd16_assumptions_and_manual(self):
         folder, package, built = self.build_fixture_package()
         manual = (package / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
-        self.assertIn("verify-device prüft das je Profil", manual)
+        self.assertIn("verify-device checks that per profile", manual)
         assumptions = (package / "ASSUMPTIONS.md").read_text(encoding="utf-8")
-        marker = "Nicht belegt und deshalb nicht als Funktion dieses Pakets behauptet:"
-        line = "Das Standardprofil ist ~/.hermes, benannte Profile liegen unter ~/.hermes/profiles/."
+        marker = "Not documented and therefore not claimed as function of this package:"
+        line = "Default profile is ~/.hermes; named profiles under ~/.hermes/profiles/."
         self.assertIn(line, assumptions)
         self.assertLess(assumptions.index(line), assumptions.index(marker))
 
@@ -655,29 +655,29 @@ class DeviceCheckTests(unittest.TestCase):
         folder = Path(tempfile.mkdtemp(dir="/tmp"))
         config_text = _managed_config()
         home = make_hermes_home(folder, config_text)
-        make_profile_dir(home / "profiles" / "kunde", config_text=config_text)
+        make_profile_dir(home / "profiles" / "client", config_text=config_text)
         profile_file = home / "active_profile"
-        profile_file.write_text("kunde\n", encoding="utf-8")
-        good = check_active_profile(home, "kunde")
+        profile_file.write_text("client\n", encoding="utf-8")
+        good = check_active_profile(home, "client")
         self.assertTrue(good["ok"])
         profile_file.unlink()
-        missing = check_active_profile(home, "kunde")
+        missing = check_active_profile(home, "client")
         self.assertEqual(missing["issues"], ["active_profile_mismatch"])
         profile_file.write_text("weg\n", encoding="utf-8")
-        dangling = check_active_profile(home, "kunde")
+        dangling = check_active_profile(home, "client")
         self.assertIn("active_profile_dangling", dangling["issues"])
         self.assertIn("active_profile_mismatch", dangling["issues"])
-        profile_file.write_text("Kunde!\n", encoding="utf-8")
-        invalid = check_active_profile(home, "kunde")
+        profile_file.write_text("Client!\n", encoding="utf-8")
+        invalid = check_active_profile(home, "client")
         self.assertIn("active_profile_invalid", invalid["issues"])
         profile_file.unlink()
-        target = folder / "kunde-active"
-        target.write_text("kunde", encoding="utf-8")
+        target = folder / "client-active"
+        target.write_text("client", encoding="utf-8")
         profile_file.symlink_to(target)
-        linked = check_active_profile(home, "kunde")
+        linked = check_active_profile(home, "client")
         self.assertEqual(linked["issues"], ["active_profile_symlink"])
         self.assertIsNone(linked["active"])
-        expect_missing = check_active_profile(home, "fehlt")
+        expect_missing = check_active_profile(home, "missing")
         self.assertIn("expected_profile_missing", expect_missing["issues"])
         bad_expected = check_active_profile(home, "A B")
         self.assertEqual(bad_expected, {"error": "expected_profile_invalid", "ok": False})
@@ -686,8 +686,8 @@ class DeviceCheckTests(unittest.TestCase):
         folder, package, built = self.build_fixture_package()
         config_text = (package / "managed" / "config.yaml").read_text(encoding="utf-8")
         hermes_home = make_hermes_home(Path(folder), config_text)
-        make_profile_dir(hermes_home / "profiles" / "kunde", config_text=config_text)
-        (hermes_home / "active_profile").write_text("kunde\n", encoding="utf-8")
+        make_profile_dir(hermes_home / "profiles" / "client", config_text=config_text)
+        (hermes_home / "active_profile").write_text("client\n", encoding="utf-8")
         plugin = copy_plugin_tree()
         installed, pkg_hash, managed = self.install_layout(folder, package, built)
         dump = Path(folder) / "dump.txt"
@@ -722,9 +722,9 @@ class DeviceCheckTests(unittest.TestCase):
             "--system-root",
             system_root,
         ]
-        kunde = subprocess.run(base_cmd + ["--profile", "kunde"], cwd=CORE, capture_output=True, text=True, env=env)
-        kunde_body = json.loads(kunde.stdout)
-        self.assertTrue(kunde_body["checks"]["active_profile"]["ok"])
+        client = subprocess.run(base_cmd + ["--profile", "client"], cwd=CORE, capture_output=True, text=True, env=env)
+        client_body = json.loads(client.stdout)
+        self.assertTrue(client_body["checks"]["active_profile"]["ok"])
         default = subprocess.run(base_cmd + ["--profile", "default"], cwd=CORE, capture_output=True, text=True, env=env)
         default_body = json.loads(default.stdout)
         self.assertIn(
@@ -735,11 +735,11 @@ class DeviceCheckTests(unittest.TestCase):
     def test_vd20_docs_active_profile(self):
         folder, package, _built = self.build_fixture_package()
         manual = (package / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
-        self.assertIn("`verify-device --profile <name>` prüft das.", manual)
+        self.assertIn("`verify-device --profile <name>` checks that.", manual)
         assumptions = (package / "ASSUMPTIONS.md").read_text(encoding="utf-8")
-        profile_line = "Das Standardprofil ist ~/.hermes, benannte Profile liegen unter ~/.hermes/profiles/."
-        sticky_line = "Ein einfaches `hermes` ohne -p folgt der Datei ~/.hermes/active_profile"
-        marker = "Nicht belegt und deshalb nicht als Funktion dieses Pakets behauptet:"
+        profile_line = "Default profile is ~/.hermes; named profiles under ~/.hermes/profiles/."
+        sticky_line = "Plain `hermes` without -p follows ~/.hermes/active_profile"
+        marker = "Not documented and therefore not claimed as function of this package:"
         self.assertIn(sticky_line, assumptions)
         self.assertGreater(assumptions.index(sticky_line), assumptions.index(profile_line))
         self.assertLess(assumptions.index(sticky_line), assumptions.index(marker))

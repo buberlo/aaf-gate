@@ -122,7 +122,7 @@ class PolicyTests(unittest.TestCase):
             payload_hash=exported["run"]["artifact_hash"],
             rules_hash=exported["run"]["rules_hash"],
         )
-        self.assertEqual(lab.call("export_run", approved["run_id"])["run"]["state"], "GESPEICHERT")
+        self.assertEqual(lab.call("export_run", approved["run_id"])["run"]["state"], "STORED")
 
     def test_pm12_policy_reject_audit_has_no_payload_plaintext(self):
         lab = Harness()

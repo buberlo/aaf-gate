@@ -35,11 +35,11 @@ class SecurityListTests(unittest.TestCase):
             store,
             (
                 ("konrad", "synth-lists", "human", ("author",)),
-                ("kunde", "synth-lists", "human", ("customer",)),
+                ("customer", "synth-lists", "human", ("customer",)),
             ),
         )
         self.plane = ConfigPlane(store, FixedClock("2026-11-13T20:00:00Z"))
-        self.template = load("templates/b2b-lead-recherche/template.json")
+        self.template = load("templates/b2b-lead-research/template.json")
         self.plane.register_template("konrad", self.template)
         self.profile = load("profiles/lead-scout-example/profile.json")
 
@@ -163,7 +163,7 @@ class SecurityListTests(unittest.TestCase):
         self.assertEqual(caught.exception.code, "INVALID_CONFIG")
         with self.assertRaises(ConfigError) as caught:
             self.plane.apply_changes(
-                "kunde",
+                "customer",
                 self.profile["profile_id"],
                 {"blocked_domains": ["example.com"]},
                 "cust-bad",
@@ -171,7 +171,7 @@ class SecurityListTests(unittest.TestCase):
         self.assertEqual(caught.exception.code, "LOCKED_FIELD")
 
     def test_sl08_flippy_release_and_list_rules(self):
-        template = load("templates/ecommerce-produktverkauf/template.json")
+        template = load("templates/ecommerce-product-sales/template.json")
         self.plane.register_template("konrad", template)
         profile = load("profiles/flippy-catch-example/profile.json")
         self.plane.release(
@@ -185,7 +185,7 @@ class SecurityListTests(unittest.TestCase):
         bad_claims = flippy_values()
         bad_claims["claims_blocklist"] = [
             "Bestseller-Rang",
-            "ungepruefte Patent- oder Lernaussage",
+            "unverified patent or learner statement",
             "Bestseller-Rang",
         ]
         with self.assertRaises(ConfigError) as caught:

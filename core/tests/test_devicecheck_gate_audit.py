@@ -48,7 +48,7 @@ class DeviceCheckGateAuditTests(unittest.TestCase):
             ),
         )
         self.plane.register_template("konrad", template_body())
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
 
     def _build_package(self):
         source = write_pin_fixture(Path(tempfile.mkdtemp(dir="/tmp")))

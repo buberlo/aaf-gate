@@ -86,7 +86,7 @@ class PilotBaselineNetTests(unittest.TestCase):
         self.assertEqual(result["classes"]["draft"]["manual_minutes"], 40)
         self.assertEqual(result["manual_minutes_total"], 40)
         for key in ("draft", "internal_write", "read"):
-            self.assertEqual(result["classes"][key]["net_basis"], "pruefzeit_nicht_gemessen")
+            self.assertEqual(result["classes"][key]["net_basis"], "check_time_not_measured")
             self.assertIsNone(result["classes"][key]["net_minutes"])
         self.assertIsNone(result["net_minutes_total"])
 

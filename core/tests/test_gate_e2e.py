@@ -84,8 +84,8 @@ class GateE2ETests(unittest.TestCase):
         cb = self._plugin_cb(self.keeper.bind("hermes-a", PILOT_POLICY))
         self.assertIsNone(cb("gmail_read", {"id": "m1"}))
         self.assertIsNone(cb("gmail_label", {"id": "m1", "label": "Rechnung"}))
-        self.assertIsNone(cb("gmail_draft", {"thread": "t1", "body": "geheim-entwurf-4711"}))
-        args_send = {"to": "x@example.invalid", "body": "geheim-body-0815"}
+        self.assertIsNone(cb("gmail_draft", {"thread": "t1", "body": "secret-draft-4711"}))
+        args_send = {"to": "x@example.invalid", "body": "secret-body-0815"}
         approve = cb("gmail_send", args_send)
         self.assertEqual(approve["action"], "approve")
         self.assertEqual(
@@ -104,7 +104,7 @@ class GateE2ETests(unittest.TestCase):
         calls = [
             ("gmail_read", {"id": "m1"}),
             ("gmail_label", {"id": "m1", "label": "Rechnung"}),
-            ("gmail_draft", {"thread": "t1", "body": "geheim-entwurf-4711"}),
+            ("gmail_draft", {"thread": "t1", "body": "secret-draft-4711"}),
             ("gmail_send", args_send),
         ]
         for row, (tool, args) in zip(rows, calls):
@@ -117,11 +117,11 @@ class GateE2ETests(unittest.TestCase):
 
     def test_e2e03_no_raw_content_in_audit(self):
         cb = self._plugin_cb(self.keeper.bind("hermes-a", PILOT_POLICY))
-        cb("gmail_draft", {"thread": "t1", "body": "geheim-entwurf-4711"})
-        cb("gmail_send", {"to": "x@example.invalid", "body": "geheim-body-0815"})
+        cb("gmail_draft", {"thread": "t1", "body": "secret-draft-4711"})
+        cb("gmail_send", {"to": "x@example.invalid", "body": "secret-body-0815"})
         forbidden = (
-            "geheim-entwurf-4711",
-            "geheim-body-0815",
+            "secret-draft-4711",
+            "secret-body-0815",
             "x@example.invalid",
             "Rechnung",
         )
@@ -138,7 +138,7 @@ class GateE2ETests(unittest.TestCase):
         out = cb("gmail_delete", {"id": "m1"})
         self.assertEqual(
             out,
-            {"action": "block", "message": "Kern: verweigert (action_class_unknown)"},
+            {"action": "block", "message": "Core: denied (action_class_unknown)"},
         )
         rows = self._audit_rows()
         self.assertEqual(len(rows), 1)
@@ -148,13 +148,13 @@ class GateE2ETests(unittest.TestCase):
     def test_e2e05_unattended_caps_send(self):
         cb = self._plugin_cb(self.keeper.bind("hermes-a", PILOT_POLICY, unattended=True))
         out = cb("gmail_send", {"to": "x@example.invalid", "body": "b"})
-        self.assertEqual(out["message"], "Kern: verweigert (level_L2)")
+        self.assertEqual(out["message"], "Core: denied (level_L2)")
         self.assertIsNone(cb("gmail_read", {"id": "m1"}))
 
     def test_e2e06_human_principal_forbidden(self):
         cb = self._plugin_cb(self.keeper.bind("ada", PILOT_POLICY))
         out = cb("gmail_read", {"id": "m1"})
-        self.assertEqual(out["message"], "Kern: verweigert (principal_kind_forbidden)")
+        self.assertEqual(out["message"], "Core: denied (principal_kind_forbidden)")
         rows = self._audit_rows()
         self.assertEqual(len(rows), 1)
         self.assertEqual(rows[0]["outcome"], "deny")
@@ -162,14 +162,14 @@ class GateE2ETests(unittest.TestCase):
     def test_e2e07_unknown_principal(self):
         cb = self._plugin_cb(self.keeper.bind("ghost", PILOT_POLICY))
         out = cb("gmail_read", {"id": "m1"})
-        self.assertEqual(out["message"], "Kern: verweigert (principal_unknown)")
+        self.assertEqual(out["message"], "Core: denied (principal_unknown)")
         self.assertEqual(len(self._audit_rows()), 0)
 
     def test_e2e08_storage_unavailable(self):
         cb = self._plugin_cb(self.keeper.bind("hermes-a", PILOT_POLICY))
         with patch.object(Store, "connect", side_effect=sqlite3.OperationalError("x")):
             out = cb("gmail_read", {"id": "m1"})
-        self.assertEqual(out["message"], "Kern: verweigert (storage_unavailable)")
+        self.assertEqual(out["message"], "Core: denied (storage_unavailable)")
 
     def test_e2e09_socket_post_observe_chain(self):
         plugin = load_plugin()

@@ -36,7 +36,7 @@ class ApplianceLabelIdsTests(unittest.TestCase):
         self.plane = ConfigPlane(self.store, FixedClock("2026-11-12T16:00:00Z"))
         seed_config(self.store, (("konrad", "synth-tenant", "human", ("author",)),))
         self.plane.register_template("konrad", template_body())
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         self.gs = gate_service()
 
     def test_li01_managed_with_ids(self):
@@ -181,25 +181,25 @@ class ApplianceLabelIdsTests(unittest.TestCase):
             label_ids=["Label_2", "Label_1"],
         )
         manual = (with_ids / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
-        self.assertIn("mit genau den IDs Label_1, Label_2", manual)
-        self.assertIn("settings.label_ids '[]'` wird als verwalteter Schlüssel verweigert", manual)
+        self.assertIn("with exactly the IDs Label_1, Label_2", manual)
+        self.assertIn("settings.label_ids '[]'` is denied as a managed key", manual)
         empty = Path(self.folder) / "empty"
         build_appliance_package(self.plane, "konrad", "cfg-1", empty, gate_service=self.gs)
         manual_empty = (empty / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
         self.assertIn("settings.label_ids: []", manual_empty)
-        self.assertIn("settings.label_ids '[]'` wird als verwalteter Schlüssel verweigert", manual_empty)
+        self.assertIn("settings.label_ids '[]'` is denied as a managed key", manual_empty)
         plain = Path(self.folder) / "plain2"
         build_appliance_package(self.plane, "konrad", "cfg-1", plain)
         manual_plain = (plain / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
         self.assertNotIn("settings.label_ids", manual_plain)
         assumptions = (with_ids / "ASSUMPTIONS.md").read_text(encoding="utf-8")
         self.assertIn(
-            "plugins.entries.aaf-gate.settings.label_ids im Managed Scope, ohne Paketparameter als leere Liste",
+            "plugins.entries.aaf-gate.settings.label_ids in managed scope, without package parameter as empty list",
             assumptions,
         )
-        marker = "Nicht belegt und deshalb nicht als Funktion dieses Pakets behauptet:"
+        marker = "Not documented and therefore not claimed as function of this package:"
         merge_line = (
-            "Ob Hermes eine Liste im Managed Scope als ein Blatt behandelt oder mit einer Liste der Benutzerkonfiguration zusammenführt"
+            "Whether Hermes treats a list in managed scope as one leaf or merges with a user list"
         )
         self.assertIn(merge_line, assumptions)
         self.assertLess(assumptions.index(marker), assumptions.index(merge_line))

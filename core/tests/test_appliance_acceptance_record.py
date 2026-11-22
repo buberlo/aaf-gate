@@ -21,7 +21,7 @@ def _build(folder, gate=True, label_ids=None):
     plane = ConfigPlane(store, FixedClock("2026-11-12T16:00:00Z"))
     seed_config(store, (("konrad", "synth-tenant", "human", ("author",)),))
     plane.register_template("konrad", template_body())
-    plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+    plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
     target = Path(folder) / "pkg"
     kwargs = {}
     if gate:
@@ -41,8 +41,8 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
         path = package / "ACCEPTANCE-RECORD.md"
         self.assertTrue(path.is_file())
         text = path.read_text(encoding="utf-8")
-        self.assertTrue(text.startswith("# Abnahmeprotokoll Pilot 1"))
-        self.assertIn("Status: nicht ausgeführt", text)
+        self.assertTrue(text.startswith("# Pilot 1 acceptance record"))
+        self.assertIn("Status: not executed", text)
 
     def test_ar02_absent_without_gate(self):
         plain_root = tempfile.mkdtemp(dir="/tmp")
@@ -68,7 +68,7 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
     def test_ar04_step_order(self):
         package = _build(self.folder)
         record = (package / "ACCEPTANCE-RECORD.md").read_text(encoding="utf-8")
-        section = record.split("## Prüfschritte", 1)[1].split("## Nicht abgedeckt", 1)[0]
+        section = record.split("## Check steps", 1)[1].split("## Not covered", 1)[0]
         found = re.findall(r"^- ([^:]+):", section, re.MULTILINE)
         self.assertEqual(found, list(ACCEPTANCE_STEP_ORDER))
         self.assertEqual(len(found), len(set(found)))
@@ -89,15 +89,15 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
 
     def test_ar07_docs_section(self):
         root = Path(__file__).resolve().parents[2]
-        doc = (root / "docs/v0.4/06-APPLIANCE-SPUR-A.md").read_text(encoding="utf-8")
-        start = doc.index("## Manuelle Abnahme am Mac mini")
+        doc = (root / "docs/v0.4/06-APPLIANCE-TRACK-A.md").read_text(encoding="utf-8")
+        start = doc.index("## Manual acceptance on Mac mini")
         rest = doc[start:]
-        next_heading = rest.find("\n## ", len("## Manuelle Abnahme am Mac mini"))
+        next_heading = rest.find("\n## ", len("## Manual acceptance on Mac mini"))
         section = rest if next_heading < 0 else rest[:next_heading]
         self.assertIn("ACCEPTANCE-RECORD.md", section)
         self.assertIn("verify-device", section)
         self.assertNotIn("CuaDriver", section)
-        self.assertNotIn("Eine Mail geht erst", section)
+        self.assertNotIn("Mail is sent only after confirmation by a human", section)
 
     def test_ar08_step_order_backup(self):
         order = list(ACCEPTANCE_STEP_ORDER)
@@ -112,15 +112,15 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
 
     def test_ar09_not_covered_text(self):
         record = (_build(self.folder) / "ACCEPTANCE-RECORD.md").read_text(encoding="utf-8")
-        block = record.split("## Nicht abgedeckt", 1)[1].split("## Ergebnis", 1)[0]
-        self.assertIn("Neuaufsetzen", block)
-        self.assertNotIn("folgen mit V1-4", block)
+        block = record.split("## Not covered", 1)[1].split("## Result", 1)[0]
+        self.assertIn("Rebuild", block)
+        self.assertIn("06-APPLIANCE-TRACK-A.md", block)
 
     def test_ar10_checklist_backup_probe(self):
         gs = gate_service_tmp(self.folder)
         package = _build(self.folder)
         manual = (package / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
-        self.assertLess(manual.index("### Backup-Probe"), manual.index("### Geräteproben"))
+        self.assertLess(manual.index("### Backup probe"), manual.index("### Device probes"))
         self.assertIn("B1.", manual)
         self.assertIn("B2.", manual)
         self.assertIn("B3.", manual)
@@ -131,11 +131,11 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
         plain_manual = (_build(plain_root, gate=False) / "MANUAL-MAC-CHECKS.md").read_text(
             encoding="utf-8"
         )
-        self.assertNotIn("### Backup-Probe", plain_manual)
+        self.assertNotIn("### Backup probe", plain_manual)
 
     def test_ar12_core_version_line(self):
         record = (_build(self.folder) / "ACCEPTANCE-RECORD.md").read_text(encoding="utf-8")
-        block = record.split("## Paket", 1)[1].split("## Gerät", 1)[0]
+        block = record.split("## Package", 1)[1].split("## Device", 1)[0]
         lines = [line for line in block.strip().splitlines() if line]
         release_idx = next(i for i, line in enumerate(lines) if line.startswith("release_hash: "))
         self.assertEqual(lines[release_idx + 1], "core_version: " + VERSION)
@@ -157,7 +157,7 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
         plane = ConfigPlane(store, FixedClock("2026-11-12T16:00:00Z"))
         seed_config(store, (("konrad", "synth-tenant", "human", ("author",)),))
         plane.register_template("konrad", template_body())
-        plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         target = Path(folder) / "pkg"
         return build_appliance_package(
             plane,
@@ -169,8 +169,8 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
 
     def test_ar11_docs_reinstall_section(self):
         root = Path(__file__).resolve().parents[2]
-        doc = (root / "docs/v0.4/06-APPLIANCE-SPUR-A.md").read_text(encoding="utf-8")
-        start = doc.index("## Neuaufsetzen aus der letzten Release")
+        doc = (root / "docs/v0.4/06-APPLIANCE-TRACK-A.md").read_text(encoding="utf-8")
+        start = doc.index("## Rebuild from last release")
         section = doc[start:]
         for token in (
             "gate-restore",
@@ -180,8 +180,8 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
             "verify-install",
         ):
             self.assertIn(token, section)
-        manual_start = doc.index("## Manuelle Abnahme am Mac mini")
-        manual_end = doc.index("## Neuaufsetzen aus der letzten Release")
+        manual_start = doc.index("## Manual acceptance on Mac mini")
+        manual_end = doc.index("## Rebuild from last release")
         manual = doc[manual_start:manual_end]
         self.assertNotIn("folgt.", manual)
         self.assertIn("B1–B3", manual)

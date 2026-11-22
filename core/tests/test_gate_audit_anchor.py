@@ -51,7 +51,7 @@ class GateAuditAnchorTests(unittest.TestCase):
         plane = ConfigPlane(store, FixedClock("2026-11-12T16:00:00Z"))
         seed_config(store, (("konrad", "synth-tenant", "human", ("author",)),))
         plane.register_template("konrad", template_body())
-        plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         source = write_pin_fixture(Path(tempfile.mkdtemp(dir="/tmp")))
         package = Path(self.folder) / "pkg"
         build_appliance_package(
@@ -161,9 +161,9 @@ class GateAuditAnchorTests(unittest.TestCase):
             + " --tenant synth-tenant --anchor"
         )
         self.assertIn(expected_cmd, pilot)
-        self.assertIn("--audit-anchor <aufbewahrter Wert>", pilot)
-        self.assertIn("Grenze: Der Anker belegt nur", pilot)
-        match = re.search(r"^6\. Bei jeder Abnahme: `([^`]+)`", pilot, re.MULTILINE)
+        self.assertIn("--audit-anchor <retained value>", pilot)
+        self.assertIn("Limit: The anchor only attests", pilot)
+        match = re.search(r"^6\. On each acceptance: `([^`]+)`", pilot, re.MULTILINE)
         self.assertIsNotNone(match)
         command = match.group(1)
         argv = shlex.split(command[len("python3 -m framework.cli ") :])
@@ -182,10 +182,10 @@ class GateAuditAnchorTests(unittest.TestCase):
         gs, package = self._build_package()
         text = (package / "ASSUMPTIONS.md").read_text(encoding="utf-8")
         line = (
-            "- Dass das Gate-Audit vollständig ist. Ein Audit-Anker belegt nur, dass die Kette bis zu seiner Sequenz nicht zurückgesetzt oder umgeschrieben wurde. Ereignisse, die vor dem Schreiben unterdrückt wurden, erkennt er nicht."
+            "- That gate audit is complete. An audit anchor only attests the chain up to its sequence was not reset or rewritten. Events suppressed before write are not detected."
         )
         self.assertIn(line, text)
-        marker = "Nicht belegt und deshalb nicht als Funktion dieses Pakets behauptet:"
+        marker = "Not documented and therefore not claimed as function of this package:"
         block = text.split(marker, 1)[1].split("\n\n", 1)[0]
         self.assertTrue(block.strip().endswith(line))
 

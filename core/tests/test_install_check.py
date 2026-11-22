@@ -20,15 +20,15 @@ CLOCK = FixedClock("2026-11-14T12:30:00Z")
 
 
 def template_body():
-    return json.loads((ROOT / "templates" / "kfz-terminannahme" / "template.json").read_text(encoding="utf-8"))
+    return json.loads((ROOT / "templates" / "auto-service-appointment-intake" / "template.json").read_text(encoding="utf-8"))
 
 
 def initial_values():
     return {
-        "callback_hint": "Wir rufen zurück, sobald ein Termin frei ist.",
+        "callback_hint": "We call back as soon as a slot is available.",
         "followup_questions": "Welche Arbeit? Welches Kennzeichen? Wann passt es?",
-        "opening_hours": "Mo-Fr 8-17",
-        "shop_name": "Synth-Werkstatt",
+        "opening_hours": "Mon-Fri 8-17",
+        "shop_name": "Synth-Workshop",
     }
 
 
@@ -39,7 +39,7 @@ class InstallCheckLab:
         seed_config(store, (("konrad", "synth-tenant", "human", ("author",)),))
         plane = ConfigPlane(store, CLOCK)
         plane.register_template("konrad", template_body())
-        plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         self.package_dir = Path(self.folder) / "package"
         self.expected = expected_hashes(HASHES_PATH)
         self.built = build_appliance_package(plane, "konrad", "cfg-1", self.package_dir, expected=self.expected)

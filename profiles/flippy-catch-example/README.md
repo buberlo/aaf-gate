@@ -1,21 +1,21 @@
-# Profil flippy-catch-example
+# flippy-catch-example
 
-Status: Entwurf. Nicht eingerichtet und nicht getestet auf einem Gerät.
+Status: draft. Not set up or tested on a device.
 
-Zweck: Kundenprofil für die Marke Flippy / Flippy Catch. Öffentlich beschrieben sind ein eigener Shop und Verkauf über Amazon, ein physisches Geschicklichkeitsspiel und die genannten Produktnamen. Die Vorlage ist `ecommerce-produktverkauf`.
+Purpose: customer profile for brand Flippy / Flippy Catch. Publicly described: own shop and Amazon sales, a physical skill game and named products. Template is `ecommerce-product-sales`.
 
-Keine Telefonnummer, keine Straße und keine privaten Adressen. Preise stehen hier nicht, weil sie sich ändern und keine Konfiguration sind.
+No phone number, street, or private addresses. Prices are omitted because they change and are not configuration.
 
-Belegte Produktnamen und Zielgruppen aus der Spezifikation vom 12.11.2026 sind ohne `SYN` eingetragen. Stimme, Wettbewerber, Keywords, Händlersegmente, Berichtstag, Meldebestand, Textbausteine und die Sterne-Schwelle 3 sind Platzhalter.
+Product names and audiences from the 12.11.2026 specification are entered without `SYN`. Voice, competitors, keywords, retailer segments, report day, reorder hint, text blocks, and 3-star threshold are placeholders.
 
-Aufgaben zum Start: nur lesen und Entwürfe. Die Checkliste dafür liegt in `start-2026-11-15.md`.
+Start tasks: read and drafts only. Checklist in `start-2026-11-15.md`.
 
-Autonomie: nichts senden, nichts veröffentlichen, kein Listing, kein Preis, kein Gebot, kein Einkauf, keine Bewertungsanfrage, keine Personendaten im Bericht, keine Automation auf `amazon.de` oder `amazon.com`.
+Autonomy: no send, no publish, no listing, no price, no bid, no purchase, no review request, no personal data in reports, no automation on `amazon.de` or `amazon.com`.
 
-Diese Schalter sind gesperrt. Die Tests prüfen, dass die Kundenrolle sie nicht umlegt und ein freigegebenes Feld ändern kann.
+These switches are locked. Tests verify customer role cannot flip them and can change an allowed field.
 
-Konnektoren: keine. Computer Use: nicht konfiguriert. Ob eine Seller-Oberfläche bedient werden darf, ist nicht belegt.
+Connectors: none. Computer Use: not configured. Whether seller UI may be used is not documented.
 
-Grenzen: Der Kern speichert die Policy. Er liest keine Berichte und schickt keine Nachricht.
+Shop URL in values is a suggestion, synthetic.
 
-Offen: Aufbewahrung, welcher Anbieter Texte sehen darf, eine spätere offizielle Schnittstelle, und ob Computer Use lesend genutzt werden soll.
+Open: retention, which provider may see texts, a later official interface, and whether Computer Use may be used read-only.

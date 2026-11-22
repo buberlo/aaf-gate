@@ -14,15 +14,15 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def template_body():
-    return json.loads((ROOT / "templates" / "kfz-terminannahme" / "template.json").read_text(encoding="utf-8"))
+    return json.loads((ROOT / "templates" / "auto-service-appointment-intake" / "template.json").read_text(encoding="utf-8"))
 
 
 def initial_values():
     return {
-        "callback_hint": "Wir rufen zurück, sobald ein Termin frei ist.",
+        "callback_hint": "We call back as soon as a slot is available.",
         "followup_questions": "Welche Arbeit? Welches Kennzeichen? Wann passt es?",
-        "opening_hours": "Mo-Fr 8-17",
-        "shop_name": "Synth-Werkstatt",
+        "opening_hours": "Mon-Fri 8-17",
+        "shop_name": "Synth-Workshop",
     }
 
 
@@ -32,7 +32,7 @@ class IdempotencyTests(unittest.TestCase):
 
     def _config_plane(self):
         store = Store(str(Path(self.folder) / "cfg.sqlite"))
-        for principal_id, roles in (("konrad", ("author",)), ("zweitautor", ("author",))):
+        for principal_id, roles in (("konrad", ("author",)), ("second-author", ("author",))):
             store.add_principal(principal_id, "synth-idem", "human")
             for role in roles:
                 store.bind_role(principal_id, role)
@@ -42,8 +42,8 @@ class IdempotencyTests(unittest.TestCase):
         plane = self._config_plane()
         plane.register_template("konrad", template_body())
         values = initial_values()
-        first = plane.release("konrad", "cfg-a", "kfz-terminannahme", "1.1.0", values, "k1")
-        second = plane.release("zweitautor", "cfg-b", "kfz-terminannahme", "1.1.0", values, "k1")
+        first = plane.release("konrad", "cfg-a", "auto-service-appointment-intake", "1.1.0", values, "k1")
+        second = plane.release("second-author", "cfg-b", "auto-service-appointment-intake", "1.1.0", values, "k1")
         self.assertEqual(first["release_no"], 1)
         self.assertEqual(second["release_no"], 1)
         self.assertNotEqual(first["release_hash"], second["release_hash"])
@@ -52,8 +52,8 @@ class IdempotencyTests(unittest.TestCase):
         plane = self._config_plane()
         plane.register_template("konrad", template_body())
         values = initial_values()
-        first = plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", values, "rk")
-        second = plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", values, "rk")
+        first = plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", values, "rk")
+        second = plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", values, "rk")
         self.assertEqual(first, second)
         conn = sqlite3.connect(str(Path(self.folder) / "cfg.sqlite"))
         config_replayed = conn.execute(
@@ -87,12 +87,12 @@ class IdempotencyTests(unittest.TestCase):
         plane = self._config_plane()
         plane.register_template("konrad", template_body())
         values = initial_values()
-        plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", values, "ck")
+        plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", values, "ck")
         with self.assertRaises(ConfigError) as caught:
             plane.release(
                 "konrad",
                 "cfg-2",
-                "kfz-terminannahme",
+                "auto-service-appointment-intake",
                 "1.1.0",
                 {**values, "shop_name": "Andere"},
                 "ck",
@@ -124,7 +124,7 @@ class IdempotencyTests(unittest.TestCase):
         values = dict(initial_values())
         values["allow_unattended_send"] = True
         with self.assertRaises(ConfigError) as caught:
-            plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", values, "k2")
+            plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", values, "k2")
         self.assertEqual(caught.exception.code, "INVALID_CONFIG")
         conn = sqlite3.connect(str(Path(self.folder) / "cfg.sqlite"))
         reject = conn.execute(
@@ -134,7 +134,7 @@ class IdempotencyTests(unittest.TestCase):
         conn.close()
         self.assertEqual(reject, ("rejected", "INVALID_CONFIG"))
         self.assertEqual(idem_count, 0)
-        ok = plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "k2")
+        ok = plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "k2")
         self.assertEqual(ok["release_no"], 1)
 
     def test_id05_foreign_service_key_no_replay(self):

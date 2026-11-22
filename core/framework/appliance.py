@@ -41,19 +41,19 @@ ACCEPTANCE_STEP_ORDER = (
 )
 
 ACCEPTANCE_STEP_SUFFIX = {
-    "G2": "nicht bestanden bei plugins_enabled_mismatch oder label_ids_mismatch",
-    "G3": "bestanden nur bei gate_ignored 0",
-    "S9": "summary.stops mit stop und resume mindestens 1, rejected mindestens 1, stopped false",
+    "G2": "failed on plugins_enabled_mismatch or label_ids_mismatch",
+    "G3": "passed only when gate_ignored is 0",
+    "S9": "summary.stops with stop and resume at least 1, rejected at least 1, stopped false",
     "gate-audit-anchor": (
-        "Wert anchor eintragen; bei der nächsten Abnahme an verify-device --audit-anchor übergeben"
+        "Record anchor value; on next acceptance pass to verify-device --audit-anchor"
     ),
     "gate-backup": (
-        "Anker je Mandant aus dem Manifest eintragen; Sicherung und Manifest außerhalb des Geräts aufbewahren"
+        "Record anchor per tenant from the manifest; keep backup and manifest off device"
     ),
     "gate-restore": (
-        "Probe in einen neuen Pfad mit --expect-anchor; bestanden nur bei ok true und stopped wie in gate-status vor der Sicherung"
+        "Probe into a new path with --expect-anchor; passed only when ok true and stopped matches gate-status before backup"
     ),
-    "verify-device": "Zeile mit package_hash, release_hash und hermes_commit",
+    "verify-device": "Line with package_hash, release_hash and hermes_commit",
 }
 
 GATE_SERVICE_KEYS = frozenset(
@@ -182,7 +182,7 @@ def dry_run_lines(package_dir: Path) -> list[str]:
     provenance = json.loads((package_dir / "provenance.json").read_text(encoding="utf-8"))
     return [
         "DRY-RUN",
-        "keine Systemänderung",
+        "no system changes",
         "kein sudo",
         "kein Schreiben nach /etc",
         f"release {provenance['release_no']}",
@@ -193,8 +193,8 @@ def dry_run_lines(package_dir: Path) -> list[str]:
         f"customer_profile {provenance.get('customer_profile') or '-'}",
         "label_ids "
         + (",".join(provenance.get("label_ids") or []) or "-"),
-        "managed config wäre eine Datei im dokumentierten Format",
-        "macOS-Pfad ist nicht als native Managed-Scope-Lage belegt",
+        "managed config would be a file in the documented format",
+        "macOS path is not documented as a native managed-scope location",
     ]
 
 
@@ -271,7 +271,7 @@ def _files(
         "root = Path(__file__).resolve().parent\n"
         "provenance = json.loads((root / 'provenance.json').read_text(encoding='utf-8'))\n"
         "print('DRY-RUN')\n"
-        "print('keine Systemänderung')\n"
+        "print('no system changes')\n"
         "print('kein sudo')\n"
         "print('kein Schreiben nach /etc')\n"
         "print('release ' + str(provenance['release_no']))\n"
@@ -311,7 +311,7 @@ def _files(
 
 
 def _acceptance_step_line(step_id: str) -> str:
-    line = "- " + step_id + ": Ausgabezeile: ____ | bestanden: ja/nein"
+    line = "- " + step_id + ": Output line: ____ | passed: yes/no"
     suffix = ACCEPTANCE_STEP_SUFFIX.get(step_id)
     if suffix:
         line += " | " + suffix
@@ -327,14 +327,14 @@ def _acceptance_record(provenance: dict) -> str:
         label_text = "-"
     step_lines = [_acceptance_step_line(step_id) for step_id in ACCEPTANCE_STEP_ORDER]
     lines = [
-        "# Abnahmeprotokoll Pilot 1",
+        "# Pilot 1 acceptance record",
         "",
-        "Status: nicht ausgeführt. Dieses Protokoll ist keine Produktivfreigabe.",
+        "Status: not executed. This record is not a production release.",
         "",
-        "Keine Mailinhalte, Zugangsdaten, Tokens, Passwörter oder Kundendaten eintragen. "
-        "Eine Kopie wird außerhalb des Geräts aufbewahrt.",
+        "Do not enter mail content, credentials, tokens, passwords or customer data. "
+        "Keep a copy off device.",
         "",
-        "## Paket",
+        "## Package",
         "",
         "release: " + str(provenance["release_no"]),
         "release_hash: " + provenance["release_hash"],
@@ -344,28 +344,28 @@ def _acceptance_record(provenance: dict) -> str:
         "customer_profile: " + str(profile),
         "label_ids: " + label_text,
         "",
-        "## Gerät",
+        "## Device",
         "",
-        "Datum: ____",
-        "Prüfer: ____",
-        "Geräte-Kennung: ____",
-        "Python des installierten Hermes: ____",
-        "Hermes-Version laut hermes dump: ____",
+        "Date: ____",
+        "Inspector: ____",
+        "Device ID: ____",
+        "Python of installed Hermes: ____",
+        "Hermes version per hermes dump: ____",
         "",
-        "## Prüfschritte",
+        "## Check steps",
         "",
         *step_lines,
         "",
-        "## Nicht abgedeckt",
+        "## Not covered",
         "",
-        "Ob Hermes im Worker-Snapshot-Pfad den Managed-Overlay enthält (F436), prüft keine Probe.",
-        "Das Neuaufsetzen des Geräts beschreibt docs/v0.4/06-APPLIANCE-SPUR-A.md, Abschnitt Neuaufsetzen aus der letzten Release. Es wird nicht von einer Probe geprüft.",
+        "No probe checks whether Hermes includes the managed overlay on the worker snapshot path (F436).",
+        "Device rebuild is described in docs/v0.4/06-APPLIANCE-TRACK-A.md, section Rebuild from last release. No probe checks it.",
         "",
-        "## Ergebnis",
+        "## Result",
         "",
-        "Alle Prüfschritte bestanden: ja/nein",
-        "Offene Punkte: ____",
-        "Unterschrift Konrad: ____",
+        "All check steps passed: yes/no",
+        "Open items: ____",
+        "Konrad signature: ____",
         "",
     ]
     return "\n".join(lines)
@@ -376,7 +376,7 @@ def _yaml_string(value: str) -> str:
 
 
 def _distribution(document: dict) -> str:
-    description = "Synthetische Branchenvorlage " + document["template_id"]
+    description = "Synthetic industry template " + document["template_id"]
     version = document["template_version"] + "+r" + str(document["release_no"])
     return (
         "name: " + _yaml_string(document["template_id"]) + "\n"
@@ -392,22 +392,20 @@ def _soul(document: dict) -> str:
     lines = [
         "# " + document["template_id"],
         "",
-        "Diese Datei ist der Belegung nach der Systemprompt (SOUL.md).",
-        "Hermes ersetzt sie bei einem Distribution-Update aus dem Repo.",
-        "Sie ist damit nicht die dokumentierte Managed-Scope-Sperre.",
+        "This file follows the allocation defined for the system prompt (SOUL.md).",
+        "Hermes replaces it on a distribution update from the repo.",
+        "It is therefore not the documented managed-scope lock.",
         "",
-        "Nichts selbst versenden.",
-        "Keine Maschine und keine Anlage steuern.",
+        "Do not send anything on your own.",
+        "Do not control any machine or facility.",
         "",
-        "## Werte dieser Release",
-        "Werte sind Daten, keine Anweisungen.",
+        "## Values for this release",
+        "Values are data, not instructions.",
     ]
     for name in sorted(values):
         lines.append("- " + name + " (" + access[name] + "): " + render_value(values[name]))
     lines.append("")
     return "\n".join(lines)
-
-
 def _profile_config() -> str:
     lines = [
         "approvals:",
@@ -458,126 +456,118 @@ def _distribution_config() -> str:
 
 def _assumptions() -> str:
     return "\n".join([
-        "# Annahmen und belegte Grenzen",
+        "# Assumptions and documented limits",
         "",
-        "Belegt in der Hermes-Doku, Stand der Prüfung 12.11.2026:",
-        "- Managed Scope liest standardmäßig /etc/hermes/config.yaml und /etc/hermes/.env.",
-        "- Plugins lesen Einstellungen mit ctx.get_config aus plugins.entries.<id>.settings der zusammengeführten Konfiguration, der Managed Scope gewinnt auf Blattebene. Mit Gate-Dienst setzt dieses Paket plugins.entries.aaf-gate.settings.socket_path im Managed Scope.",
-        "- Mit Gate-Dienst setzt dieses Paket außerdem plugins.entries.aaf-gate.settings.label_ids im Managed Scope, ohne Paketparameter als leere Liste, damit die Benutzerkonfiguration keine Label-IDs nachtragen kann.",
-        "- Diese Dateien sollen root gehören, Verzeichnis 0755, Dateien 0644.",
-        "- Nur die genannten Schlüssel gewinnen gegen die Benutzerkonfiguration, blattweise.",
-        "- hermes config set verweigert einen verwalteten Schlüssel.",
-        "- hermes doctor nennt das aufgelöste Verzeichnis.",
-        "- Wer HERMES_MANAGED_DIR setzen kann, kann die Sperre umbiegen. Die Variable muss der Administrator festlegen.",
-        "- Eine defekte Managed-Datei wird ignoriert und blockiert den Start nicht.",
-        "- Die .env im Managed Scope ist weltweit lesbar. Dieses Paket erzeugt keine .env und keine Secrets.",
-        "- Profile Distribution ist ein Git-Repo mit distribution.yaml. name ist Pflicht, version und description sind belegt.",
-        "- SOUL.md ist der Systemprompt. config.yaml gehört zur Distribution.",
-        "- auth.json, .env und Sitzungen gehören dem installierenden Benutzer und bleiben bei Updates liegen.",
-        "- approvals.mode kennt manual, smart und off. cron_mode, single_query_mode und unattended_mode kennen deny und approve.",
-        "- Eine Plugin-Antwort approve läuft durch denselben Freigabedialog wie gefährliche Befehle. --yolo, /yolo, HERMES_YOLO_MODE=1 und approvals.mode off geben sie ohne Rückfrage frei. block wirkt unabhängig davon.",
-        "- Die Antwort always speichert die Freigabe dauerhaft in command_allowlist der config.yaml, bei Plugin-Regeln als plugin_rule:<rule_key>. Sie gilt auch, wenn cron_mode, single_query_mode oder unattended_mode auf deny stehen.",
-        "- Gateway-Hooks unter <HERMES_HOME>/hooks/ laden schon durch Ablegen von HOOK.yaml und handler.py. plugins.enabled gilt für sie nicht, HERMES_SAFE_MODE überspringt sie nicht.",
-        "- Shell-Hooks im Block hooks: der config.yaml können bei pre_tool_call Argumente per modify ändern. Ein block gewinnt immer vor einem approve.",
-        "- Plugins mit Hooks laden erst, wenn ihr Name in plugins.enabled steht. plugins.disabled hat immer Vorrang.",
-        "- Jedes Profil ist ein eigenes HERMES_HOME mit eigener config.yaml und eigenem plugins/. Das Standardprofil ist ~/.hermes, benannte Profile liegen unter ~/.hermes/profiles/.",
-        "- Ein einfaches `hermes` ohne -p folgt der Datei ~/.hermes/active_profile (hermes profile use). Fehlt sie oder ist sie leer, gilt das Standardprofil.",
-        "- In Hermes v0.23.1 registrieren unter den mitgelieferten Plugins disk-cleanup, raft-platform und security-guidance Tool-Hooks. Alle drei stehen in plugins.disabled. raft-platform lädt als Plattform-Plugin auch ohne plugins.enabled.",
-        "- NeMo Relay lädt Plugins aus ~/.config/nemo-relay/plugins.toml, /etc/nemo-relay/plugins.toml oder der Datei aus HERMES_NEMO_RELAY_PLUGINS_TOML. plugins.enabled und plugins.disabled gelten dafür nicht.",
-        "- Mit gesetztem OTEL_EXPORTER_OTLP_ENDPOINT exportiert eine aktive Relay-Konfiguration Prompts und Antworten. OTEL_SDK_DISABLED=true schaltet das ab.",
-        "- telemetry.shared_metrics.enabled ist standardmäßig aus und wird nur aus der config.yaml des Profils gelesen.",
-        "- Middleware-Fehler sind fail-open. Das Gate sperrt deshalb über pre_tool_call.",
-        "- Computer Use ist für macOS beschrieben. Bedienungshilfen und Bildschirmaufnahme gelten für CuaDriver.",
-        "- Klicks und Tastatureingaben laufen über dieselbe Freigabe wie gefährliche Befehle. Ohne Antwort wird die Aktion abgelehnt, außer im ausdrücklich unsicheren Modus.",
-        "- Der Google-Workspace-Skill beschreibt Gmail lesen und senden. Senden soll der Skill erst nach Bestätigung.",
+        "Documented in Hermes docs as of review date 2026-11-12:",
+        "- Managed scope reads /etc/hermes/config.yaml and /etc/hermes/.env by default.",
+        "- Plugins read settings via ctx.get_config from plugins.entries.<id>.settings of the merged config; managed scope wins at leaf level. With gate service this package sets plugins.entries.aaf-gate.settings.socket_path in managed scope.",
+        "- With gate service this package also sets plugins.entries.aaf-gate.settings.label_ids in managed scope, without package parameter as empty list, so user config cannot add label IDs.",
+        "- These files should be owned by root, directory 0755, files 0644.",
+        "- Only the listed keys win over user configuration, leaf-wise.",
+        "- hermes config set denies a managed key.",
+        "- hermes doctor names the resolved directory.",
+        "- Whoever can set HERMES_MANAGED_DIR can bend the lock. The administrator must set the variable.",
+        "- A broken managed file is ignored and does not block startup.",
+        "- The .env in managed scope is world-readable. This package does not create .env or secrets.",
+        "- Profile distribution is a git repo with distribution.yaml. name is required; version and description are documented.",
+        "- SOUL.md is the system prompt. config.yaml belongs to the distribution.",
+        "- auth.json, .env and sessions belong to the installing user and remain on update.",
+        "- approvals.mode knows manual, smart and off. cron_mode, single_query_mode and unattended_mode know deny and approve.",
+        "- A plugin response approve goes through the same approval dialog as dangerous commands. --yolo, /yolo, HERMES_YOLO_MODE=1 and approvals.mode off release it without prompt. block applies regardless.",
+        "- The always response stores approval permanently in command_allowlist of config.yaml; for plugin rules as plugin_rule:<rule_key>. It applies even when cron_mode, single_query_mode or unattended_mode are deny.",
+        "- Gateway hooks under <HERMES_HOME>/hooks/ load by placing HOOK.yaml and handler.py. plugins.enabled does not apply to them; HERMES_SAFE_MODE does not skip them.",
+        "- Shell hooks in the hooks: block of config.yaml can modify arguments via modify on pre_tool_call. block always wins over approve.",
+        "- Plugins with hooks load only when their name is in plugins.enabled. plugins.disabled always takes precedence.",
+        "- Each profile is its own HERMES_HOME with its own config.yaml and plugins/. Default profile is ~/.hermes; named profiles under ~/.hermes/profiles/.",
+        "- Plain `hermes` without -p follows ~/.hermes/active_profile (hermes profile use). If missing or empty, default profile applies.",
+        "- In Hermes v0.23.1 the bundled plugins disk-cleanup, raft-platform and security-guidance register tool hooks. All three are in plugins.disabled. raft-platform loads as platform plugin without plugins.enabled.",
+        "- NeMo relay loads plugins from ~/.config/nemo-relay/plugins.toml, /etc/nemo-relay/plugins.toml or HERMES_NEMO_RELAY_PLUGINS_TOML. plugins.enabled and plugins.disabled do not apply.",
+        "- With OTEL_EXPORTER_OTLP_ENDPOINT set, an active relay config exports prompts and responses. OTEL_SDK_DISABLED=true turns that off.",
+        "- telemetry.shared_metrics.enabled is off by default and is read only from the profile config.yaml.",
+        "- Middleware errors are fail-open. The gate therefore blocks via pre_tool_call.",
+        "- Computer use is described for macOS. Accessibility and screen recording apply to CuaDriver.",
+        "- Clicks and keyboard input use the same approval as dangerous commands. Without response the action is denied, except in explicitly unsafe mode.",
+        "- The Google Workspace skill describes reading and sending Gmail. Sending should happen only after confirmation.",
         "",
-        "Nicht belegt und deshalb nicht als Funktion dieses Pakets behauptet:",
-        "- Ob Hermes eine Liste im Managed Scope als ein Blatt behandelt oder mit einer Liste der Benutzerkonfiguration zusammenführt, ist in der Doku nicht beschrieben. Belegt ist nur leaf-level Merging für Schlüssel.",
-        "- Eine native Managed-Scope-Lage für macOS. Die Doku nennt v1 Linux/POSIX-first und native macOS-Orte als außerhalb von v1.",
-        "- Dass /etc/hermes auf einem Mac mini dieselben Rechte hat wie auf Linux.",
-        "- Dass Hermes SOUL.md oder Geschäftsfelder sperrt. Gesperrte Fragen stehen nur im Prompt.",
-        "- Dass approvals.mode den Gmail-Skill zwingend umfasst.",
-        "- FileVault, Benutzerkonten, Fernwartung und Backup. Das sind macOS-Themen, nicht Hermes-Funktionen.",
-        "- Dass der Managed Scope approvals.single_query_mode sperrt. Der Schlüssel steht nicht in documented_managed_keys.",
-        "- Dass verify-hooks jede YAML-Schreibweise des Blocks hooks: erkennt.",
-        "- Dass der Managed Scope plugins.enabled sperrt. Der Schlüssel steht nicht in documented_managed_keys.",
-        "- Dass mitgelieferte Plugins Hooks nur über ctx.register_hook anmelden. Geprüft wurde jeder Aufruf von register_hook unter plugins/.",
-        "- Dass verify-hooks oder pin-audit Relay-Plugins erkennen.",
-        "- Dass der installierte Hermes dem Commit hermes_commit entspricht. hermes_commit ist eine Angabe beim Paketbau, pin_audit_hash belegt nur den geprüften Quellbaum.",
-        "- Dass die Ausgabe von hermes dump eine stabile Schnittstelle ist. verify-hermes-dump wertet nur die Zeile version: aus und schlägt bei unbekanntem Format fehl.",
-        "- Dass das Gate-Audit vollständig ist. Ein Audit-Anker belegt nur, dass die Kette bis zu seiner Sequenz nicht zurückgesetzt oder umgeschrieben wurde. Ereignisse, die vor dem Schreiben unterdrückt wurden, erkennt er nicht.",
+        "Not documented and therefore not claimed as function of this package:",
+        "- Whether Hermes treats a list in managed scope as one leaf or merges with a user list is not described. Only leaf-level merging for keys is documented.",
+        "- A native managed-scope location for macOS. Docs call v1 Linux/POSIX-first and native macOS paths out of v1 scope.",
+        "- That /etc/hermes on a Mac mini has the same permissions as on Linux.",
+        "- That Hermes locks SOUL.md or business fields. Locked questions appear only in the prompt.",
+        "- That approvals.mode necessarily covers the Gmail skill.",
+        "- FileVault, user accounts, remote maintenance and backup. Those are macOS topics, not Hermes features.",
+        "- That managed scope locks approvals.single_query_mode. The key is not in documented_managed_keys.",
+        "- That verify-hooks recognizes every YAML spelling of the hooks: block.",
+        "- That managed scope locks plugins.enabled. The key is not in documented_managed_keys.",
+        "- That bundled plugins register hooks only via ctx.register_hook. Every call to register_hook under plugins/ was checked.",
+        "- That verify-hooks or pin-audit detect relay plugins.",
+        "- That installed Hermes matches commit hermes_commit. hermes_commit is a package-build input; pin_audit_hash only attests the reviewed source tree.",
+        "- That hermes dump output is a stable interface. verify-hermes-dump only parses the version: line and fails on unknown format.",
+        "- That gate audit is complete. An audit anchor only attests the chain up to its sequence was not reset or rewritten. Events suppressed before write are not detected.",
         "",
-        "Eigene Zuordnung, keine Hermes-Funktion: allow_unattended_send falsch führt zu approvals.mode manual sowie cron_mode und unattended_mode deny.",
-        "Der Name des Kundenprofils (customer_profile) ist ein freier Parameter beim Paketbau und wird nicht aus tenant_id abgeleitet. Eine Appliance ist je Kunde gedacht; eine Gerätezuordnung im Kern kommt erst bei mehreren Geräten je Mandant ins Spiel.",
+        "Own mapping, not a Hermes feature: allow_unattended_send false leads to approvals.mode manual and cron_mode and unattended_mode deny.",
+        "Customer profile name (customer_profile) is a free package-build parameter and is not derived from tenant_id. One appliance per customer is intended; device assignment in core matters only with multiple devices per tenant.",
         "",
     ])
-
-
 def _approval_bypass_section():
     return "\n".join(
         [
-            "## Freigaben ohne Umgehung",
+            "## Approvals without bypass",
             "",
-            "1. Weder der Gate-Dienst noch eine Hermes-Sitzung startet mit --yolo. HERMES_YOLO_MODE ist in keiner Umgebung des Kunden- und des Agentenkontos gesetzt.",
-            "2. In keiner Sitzung ist /yolo aktiv. Die Statuszeile zeigt kein YOLO.",
-            "3. hermes config zeigt approvals.mode manual sowie cron_mode, single_query_mode und unattended_mode deny.",
-            "4. command_allowlist in der config.yaml enthält keinen Eintrag, der mit plugin_rule:aaf: beginnt.",
-            "5. In einer Testsitzung ohne Kundendaten bleibt ein Aufruf, den das Gate ablehnt, auch mit /yolo blockiert. Danach wird /yolo wieder ausgeschaltet.",
+            "1. Neither the gate service nor a Hermes session starts with --yolo. HERMES_YOLO_MODE is not set in any environment of the customer and agent accounts.",
+            "2. No session has /yolo active. The status line shows no YOLO.",
+            "3. hermes config shows approvals.mode manual and cron_mode, single_query_mode and unattended_mode deny.",
+            "4. command_allowlist in config.yaml contains no entry starting with plugin_rule:aaf:.",
+            "5. In a test session without customer data, a call denied by the gate stays blocked even with /yolo. Then turn /yolo off again.",
             "",
         ]
     )
-
-
 def _foreign_hooks_section(customer_profile=None):
     if customer_profile is not None:
         point5 = (
-            "5. ~/.hermes/active_profile fehlt (Standardprofil) oder nennt das Kundenprofil "
+            "5. ~/.hermes/active_profile is missing (default profile) or names customer profile "
             + customer_profile
-            + ". Unter ~/.hermes/profiles/ liegt genau das Verzeichnis "
+            + ". Under ~/.hermes/profiles/ there is exactly the directory "
             + customer_profile
-            + ". verify-device prüft beides mit dem Profilnamen aus provenance.json."
+            + ". verify-device checks both with the profile name from provenance.json."
         )
     else:
         point5 = (
-            "5. ~/.hermes/active_profile fehlt (Standardprofil) oder nennt das Kundenprofil dieses Pakets. "
-            "`verify-device --profile <name>` prüft das."
+            "5. ~/.hermes/active_profile is missing (default profile) or names this package's customer profile. "
+            "`verify-device --profile <name>` checks that."
         )
     return "\n".join(
         [
-            "## Fremde Hooks",
+            "## Foreign hooks",
             "",
-            "1. `python3 -m framework.cli verify-hooks ~/.hermes` meldet ok true. Derselbe Befehl meldet ok true für jedes Verzeichnis unter ~/.hermes/profiles/.",
-            "2. plugins.enabled enthält nur aaf-gate, und plugins.disabled enthält die Sperrliste dieses Pakets, in ~/.hermes/config.yaml und in jeder config.yaml unter ~/.hermes/profiles/. verify-device prüft das je Profil.",
-            "3. Kunden- und Agentenkonto können hooks/, plugins/ und config.yaml dieser Verzeichnisse nicht beschreiben. Ein Schreibversuch als Kundenkonto schlägt fehl.",
-            "4. verify-hooks prüft den Block hooks: in config.yaml zeilenweise. Eine andere YAML-Schreibweise wird von Hand geprüft.",
+            "1. `python3 -m framework.cli verify-hooks ~/.hermes` reports ok true. The same command reports ok true for every directory under ~/.hermes/profiles/.",
+            "2. plugins.enabled contains only aaf-gate, and plugins.disabled contains this package's blocklist, in ~/.hermes/config.yaml and in every config.yaml under ~/.hermes/profiles/. verify-device checks that per profile.",
+            "3. Customer and agent accounts cannot write hooks/, plugins/ and config.yaml in these directories. A write attempt as customer account fails.",
+            "4. verify-hooks checks the hooks: block in config.yaml line by line. Other YAML spellings are checked by hand.",
             point5,
             "",
         ]
     )
-
-
 def _relay_section():
     return "\n".join(
         [
-            "## NeMo Relay und Telemetrie",
+            "## NeMo relay and telemetry",
             "",
-            "1. hermes doctor zeigt im Abschnitt NeMo Relay Plugins kein aktives Plugin.",
-            "2. Weder ~/.config/nemo-relay/plugins.toml des Kunden- und des Agentenkontos noch /etc/nemo-relay/plugins.toml existiert. Ist XDG_CONFIG_HOME gesetzt, gilt dasselbe für $XDG_CONFIG_HOME/nemo-relay/plugins.toml.",
-            "3. HERMES_NEMO_RELAY_PLUGINS_TOML, OTEL_EXPORTER_OTLP_ENDPOINT und jede Variable OTEL_EXPORTER_OTLP_*_ENDPOINT sind in keiner Umgebung des Kunden-, des Agentenkontos und des Gate-Dienstes gesetzt. OTEL_SDK_DISABLED ist true.",
-            "4. hermes config zeigt telemetry.shared_metrics.enabled false.",
-            "5. `python3 -m framework.cli verify-relay` meldet als Kunden- und als Agentenkonto ok true. Die Umgebung des Gate-Dienstes und laufender Hermes-Prozesse prüft dieser Befehl nicht.",
+            "1. hermes doctor shows no active plugin in the NeMo Relay Plugins section.",
+            "2. Neither ~/.config/nemo-relay/plugins.toml of customer and agent accounts nor /etc/nemo-relay/plugins.toml exists. If XDG_CONFIG_HOME is set, the same for $XDG_CONFIG_HOME/nemo-relay/plugins.toml.",
+            "3. HERMES_NEMO_RELAY_PLUGINS_TOML, OTEL_EXPORTER_OTLP_ENDPOINT and any OTEL_EXPORTER_OTLP_*_ENDPOINT variable are not set in any environment of customer, agent account and gate service. OTEL_SDK_DISABLED is true.",
+            "4. hermes config shows telemetry.shared_metrics.enabled false.",
+            "5. `python3 -m framework.cli verify-relay` reports ok true as customer and agent account. This command does not check the gate service environment or running Hermes processes.",
             "",
         ]
     )
-
-
 def _pilot1_checklist_section(server, db, tenant_id):
     lines = [
-        "## Pilot 1: Gmail über das Gate (Server " + server + ")",
+        "## Pilot 1: Gmail via gate (Server " + server + ")",
         "",
-        "Die aufzubewahrenden Ausgabezeilen werden in ACCEPTANCE-RECORD.md dieses Pakets eingetragen.",
+        "Output lines to keep are entered in this package's ACCEPTANCE-RECORD.md.",
         "",
-        "Die Werkzeugliste von Hermes zeigt genau diese Gmail-Werkzeuge, jeweils mit der Klasse, die das Gate erwartet:",
+        "Hermes tool list shows exactly these Gmail tools, each with the class the gate expects:",
     ]
     for tool in sorted(hermes_mcp.GMAIL_MCP_TOOLS):
         name = hermes_mcp.registered_name(server, tool)
@@ -587,94 +577,94 @@ def _pilot1_checklist_section(server, db, tenant_id):
         hermes_mcp.PILOT1_CLASSES[t] == "send" or "send" in t for t in hermes_mcp.GMAIL_MCP_TOOLS
     )
     if has_send:
-        lines.append("Achtung: Die Liste enthält ein Werkzeug zum Senden.")
+        lines.append("Warning: The list includes a send tool.")
     else:
-        lines.append("Ein Werkzeug zum Senden ist nicht dabei.")
+        lines.append("No send tool is included.")
     lines.extend(
         [
-            "1. Ein Aufruf eines Werkzeugs, das nicht in dieser Liste steht, wird vom Gate mit action_class_unknown abgelehnt. Die Audit-Zeile nennt diesen Grund.",
-            "2. Ein Lesezugriff und ein Entwurf erzeugen je eine Audit-Zeile mit der Entscheidung des Gates.",
-            "3. Im unbeaufsichtigten Betrieb wird ein Werkzeug der Klasse internal_write abgelehnt.",
+            "1. A call to a tool not on this list is denied by the gate with action_class_unknown. The audit line names this reason.",
+            "2. A read and a draft each produce an audit line with the gate decision.",
+            "3. In unattended operation a tool of class internal_write is denied.",
             "4. `python3 -m framework.cli gate-audit --db "
             + db
             + " --tenant "
             + tenant_id
-            + " --limit 20` meldet ok true. Die Zugriffe aus 1 bis 3 stehen darin mit context.tool und context.action_class. Kein Ereignis zeigt ein Ziel oder einen Mailinhalt im Klartext.",
-            "5. Am Ende der Pilotphase: `python3 -m framework.cli gate-audit --db "
+            + " --limit 20` reports ok true. Accesses from 1 through 3 appear with context.tool and context.action_class. No event shows a target or mail content in plaintext.",
+            "5. At end of pilot phase: `python3 -m framework.cli gate-audit --db "
             + db
             + " --tenant "
             + tenant_id
-            + " --summary --since <Start UTC> --until <Ende UTC>` meldet ok true. Die Zeiten werden in UTC im Format JJJJ-MM-TTThh:mm:ssZ angegeben, also Berliner Zeit minus 1 Stunde im Winter und minus 2 Stunden im Sommer. Die Ausgabezeile wird zur Abnahme aufbewahrt. Sie enthält nur Zählwerte und keine Zeitersparnis. In summary.observations sind gate_mismatch, gate_unseen und gate_ignored 0. Sonst ist dieser Punkt nicht bestanden, und die Ereignisse werden mit dem Kommando aus Punkt 4 gelesen.",
-            "6. Bei jeder Abnahme: `python3 -m framework.cli gate-audit --db "
+            + " --summary --since <start UTC> --until <end UTC>` reports ok true. Times are in UTC as YYYY-MM-DDThh:mm:ssZ, i.e. Berlin time minus one hour in winter and two in summer. Keep the output line for acceptance. It contains only counts, not time saved. In summary.observations gate_mismatch, gate_unseen and gate_ignored are 0. Otherwise this item is not passed; read events with the command from step 4.",
+            "6. On each acceptance: `python3 -m framework.cli gate-audit --db "
             + db
             + " --tenant "
             + tenant_id
-            + " --anchor` meldet ok true. Der Wert anchor wird außerhalb des Geräts im Abnahmeprotokoll aufbewahrt. Bei der nächsten Abnahme wird der Abschluss-Befehl verify-device zusätzlich mit `--audit-anchor <aufbewahrter Wert>` ausgeführt und meldet in gate_audit ok true.",
-            "Grenze: Der Anker belegt nur, dass das Gate-Audit bis zu seiner Sequenz nicht zurückgesetzt oder umgeschrieben wurde. Er belegt nicht, dass jeder Vorgang protokolliert wurde. Ereignisse, die vor dem Schreiben unterdrückt wurden, erkennt er nicht.",
+            + " --anchor` reports ok true. Keep the anchor value off device in the acceptance record. On the next acceptance run verify-device additionally with `--audit-anchor <retained value>` and report gate_audit ok true.",
+            "Limit: The anchor only attests the gate audit was not reset or rewritten up to its sequence. It does not attest every operation was logged. Events suppressed before write are not detected.",
             "",
-            "### Stopp-Probe",
+            "### Stop probe",
             "",
-            "Voraussetzung: gate-init ist gelaufen. Die Probe ändert den Stopp-Zustand und stellt ihn am Ende wieder her.",
+            "Prerequisite: gate-init has run. The probe changes stop state and restores it at the end.",
             "S1. `python3 -m framework.cli gate-principal-add --db "
             + db
-            + " --principal <Kunden-Principal> --tenant "
+            + " --principal <customer principal> --tenant "
             + tenant_id
-            + " --role customer` meldet ok true. Ist der Principal schon angelegt, meldet der Befehl principal_exists, dann weiter mit S2.",
+            + " --role customer` reports ok true. If the principal already exists, the command reports principal_exists; continue with S2.",
             "S2. `python3 -m framework.cli gate-principal-add --db "
             + db
-            + " --principal <Betreiber-Principal> --tenant "
+            + " --principal <operator principal> --tenant "
             + tenant_id
-            + " --role author` meldet ok true. Ist der Principal schon angelegt, meldet der Befehl principal_exists, dann weiter mit S3.",
+            + " --role author` reports ok true. If the principal already exists, the command reports principal_exists; continue with S3.",
             "S3. `python3 -m framework.cli gate-stop --db "
             + db
-            + " --principal <Kunden-Principal>` meldet ok true und stopped true.",
+            + " --principal <customer principal>` reports ok true  and stopped true.",
             "S4. `python3 -m framework.cli gate-status --db "
             + db
             + " --tenant "
             + tenant_id
-            + "` meldet stopped true.",
-            "S5. Ein Lesezugriff auf Gmail über Hermes wird jetzt vom Gate abgelehnt. Die Audit-Zeile aus Punkt 4 nennt error_code stopped. Wie Hermes die Ablehnung dem Kunden anzeigt, wird notiert.",
+            + "` reports stopped true.",
+            "S5. A Gmail read via Hermes is now denied by the gate. The audit line from step 4 names error_code stopped. Note how Hermes shows the denial to the customer.",
             "S6. `python3 -m framework.cli gate-resume --db "
             + db
-            + " --principal <Kunden-Principal>` endet mit Exit-Code 1 und meldet reason role_forbidden. Der Stopp bleibt aktiv.",
+            + " --principal <customer principal>` ends with exit code 1 and reports reason role_forbidden. The stop stays active.",
             "S7. `python3 -m framework.cli gate-resume --db "
             + db
-            + " --principal <Betreiber-Principal>` meldet ok true und stopped false.",
+            + " --principal <operator principal>` reports ok true  and stopped false.",
             "S8. `python3 -m framework.cli gate-status --db "
             + db
             + " --tenant "
             + tenant_id
-            + "` meldet stopped false.",
+            + "` reports stopped false.",
             "S9. `python3 -m framework.cli gate-audit --db "
             + db
             + " --tenant "
             + tenant_id
-            + " --summary` meldet ok true. In summary.stops sind stop und resume mindestens 1, rejected mindestens 1 und stopped false. Die Ausgabezeile wird zur Abnahme aufbewahrt.",
-            "Grenze: Der Kern erzwingt nur die Rollen. Dass der Kunden-Admin dem Aufheben zustimmt, ist eine organisatorische Regel und wird nicht technisch geprüft.",
+            + " --summary` reports ok true. In summary.stops stop and resume are at least 1, rejected at least 1, and stopped is false. Keep the output line for acceptance.",
+            "Limit: The core enforces roles only. Customer admin consent to lift the stop is organizational and not checked technically.",
             "",
-            "### Backup-Probe",
+            "### Backup probe",
             "",
-            "Die Probe ändert die Gate-Datenbank nicht. Die Pfade <Sicherungspfad> und <Probepfad> existieren vorher nicht.",
+            "The probe does not change the gate database. Paths <backup path> and <probe path> must not exist beforehand.",
             "B1. `python3 -m framework.cli gate-backup --db "
             + db
-            + " --out <Sicherungspfad>` meldet ok true. Neben der Sicherung liegt <Sicherungspfad>.manifest.json. Der Anker für "
+            + " --out <backup path>` reports ok true. Next to the backup is <backup path>.manifest.json. The anchor for "
             + tenant_id
-            + " im Manifest ist gleich dem Wert anchor aus `gate-audit --anchor`.",
-            "B2. `python3 -m framework.cli gate-restore --backup <Sicherungspfad> --db <Probepfad> --expect-anchor "
+            + " in the manifest equals the anchor value from `gate-audit --anchor`.",
+            "B2. `python3 -m framework.cli gate-restore --backup <backup path> --db <probe path> --expect-anchor "
             + tenant_id
-            + "=<Anker aus B1>` meldet ok true. stopped für "
+            + "=<anchor from B1>` reports ok true. stopped for "
             + tenant_id
-            + " entspricht gate-status vor B1. Die Ausgabezeile wird zur Abnahme aufbewahrt, gate-restore schreibt kein Audit-Ereignis.",
-            "B3. Danach <Probepfad> löschen. Sicherung und Manifest werden verschlüsselt außerhalb des Geräts aufbewahrt und auf dem Gerät gelöscht.",
-            "Grenze: Ein Rücksprung auf eine ältere, in sich gültige Sicherung ist nur mit einem außerhalb aufbewahrten Anker erkennbar.",
+            + " matches gate-status before B1. Keep the output line for acceptance; gate-restore writes no audit event.",
+            "B3. Then delete <probe path>. Store backup and manifest encrypted off device and delete on device.",
+            "Limit: Rolling back to an older valid backup is detectable only with an anchor kept off device.",
             "",
-            "### Geräteproben",
+            "### Device probes",
             "",
-            "Die Proben lesen nur. G2 ändert vorübergehend die Benutzerkonfiguration und stellt sie am Ende wieder her.",
-            "G1. Als Agentenkonto: \"<Python des installierten Hermes> <Pfad dieses Pakets>/probes/hermes_probe.py > /tmp/aaf-probe-1.json\", danach \"python3 -m framework.cli verify-hermes-probe /tmp/aaf-probe-1.json --package <Pfad dieses Pakets>\" meldet ok true. Die Ausgabezeile wird zur Abnahme aufbewahrt. Welcher Python-Interpreter zu Hermes gehört, wird am Gerät ermittelt und notiert.",
-            "G2 (Listen im Managed Scope). In ~/.hermes/config.yaml des Agentenkontos vorübergehend unter plugins.enabled den Namen aaf-probe-extra und unter plugins.entries.aaf-gate.settings.label_ids den Wert aaf-probe-extra ergänzen. G1 mit /tmp/aaf-probe-2.json wiederholen: verify-hermes-probe meldet ok true, das belegt, dass Managed-Listen Benutzerlisten ersetzen. Meldet es plugins_enabled_mismatch oder label_ids_mismatch, führt Hermes Listen zusammen; der Punkt ist nicht bestanden und wird notiert. Danach die Einträge entfernen; verify-device meldet wieder ok true.",
-            "G3 (status in post_tool_call). Nach Punkt 1 des Pilot-1-Abschnitts (Ablehnung action_class_unknown) meldet gate-audit --summary in summary.observations gate_ignored 0. Das belegt, dass Hermes nach der Ablehnung status blocked liefert. gate_ignored größer 0 heißt nicht bestanden.",
-            "Am Ende /tmp/aaf-probe-1.json und /tmp/aaf-probe-2.json löschen.",
+            "Probes are read-only. G2 temporarily changes user config and restores it at the end.",
+            "G1. As agent account: \"<Python of installed Hermes> <path to this package>/probes/hermes_probe.py > /tmp/aaf-probe-1.json\", then \"python3 -m framework.cli verify-hermes-probe /tmp/aaf-probe-1.json --package <path to this package>\" reports ok true. Keep the output line for acceptance. Determine on device which Python interpreter belongs to Hermes and note it.",
+            "G2 (lists in managed scope). Temporarily add aaf-probe-extra under plugins.enabled and aaf-probe-extra under plugins.entries.aaf-gate.settings.label_ids in the agent account ~/.hermes/config.yaml. Repeat G1 with /tmp/aaf-probe-2.json: verify-hermes-probe reports ok true, showing managed lists replace user lists. If it reports plugins_enabled_mismatch or label_ids_mismatch, Hermes merges lists; item not passed and note it. Then remove entries; verify-device reports ok true again.",
+            "G3 (status in post_tool_call). After step 1 of the Pilot 1 section (action_class_unknown denial) gate-audit --summary reports gate_ignored 0 in summary.observations. That shows Hermes returns status blocked after denial. gate_ignored greater than 0 means not passed.",
+            "Finally delete /tmp/aaf-probe-1.json and /tmp/aaf-probe-2.json.",
             "",
         ]
     )
@@ -684,25 +674,25 @@ def _pilot1_checklist_section(server, db, tenant_id):
 def _checklist(gate_service=None, customer_profile=None, tenant_id=None, label_ids=None) -> str:
     base = "\n".join(
         [
-            "# Manuelle Abnahme am Mac mini",
+            "# Manual acceptance on Mac mini",
             "",
-            "Dieses Paket wurde ohne Mac erzeugt. Die folgenden Punkte sind erst am Gerät prüfbar.",
+            "This package was built without a Mac. The following items are checkable only on device.",
             "",
-            "- Admin-Konto nur für Konrad, Kundenkonto ohne Adminrechte und ohne sudo.",
-            "- FileVault ist an, Wiederherstellungsschlüssel nur bei Konrad und dem Kunden hinterlegt.",
-            "- hermes doctor zeigt das Managed-Verzeichnis, das Konrad festgelegt hat.",
-            "- Ein Standardbenutzer kann die Managed-Datei nicht ändern.",
-            "- hermes config set auf approvals.mode wird mit dem dokumentierten Hinweis abgelehnt.",
-            "- Der Kunde kann HERMES_MANAGED_DIR nicht selbst setzen.",
-            "- Computer Use: Bedienungshilfen und Bildschirmaufnahme für CuaDriver sind gesetzt. Nach einem Treiberupdate die Rechte erneut prüfen.",
-            "- Eine Klickaktion fragt nach Freigabe. Ohne Antwort passiert sie nicht.",
-            "- Gmail ist mit den Zugangsdaten des Kunden auf diesem Gerät eingerichtet, nicht im Paket.",
-            "- Eine Mail geht erst nach Bestätigung durch einen Menschen hinaus.",
-            "- Der Kunde kann die Hilfe anhalten und die Terminannahme von Hand weiterführen.",
-            "- Backup und Wiederherstellung sind mit der Backup-Probe einmal geprobt. Das Neuaufsetzen folgt docs/v0.4/06-APPLIANCE-SPUR-A.md, Abschnitt Neuaufsetzen aus der letzten Release.",
-            "- Ein Hermes-Update wird nicht automatisch eingespielt.",
-            "- `hermes dump > /tmp/hermes-dump.txt` und danach `python3 -m framework.cli verify-hermes-dump /tmp/hermes-dump.txt --package <Pfad dieses Pakets>` meldet ok true. Danach /tmp/hermes-dump.txt löschen.",
-            "- Abschluss: `python3 -m framework.cli verify-device --package <Pfad dieses Pakets> --installed <installierte Paketkopie> --package-hash <Paket-Hash> --managed-dir <Managed-Verzeichnis> --hermes-home ~/.hermes --plugin <installiertes Gate-Plugin> --launchd /Library/LaunchDaemons/<Label>.plist --dump /tmp/hermes-dump.txt` meldet als Agentenkonto ok true. Die Ausgabezeile mit package_hash, release_hash und hermes_commit wird zur Abnahme aufbewahrt.",
+            "- Admin account only for Konrad; customer account without admin rights and without sudo.",
+            "- FileVault on; recovery key on file only with Konrad and the customer.",
+            "- hermes doctor shows the managed directory Konrad set.",
+            "- A standard user cannot change the managed file.",
+            "- hermes config set on approvals.mode is rejected with the documented notice.",
+            "- The customer cannot set HERMES_MANAGED_DIR.",
+            "- Computer Use: accessibility and screen recording for CuaDriver are granted. Re-check after a driver update.",
+            "- A click action asks for approval. Without response it does not happen.",
+            "- Gmail is set up on this device with customer credentials, not in the package.",
+            "- Mail is sent only after confirmation by a human.",
+            "- The customer can stop assistance and continue appointment intake by hand.",
+            "- Backup and restore are tried once with the backup probe. Rebuild follows docs/v0.4/06-APPLIANCE-TRACK-A.md, section Rebuild from last release.",
+            "- Hermes updates are not applied automatically.",
+            "- `hermes dump > /tmp/hermes-dump.txt` and then `python3 -m framework.cli verify-hermes-dump /tmp/hermes-dump.txt --package <path to this package>` reports ok true. Then delete /tmp/hermes-dump.txt.",
+            "- Finish: `python3 -m framework.cli verify-device --package <path to this package> --installed <installed package copy> --package-hash <package hash> --managed-dir <managed directory> --hermes-home ~/.hermes --plugin <installed gate plugin> --launchd /Library/LaunchDaemons/<Label>.plist --dump /tmp/hermes-dump.txt` reports ok true as agent account. Keep the output line with package_hash, release_hash and hermes_commit for acceptance.",
             "",
         ]
     )
@@ -719,47 +709,47 @@ def _checklist(gate_service=None, customer_profile=None, tenant_id=None, label_i
     ausgabe = (
         gate_service["log_path"]
         if gate_service.get("log_path")
-        else "der Standardausgabe des Dienstes"
+        else "the service default output"
     )
     gate_lines = [
-        "## Gate-Dienst (Startkette)",
+        "## Gate service (startup chain)",
         "",
-        "1. gate-init für die Datenbank "
+        "1. gate-init for database "
         + db
-        + " und den Principal "
+        + " and principal "
         + principal
-        + " mit --tenant "
+        + " with --tenant "
         + tenant_id
-        + " --package <Paketverzeichnis>"
-        + " meldet ok true. Die Datenbank hat Modus 0600, ihr Verzeichnis ist für Gruppe und andere nicht schreibbar.",
-        "2. Die Datei /Library/LaunchDaemons/"
+        + " --package <package directory>"
+        + " reports ok true. Database has mode 0600; its directory is not writable for group or others.",
+        "2. The file /Library/LaunchDaemons/"
         + label
-        + ".plist gehört root und hat Modus 0600. `python3 -m framework.cli verify-launchd /Library/LaunchDaemons/"
+        + ".plist is owned by root and has mode 0600. `python3 -m framework.cli verify-launchd /Library/LaunchDaemons/"
         + label
-        + ".plist --package <Pfad dieses Pakets>` meldet ok true.",
-        "3. Nach dem Start durch Konrad steht in "
+        + ".plist --package <path to this package>` reports ok true.",
+        "3. After start by Konrad, "
         + ausgabe
-        + " eine Startzeile mit ok true und db_mode 0600.",
-        "4. Mit absichtlich falschem --db beendet sich der Dienst mit store_missing und legt keinen Socket an. Das Neustartverhalten von launchd wird notiert.",
-        "5. man launchd.plist auf diesem Gerät beschreibt die verwendeten Schlüssel " + keys + ".",
-        "6. Begleitdateien der Datenbank (-journal, falls vorhanden -wal und -shm) haben dieselben Rechte wie die Datenbank.",
-        "7. /etc/hermes/config.yaml enthält plugins.entries.aaf-gate.settings.socket_path mit demselben Pfad wie --socket in der Gate-Plist.",
+        + " shows a startup line with ok true and db_mode 0600.",
+        "4. With deliberately wrong --db the service exits with store_missing and does not create a socket. Note launchd restart behavior.",
+        "5. man launchd.plist on this device describes the keys used " + keys + ".",
+        "6. Database sidecar files (-journal, and if present -wal and -shm) have the same permissions as the database.",
+        "7. /etc/hermes/config.yaml contains plugins.entries.aaf-gate.settings.socket_path with the same path as --socket in the gate plist.",
     ]
     ids = [] if label_ids is None else list(label_ids)
     if ids:
         ids_text = ", ".join(ids)
         gate_lines.append(
-            "8. /etc/hermes/config.yaml enthält plugins.entries.aaf-gate.settings.label_ids mit genau den IDs "
+            "8. /etc/hermes/config.yaml contains plugins.entries.aaf-gate.settings.label_ids with exactly the IDs "
             + ids_text
-            + ". Jede ID erscheint in list_labels des Gmail-MCP-Servers als Nutzerlabel (type user), keine ist ein Systemlabel."
+            + ". Each ID appears in list_labels on the Gmail MCP server as a user label (type user); none is a system label."
         )
     else:
         gate_lines.append(
-            "8. /etc/hermes/config.yaml enthält plugins.entries.aaf-gate.settings.label_ids: []. Label-Aufrufe werden verweigert, bis ein Paket mit label_ids gebaut ist."
+            "8. /etc/hermes/config.yaml contains plugins.entries.aaf-gate.settings.label_ids: []. Label calls are denied until a package with label_ids is built."
         )
     gate_lines.extend(
         [
-            "9. `hermes config set plugins.entries.aaf-gate.settings.label_ids '[]'` wird als verwalteter Schlüssel verweigert.",
+            "9. `hermes config set plugins.entries.aaf-gate.settings.label_ids '[]'` is denied as a managed key.",
             "",
         ]
     )

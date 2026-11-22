@@ -13,7 +13,7 @@ from framework.store import Store
 
 from test_hermes_plugin import ConfigFakeCtx, load_plugin
 
-BLOCK_UNKNOWN = {"action": "block", "message": "Kern: verweigert (action_class_unknown)"}
+BLOCK_UNKNOWN = {"action": "block", "message": "Core: denied (action_class_unknown)"}
 LABEL_1 = frozenset(["Label_1"])
 READ_DRAFT = [
     hermes_mcp.registered_name("gmail", t)

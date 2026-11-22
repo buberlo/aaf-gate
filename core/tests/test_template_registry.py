@@ -21,7 +21,7 @@ CLOCK = FixedClock("2026-11-14T11:30:00Z")
 
 
 def template_body():
-    return json.loads((TEMPLATE_DIR / "kfz-terminannahme" / "template.json").read_text(encoding="utf-8"))
+    return json.loads((TEMPLATE_DIR / "auto-service-appointment-intake" / "template.json").read_text(encoding="utf-8"))
 
 
 class TemplateRegistryTests(unittest.TestCase):
@@ -42,14 +42,14 @@ class TemplateRegistryTests(unittest.TestCase):
         expected = expected_hashes(HASHES_PATH)
         plane = ConfigPlane(self.store, CLOCK, expected=expected)
         body = copy.deepcopy(template_body())
-        body["title"] = "Geänderte Terminannahme"
+        body["title"] = "Changed appointment intake"
         with self.assertRaises(ConfigError) as ctx:
             plane.register_template("konrad", body)
         self.assertEqual(ctx.exception.code, "TEMPLATE_HASH_MISMATCH")
         conn = self.store.connect()
         count = conn.execute(
             "SELECT COUNT(*) FROM config_templates WHERE template_id=? AND template_version=?",
-            ("kfz-terminannahme", "1.1.0"),
+            ("auto-service-appointment-intake", "1.1.0"),
         ).fetchone()[0]
         conn.close()
         self.assertEqual(count, 0)
@@ -92,7 +92,7 @@ class TemplateRegistryTests(unittest.TestCase):
         body["title"] = "Entwicklungsmodus"
         dev = ConfigPlane(self.store, CLOCK)
         result = dev.register_template("konrad", body)
-        self.assertEqual(result["template_id"], "kfz-terminannahme")
+        self.assertEqual(result["template_id"], "auto-service-appointment-intake")
 
     def test_tr06_idempotent_listed_registration(self):
         expected = expected_hashes(HASHES_PATH)
@@ -104,7 +104,7 @@ class TemplateRegistryTests(unittest.TestCase):
         conn = self.store.connect()
         count = conn.execute(
             "SELECT COUNT(*) FROM config_templates WHERE template_id=? AND template_version=?",
-            ("kfz-terminannahme", "1.1.0"),
+            ("auto-service-appointment-intake", "1.1.0"),
         ).fetchone()[0]
         conn.close()
         self.assertEqual(count, 1)

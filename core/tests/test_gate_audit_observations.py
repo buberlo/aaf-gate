@@ -23,11 +23,11 @@ from test_gate_audit_summary import SequenceClock
 from test_hermes_adapter import build_observation
 from test_pilot_baseline import _timesheet
 POINT5_LEGACY_TAIL = (
-    "Die Ausgabezeile wird zur Abnahme aufbewahrt. Sie enthält nur Zählwerte und keine Zeitersparnis."
+    "Keep the output line for acceptance. It contains only counts, not time saved."
 )
 POINT5_NEW_TAIL = (
-    " In summary.observations sind gate_mismatch, gate_unseen und gate_ignored 0. Sonst ist dieser Punkt nicht bestanden, "
-    "und die Ereignisse werden mit dem Kommando aus Punkt 4 gelesen."
+    " In summary.observations gate_mismatch, gate_unseen and gate_ignored are 0. Otherwise this item is not passed; "
+    "read events with the command from step 4."
 )
 
 
@@ -144,27 +144,27 @@ class GateAuditObservationsTests(unittest.TestCase):
         plane = ConfigPlane(store, Clock())
         seed_config(store, (("konrad", "synth-tenant", "human", ("author",)),))
         plane.register_template("konrad", template_body())
-        plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         package = Path(self.folder) / "pkg"
         build_appliance_package(plane, "konrad", "cfg-1", package, gate_service=gs)
         manual = (package / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
         pilot = manual[manual.index("## Pilot 1") :]
         prefix = _legacy_pilot1_prefix(gs.get("server", "gmail"))
         self.assertTrue(pilot.startswith(prefix))
-        point5_match = re.search(r"^5\. Am Ende der Pilotphase:.*", pilot, re.MULTILINE)
+        point5_match = re.search(r"^5\. At end of pilot phase:.*", pilot, re.MULTILINE)
         self.assertIsNotNone(point5_match)
         point5 = point5_match.group(0)
         self.assertIn(POINT5_LEGACY_TAIL, point5)
         self.assertTrue(point5.endswith(POINT5_NEW_TAIL))
         point6_match = re.search(
-            r"^6\. Bei jeder Abnahme: `python3 -m framework.cli gate-audit --db "
+            r"^6\. On each acceptance: `python3 -m framework.cli gate-audit --db "
             + re.escape(gs["db"])
             + r" --tenant synth-tenant --anchor`",
             pilot,
             re.MULTILINE,
         )
         self.assertIsNotNone(point6_match)
-        grenze = "Grenze: Der Anker belegt nur, dass das Gate-Audit bis zu seiner Sequenz"
+        grenze = "Limit: The anchor only attests the gate audit was not reset"
         self.assertIn(grenze, pilot)
         legacy_pilot = _pilot1_checklist_section(
             gs.get("server", "gmail"), gs["db"], "synth-tenant"
@@ -172,7 +172,7 @@ class GateAuditObservationsTests(unittest.TestCase):
         current_without_new = pilot.replace(POINT5_NEW_TAIL, "")
         for marker in (
             "4. `python3 -m framework.cli gate-audit --db ",
-            "6. Bei jeder Abnahme:",
+            "6. On each acceptance:",
             grenze,
         ):
             legacy_idx = legacy_pilot.index(marker)

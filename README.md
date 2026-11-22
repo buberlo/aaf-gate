@@ -2,7 +2,7 @@
 
 Deterministic policy gate, kill switch, call limits and tamper-evident audit for existing AI agent runtimes. **Not an agent of its own.** Models, providers and the agent loop are not reimplemented. The primary runtime is [Hermes Agent](https://github.com/NousResearch/hermes-agent) (pinned at v0.23.1 for the Mac mini appliance track). Adapters can target other runtimes later.
 
-Core version **1.0.0rc1** (v1 candidate). See [CHANGELOG.md](CHANGELOG.md), [docs/v1/STATUS.md](docs/v1/STATUS.md) and [docs/v1/INSTALLATION-UND-BETRIEB.md](docs/v1/INSTALLATION-UND-BETRIEB.md).
+Core version **1.0.0rc1** (v1 candidate). See [CHANGELOG.md](CHANGELOG.md), [docs/v1/STATUS.md](docs/v1/STATUS.md) and [docs/v1/INSTALLATION-AND-OPERATIONS.md](docs/v1/INSTALLATION-AND-OPERATIONS.md).
 
 ## What it does
 
@@ -85,7 +85,7 @@ python3 -m framework.cli version
 | `pilot-baseline` | `--summary` `--timesheet` [`--min-samples` 5] [`--require-clean`] |
 | `version` | — |
 
-Device installation, operation, backup and the acceptance probes are described in [docs/v1/INSTALLATION-UND-BETRIEB.md](docs/v1/INSTALLATION-UND-BETRIEB.md). That guide has not been executed on a device yet.
+Device installation, operation, backup and the acceptance probes are described in [docs/v1/INSTALLATION-AND-OPERATIONS.md](docs/v1/INSTALLATION-AND-OPERATIONS.md). That guide has not been executed on a device yet.
 
 ## Repository layout
 
@@ -107,11 +107,3 @@ LICENSE        Apache-2.0
 Copyright 2026 Konrad Kern. Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE).
 
 Hermes Agent is a separate project by Nous Research, licensed under MIT. This repository contains adapter and plugin code that talks to Hermes hooks; it does not vendor the Hermes source tree.
-
----
-
-## Deutsch
-
-**aaf-gate** ist eine Steuer- und Sperrschicht (Policy-Gate) für bestehende Agenten-Laufzeiten, primär Hermes Agent. Es ist kein eigener Agent. Es entscheidet deterministisch je Werkzeugklasse (`read` / `draft` / `internal_write`), hat einen Stopp-Schalter, Aufruflimits je Zeitfenster, eine anhängbare Audit-Hashkette in SQLite, Backup und Restore mit Kettenanker, versionierte gesperrte Branchenvorlagen und ein Geräteabnahme-Paket für eine Mac-mini-Appliance. Pilot 1: Gmail lesen, kategorisieren, Antwortentwurf — ohne Senden.
-
-Stand: v1-Kandidat **1.0.0rc1**, implementiert und lokal mit 719 Unittests der Standardbibliothek geprüft. **Nicht produktiv**, noch nicht am Gerät abgenommen, keine Compliance-Zusagen. Ausführlicher Stand: [docs/v1/STATUS.md](docs/v1/STATUS.md).

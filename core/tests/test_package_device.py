@@ -21,15 +21,15 @@ CLOCK = FixedClock("2026-11-14T12:00:00Z")
 
 
 def template_body():
-    return json.loads((ROOT / "templates" / "kfz-terminannahme" / "template.json").read_text(encoding="utf-8"))
+    return json.loads((ROOT / "templates" / "auto-service-appointment-intake" / "template.json").read_text(encoding="utf-8"))
 
 
 def initial_values():
     return {
-        "callback_hint": "Wir rufen zurück, sobald ein Termin frei ist.",
+        "callback_hint": "We call back as soon as a slot is available.",
         "followup_questions": "Welche Arbeit? Welches Kennzeichen? Wann passt es?",
-        "opening_hours": "Mo-Fr 8-17",
-        "shop_name": "Synth-Werkstatt",
+        "opening_hours": "Mon-Fri 8-17",
+        "shop_name": "Synth-Workshop",
     }
 
 
@@ -40,7 +40,7 @@ class PackageDeviceTests(unittest.TestCase):
         seed_config(self.store, (("konrad", "synth-tenant", "human", ("author",)),))
         self.plane = ConfigPlane(self.store, CLOCK)
         self.plane.register_template("konrad", template_body())
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         self.expected = expected_hashes(HASHES_PATH)
 
     def test_pd01_package_contains_device_files_and_provenance(self):

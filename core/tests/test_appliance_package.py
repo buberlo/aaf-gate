@@ -16,15 +16,15 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def template_body():
-    return json.loads((ROOT / "templates" / "kfz-terminannahme" / "template.json").read_text(encoding="utf-8"))
+    return json.loads((ROOT / "templates" / "auto-service-appointment-intake" / "template.json").read_text(encoding="utf-8"))
 
 
 def initial_values():
     return {
-        "callback_hint": "Wir rufen zurück, sobald ein Termin frei ist.",
+        "callback_hint": "We call back as soon as a slot is available.",
         "followup_questions": "Welche Arbeit? Welches Kennzeichen? Wann passt es?",
-        "opening_hours": "Mo-Fr 8-17",
-        "shop_name": "Synth-Werkstatt",
+        "opening_hours": "Mon-Fri 8-17",
+        "shop_name": "Synth-Workshop",
     }
 
 
@@ -45,7 +45,7 @@ class AppliancePackageTests(unittest.TestCase):
             ),
         )
         self.plane.register_template("konrad", template_body())
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
 
     def test_package_matches_release_and_contains_no_secrets(self):
         first = Path(self.folder) / "pkg-a"
@@ -55,7 +55,7 @@ class AppliancePackageTests(unittest.TestCase):
         self.assertEqual(built["package_hash"], again["package_hash"])
         self.assertEqual(built["release_hash"], self.plane.active("konrad", "cfg-1")["release_hash"])
         soul = (first / "distribution" / "SOUL.md").read_text(encoding="utf-8")
-        self.assertIn("Mo-Fr 8-17", soul)
+        self.assertIn("Mon-Fri 8-17", soul)
         self.assertIn("Welche Arbeit?", soul)
         managed = (first / "managed" / "config.yaml").read_text(encoding="utf-8")
         self.assertIn("mode: manual", managed)
@@ -65,9 +65,9 @@ class AppliancePackageTests(unittest.TestCase):
         self.assertFalse((first / "distribution" / ".env").exists())
         self.assertFalse((first / "distribution" / "auth.json").exists())
         manifest = (first / "distribution" / "distribution.yaml").read_text(encoding="utf-8")
-        self.assertIn('name: "kfz-terminannahme"', manifest)
+        self.assertIn('name: "auto-service-appointment-intake"', manifest)
         assumptions = (first / "ASSUMPTIONS.md").read_text(encoding="utf-8")
-        self.assertIn("nicht belegt", assumptions.lower())
+        self.assertIn("not documented", assumptions.lower())
         self.assertIn("macOS", assumptions)
         script = (first / "provision_dry_run.py").read_text(encoding="utf-8")
         self.assertNotIn("subprocess", script)
@@ -78,11 +78,11 @@ class AppliancePackageTests(unittest.TestCase):
         self.assertEqual(dry_run_lines(first)[0], "DRY-RUN")
 
     def test_customer_edit_changes_profile_and_rollback_restores_it(self):
-        self.plane.apply_changes("cust", "cfg-1", {"opening_hours": "Mo-Fr 9-18"}, "hours")
+        self.plane.apply_changes("cust", "cfg-1", {"opening_hours": "Mon-Fri 9-18"}, "hours")
         updated = Path(self.folder) / "updated"
         built = build_appliance_package(self.plane, "konrad", "cfg-1", updated)
         soul = (updated / "distribution" / "SOUL.md").read_text(encoding="utf-8")
-        self.assertIn("Mo-Fr 9-18", soul)
+        self.assertIn("Mon-Fri 9-18", soul)
         rollback = json.loads((updated / "rollback.json").read_text(encoding="utf-8"))
         self.assertEqual(rollback["previous_release_no"], 1)
         self.assertIsNotNone(rollback["previous_release_hash"])
@@ -90,26 +90,26 @@ class AppliancePackageTests(unittest.TestCase):
         restored = Path(self.folder) / "restored"
         restored_build = build_appliance_package(self.plane, "konrad", "cfg-1", restored)
         self.assertNotEqual(restored_build["package_hash"], built["package_hash"])
-        self.assertIn("Mo-Fr 8-17", (restored / "distribution" / "SOUL.md").read_text(encoding="utf-8"))
+        self.assertIn("Mon-Fri 8-17", (restored / "distribution" / "SOUL.md").read_text(encoding="utf-8"))
         self.assertEqual(restored_build["release_no"], 1)
 
     def test_release_rejects_fixed_allow_values_in_profile(self):
         values = dict(initial_values())
         values["allow_unattended_send"] = True
         with self.assertRaises(ConfigError) as caught:
-            self.plane.release("konrad", "cfg-open", "kfz-terminannahme", "1.1.0", values, "open")
+            self.plane.release("konrad", "cfg-open", "auto-service-appointment-intake", "1.1.0", values, "open")
         self.assertEqual(caught.exception.code, "INVALID_CONFIG")
 
     def test_packages_carry_allow_false_from_release(self):
         lead = load("profiles/lead-scout-example/profile.json")
         flippy = load("profiles/flippy-catch-example/profile.json")
         for relative in (
-            "templates/b2b-lead-recherche/template.json",
-            "templates/ecommerce-produktverkauf/template.json",
+            "templates/b2b-lead-research/template.json",
+            "templates/ecommerce-product-sales/template.json",
         ):
             self.plane.register_template("konrad", load(relative))
         cases = (
-            ("cfg-kfz", "kfz-terminannahme", "1.1.0", initial_values()),
+            ("cfg-kfz", "auto-service-appointment-intake", "1.1.0", initial_values()),
             (lead["profile_id"], lead["template_id"], lead["template_version"], lead["values"]),
             (flippy["profile_id"], flippy["template_id"], flippy["template_version"], flippy["values"]),
         )

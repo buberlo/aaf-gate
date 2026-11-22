@@ -97,12 +97,12 @@ class HermesAdapterTests(unittest.TestCase):
             lambda req: {"decision": "deny", "reason": "action_class_unknown"}
         )
         out = cb("terminal", {})
-        self.assertEqual(out["message"], "Kern: verweigert (action_class_unknown)")
+        self.assertEqual(out["message"], "Core: denied (action_class_unknown)")
 
     def test_ha06_check_raises_block(self):
         cb = make_pre_tool_call(lambda req: (_ for _ in ()).throw(RuntimeError("boom")))
         out = cb("gmail", {})
-        self.assertEqual(out["message"], "Kern: verweigert (adapter_error)")
+        self.assertEqual(out["message"], "Core: denied (adapter_error)")
 
     def test_ha07_bad_check_result(self):
         cb = make_pre_tool_call(lambda req: None)
@@ -112,7 +112,7 @@ class HermesAdapterTests(unittest.TestCase):
                     out = cb("gmail", {})
                 else:
                     out = make_pre_tool_call(lambda req: value)("gmail", {})
-                self.assertEqual(out["message"], "Kern: verweigert (adapter_error)")
+                self.assertEqual(out["message"], "Core: denied (adapter_error)")
 
     def test_ha08_build_errors_no_check(self):
         calls = []
@@ -121,7 +121,7 @@ class HermesAdapterTests(unittest.TestCase):
             with self.subTest(args=args):
                 calls.clear()
                 out = cb("gmail", args)
-                self.assertEqual(out["message"], "Kern: verweigert (invalid_args)")
+                self.assertEqual(out["message"], "Core: denied (invalid_args)")
                 self.assertEqual(calls, [])
 
     def test_ha09_target_keys(self):
@@ -132,12 +132,12 @@ class HermesAdapterTests(unittest.TestCase):
         )
         cb(
             "gmail",
-            {"to": "kunde@example.invalid", "body": "x"},
+            {"to": "client@example.invalid", "body": "x"},
         )
-        self.assertEqual(captured[0]["target"], "kunde@example.invalid")
+        self.assertEqual(captured[0]["target"], "client@example.invalid")
         captured.clear()
         cb2 = make_pre_tool_call(lambda req: (captured.append(req) or {"decision": "allow"}))
-        cb2("gmail", {"to": "kunde@example.invalid", "body": "x"})
+        cb2("gmail", {"to": "client@example.invalid", "body": "x"})
         self.assertEqual(captured[0]["target"], "")
 
     def test_ha10_e2e_gatekeeper(self):
@@ -153,7 +153,7 @@ class HermesAdapterTests(unittest.TestCase):
         approve = cb("gmail_send", {"to": "x@y.invalid"})
         self.assertEqual(approve["action"], "approve")
         block = cb("terminal", {})
-        self.assertEqual(block["message"], "Kern: verweigert (action_class_unknown)")
+        self.assertEqual(block["message"], "Core: denied (action_class_unknown)")
         conn = sqlite3.connect(path)
         conn.row_factory = sqlite3.Row
         count = conn.execute(

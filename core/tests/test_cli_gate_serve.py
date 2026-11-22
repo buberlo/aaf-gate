@@ -117,7 +117,7 @@ class GateServeTests(unittest.TestCase):
         self.thread.join(timeout=5)
 
     def test_cs03_store_missing(self):
-        missing_db = self.folder + "/fehlt.sqlite"
+        missing_db = self.folder + "/missing.sqlite"
         out = io.StringIO()
         code = serve_gate(missing_db, self.sock, "hermes-a", out=out)
         self.assertEqual(code, 2)
@@ -351,7 +351,7 @@ class GateServeTests(unittest.TestCase):
                 [
                     "gate-serve",
                     "--db",
-                    self.folder + "/fehlt.sqlite",
+                    self.folder + "/missing.sqlite",
                     "--socket",
                     self.sock,
                     "--principal",

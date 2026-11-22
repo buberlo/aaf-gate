@@ -28,7 +28,7 @@ class AppliancePilot1ChecksTests(unittest.TestCase):
             ),
         )
         self.plane.register_template("konrad", template_body())
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
 
     def test_ap01_without_gate_service(self):
         target = Path(self.folder) / "plain"
@@ -41,7 +41,7 @@ class AppliancePilot1ChecksTests(unittest.TestCase):
         target = Path(self.folder) / "with-gate"
         build_appliance_package(self.plane, "konrad", "cfg-1", target, gate_service=gs)
         manual = (target / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
-        gate_index = manual.index("## Gate-Dienst (Startkette)")
+        gate_index = manual.index("## Gate service (startup chain)")
         pilot_index = manual.index("## Pilot 1")
         self.assertGreater(pilot_index, gate_index)
         tool_lines = [
@@ -51,7 +51,7 @@ class AppliancePilot1ChecksTests(unittest.TestCase):
         for line in tool_lines:
             self.assertIn(line, manual)
         self.assertEqual(len(re.findall(r"^- mcp_gmail_[a-z_]+: ", manual, re.MULTILINE)), 10)
-        self.assertIn("Ein Werkzeug zum Senden ist nicht dabei.", manual)
+        self.assertIn("No send tool is included.", manual)
         self.assertIn("action_class_unknown", manual)
         self.assertNotIn("SYN:", manual)
 
@@ -78,8 +78,8 @@ class AppliancePilot1ChecksTests(unittest.TestCase):
         with patch.dict(hermes_mcp.PILOT1_CLASSES, {"create_draft": "send"}, clear=False):
             build_appliance_package(self.plane, "konrad", "cfg-1", target, gate_service=gs)
         manual = (target / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
-        self.assertIn("Achtung: Die Liste enthält ein Werkzeug zum Senden.", manual)
-        self.assertNotIn("Ein Werkzeug zum Senden ist nicht dabei.", manual)
+        self.assertIn("Warning: The list includes a send tool.", manual)
+        self.assertNotIn("No send tool is included.", manual)
 
 
 if __name__ == "__main__":

@@ -18,15 +18,15 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def template_body():
-    return json.loads((ROOT / "templates" / "kfz-terminannahme" / "template.json").read_text(encoding="utf-8"))
+    return json.loads((ROOT / "templates" / "auto-service-appointment-intake" / "template.json").read_text(encoding="utf-8"))
 
 
 def initial_values():
     return {
-        "callback_hint": "Wir rufen zurück, sobald ein Termin frei ist.",
+        "callback_hint": "We call back as soon as a slot is available.",
         "followup_questions": "Welche Arbeit? Welches Kennzeichen? Wann passt es?",
-        "opening_hours": "Mo-Fr 8-17",
-        "shop_name": "Synth-Werkstatt",
+        "opening_hours": "Mon-Fri 8-17",
+        "shop_name": "Synth-Workshop",
     }
 
 
@@ -93,7 +93,7 @@ class AuditAppendTests(unittest.TestCase):
         seed_config(store, (("konrad", "synth-tenant", "human", ("author",)),))
         plane = ConfigPlane(store, FixedClock("2026-11-14T09:00:00Z"))
         plane.register_template("konrad", template_body())
-        plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "k-au3")
+        plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "k-au3")
         conn = sqlite3.connect(str(Path(folder) / "cfg.sqlite"))
         row = conn.execute(
             "SELECT operation, outcome, command_id FROM audit_events WHERE operation='config.release'"

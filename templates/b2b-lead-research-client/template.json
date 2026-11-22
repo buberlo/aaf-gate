@@ -1,0 +1,20 @@
+{
+  "template_id": "b2b-lead-research-client",
+  "template_version": "0.1.0",
+  "synthetic": true,
+  "title": "Draft: target account per client",
+  "fields": {
+    "client_label": {"access": "customer_editable", "type": "string", "required": true},
+    "offer": {"access": "customer_editable", "type": "string", "required": true},
+    "industries": {"access": "customer_editable", "type": "array", "item_type": "string", "required": true},
+    "company_size": {"access": "customer_editable", "type": "string", "required": true},
+    "region": {"access": "customer_editable", "type": "string", "required": true},
+    "target_roles": {"access": "customer_editable", "type": "array", "item_type": "string", "required": true},
+    "exclusions": {"access": "customer_editable", "type": "array", "item_type": "string", "required": true, "min": 0},
+    "tone": {"access": "customer_editable", "type": "string", "required": true, "enum": ["Sie", "Du"]},
+    "goal": {"access": "customer_editable", "type": "string", "required": true, "enum": ["Austausch", "Produkt", "Webinar"]},
+    "account_char_limit": {"access": "customer_editable", "type": "integer", "required": true, "min": 1, "max": 300},
+    "activity_window_days": {"access": "customer_editable", "type": "integer", "required": true, "min": 1, "max": 365},
+    "approved_for_live_research": {"access": "locked", "type": "boolean", "required": true}
+  }
+}

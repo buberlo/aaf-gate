@@ -1,0 +1,38 @@
+{
+  "template_id": "ecommerce-product-sales",
+  "template_version": "0.3.0",
+  "synthetic": true,
+  "title": "Draft: own-shop and marketplace product sales, toys variant",
+  "fields": {
+    "brand_name": {"access": "customer_editable", "type": "string", "required": true},
+    "product_catalog": {"access": "customer_editable", "type": "array", "item_type": "string", "required": true},
+    "brand_voice": {"access": "customer_editable", "type": "string", "required": true},
+    "target_audiences": {"access": "customer_editable", "type": "array", "item_type": "string", "required": true},
+    "competitor_set": {"access": "customer_editable", "type": "array", "item_type": "string", "required": true},
+    "seed_keywords": {"access": "customer_editable", "type": "array", "item_type": "string", "required": true},
+    "retailer_segments": {"access": "customer_editable", "type": "array", "item_type": "string", "required": true},
+    "retailer_exclusions": {"access": "customer_editable", "type": "array", "item_type": "string", "required": true, "min": 0},
+    "report_weekday": {
+      "access": "customer_editable",
+      "type": "string",
+      "required": true,
+      "enum": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    },
+    "reorder_point_hint": {"access": "customer_editable", "type": "string", "required": true},
+    "review_alert_max_stars": {"access": "customer_editable", "type": "integer", "required": true, "min": 1, "max": 5},
+    "service_text_blocks": {"access": "customer_editable", "type": "string", "required": true},
+    "marketplaces": {"access": "locked", "type": "array", "item_type": "string", "required": true},
+    "data_access_mode": {"access": "locked", "type": "string", "required": true, "enum": ["manual_csv"]},
+    "claims_blocklist": {"access": "locked", "type": "array", "item_type": "string", "required": true, "min": 1, "unique": true},
+    "blocked_automation_domains": {"access": "locked", "type": "array", "item_type": "domain", "required": true, "min": 1},
+    "allow_unattended_send": {"access": "fixed", "type": "boolean", "required": true, "value": false},
+    "allow_listing_write": {"access": "fixed", "type": "boolean", "required": true, "value": false},
+    "allow_price_change": {"access": "fixed", "type": "boolean", "required": true, "value": false},
+    "allow_ad_spend_change": {"access": "fixed", "type": "boolean", "required": true, "value": false},
+    "allow_review_solicitation": {"access": "fixed", "type": "boolean", "required": true, "value": false},
+    "allow_publish_social": {"access": "fixed", "type": "boolean", "required": true, "value": false},
+    "allow_purchases": {"access": "fixed", "type": "boolean", "required": true, "value": false},
+    "pii_in_reports": {"access": "locked", "type": "boolean", "required": true},
+    "toy_safety_checklist": {"access": "locked", "type": "string", "required": true}
+  }
+}

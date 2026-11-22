@@ -1,0 +1,25 @@
+{
+  "profile_id": "lead-scout-example-c",
+  "synthetic": true,
+  "placeholder": "C",
+  "template_id": "b2b-lead-research-client",
+  "template_version": "0.1.0",
+  "values": {
+    "client_label": "Client C",
+    "offer": "SYN: offer not documented",
+    "industries": [
+      "SYN: example industry C"
+    ],
+    "company_size": "SYN: not set",
+    "region": "SYN: not set",
+    "target_roles": [
+      "SYN: role C"
+    ],
+    "exclusions": [],
+    "tone": "Sie",
+    "goal": "Webinar",
+    "account_char_limit": 300,
+    "activity_window_days": 7,
+    "approved_for_live_research": false
+  }
+}

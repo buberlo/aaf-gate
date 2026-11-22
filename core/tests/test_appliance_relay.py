@@ -26,7 +26,7 @@ class ApplianceRelayTests(unittest.TestCase):
             ),
         )
         self.plane.register_template("konrad", template_body())
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
 
     def test_rl01_distribution_telemetry(self):
         target = Path(self.folder) / "plain"
@@ -47,13 +47,13 @@ class ApplianceRelayTests(unittest.TestCase):
         target = Path(self.folder) / "gated"
         build_appliance_package(self.plane, "konrad", "cfg-1", target, gate_service=gate_service())
         manual = (target / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
-        self.assertIn("## NeMo Relay und Telemetrie", manual)
+        self.assertIn("## NeMo relay and telemetry", manual)
         self.assertIn("/etc/nemo-relay/plugins.toml", manual)
         self.assertIn("HERMES_NEMO_RELAY_PLUGINS_TOML", manual)
-        self.assertIn("OTEL_SDK_DISABLED ist true", manual)
-        foreign = manual.index("## Fremde Hooks")
-        relay = manual.index("## NeMo Relay und Telemetrie")
-        gate = manual.index("## Gate-Dienst (Startkette)")
+        self.assertIn("OTEL_SDK_DISABLED is true", manual)
+        foreign = manual.index("## Foreign hooks")
+        relay = manual.index("## NeMo relay and telemetry")
+        gate = manual.index("## Gate service (startup chain)")
         self.assertLess(foreign, relay)
         self.assertLess(relay, gate)
 
@@ -61,12 +61,12 @@ class ApplianceRelayTests(unittest.TestCase):
         target = Path(self.folder) / "assumptions"
         build_appliance_package(self.plane, "konrad", "cfg-1", target)
         text = (target / "ASSUMPTIONS.md").read_text(encoding="utf-8")
-        marker = "Nicht belegt und deshalb nicht als Funktion dieses Pakets behauptet:"
-        self.assertIn("plugins.enabled und plugins.disabled gelten dafür nicht", text)
-        self.assertIn("Middleware-Fehler sind fail-open", text)
-        self.assertLess(text.index("plugins.enabled und plugins.disabled gelten dafür nicht"), text.index(marker))
-        self.assertLess(text.index("Middleware-Fehler sind fail-open"), text.index(marker))
-        relay_audit = "Dass verify-hooks oder pin-audit Relay-Plugins erkennen."
+        marker = "Not documented and therefore not claimed as function of this package:"
+        self.assertIn("plugins.enabled and plugins.disabled do not apply", text)
+        self.assertIn("Middleware errors are fail-open", text)
+        self.assertLess(text.index("plugins.enabled and plugins.disabled do not apply"), text.index(marker))
+        self.assertLess(text.index("Middleware errors are fail-open"), text.index(marker))
+        relay_audit = "That verify-hooks or pin-audit detect relay plugins."
         self.assertIn(relay_audit, text)
         self.assertGreater(text.index(relay_audit), text.index(marker))
 

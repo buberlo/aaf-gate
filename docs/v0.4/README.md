@@ -1,13 +1,13 @@
-# v0.4 · anpassbarer Assistent
+# v0.4 · customizable assistant
 
-Stand 12.11.2026 Europe/Berlin. Produktrichtung. Historische Entwurfspakete vor v0.4 sind in diesem öffentlichen Baum nicht enthalten.
+As of 12.11.2026 Europe/Berlin. Product direction. Historical draft packages before v0.4 are not in this public tree.
 
-- [01-PRODUKT.md](01-PRODUKT.md)
-- [02-SCHICHTEN-UND-SPERREN.md](02-SCHICHTEN-UND-SPERREN.md)
+- [01-PRODUCT.md](01-PRODUCT.md)
+- [02-LAYERS-AND-GATES.md](02-LAYERS-AND-GATES.md)
 - [03-VERSION-ROLLBACK-CR.md](03-VERSION-ROLLBACK-CR.md)
-- [04-MANDANT-UPDATE-STOPP.md](04-MANDANT-UPDATE-STOPP.md)
+- [04-TENANT-UPDATE-STOP.md](04-TENANT-UPDATE-STOP.md)
 - [05-ROADMAP.md](05-ROADMAP.md)
-- [06-APPLIANCE-SPUR-A.md](06-APPLIANCE-SPUR-A.md)
-- Entscheidung: [../adr/ADR-002-steuerzentrale.md](../adr/ADR-002-steuerzentrale.md)
+- [06-APPLIANCE-TRACK-A.md](06-APPLIANCE-TRACK-A.md)
+- Decision: [../adr/ADR-002-control-plane.md](../adr/ADR-002-control-plane.md)
 
-Der lokale Nachweis für K1 steht in [../NACHWEIS-I1.md](../NACHWEIS-I1.md).
+Local evidence for K1 is in [../EVIDENCE-I1.md](../EVIDENCE-I1.md).

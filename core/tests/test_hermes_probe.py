@@ -64,7 +64,7 @@ def _build_package(folder, gate=True):
     plane = ConfigPlane(store, FixedClock("2026-11-12T16:00:00Z"))
     seed_config(store, (("konrad", "synth-tenant", "human", ("author",)),))
     plane.register_template("konrad", template_body())
-    plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+    plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
     target = Path(folder) / "pkg"
     kwargs = {}
     if gate:
@@ -261,14 +261,14 @@ class HermesProbeTests(unittest.TestCase):
 
     def test_hpr10_checklist_section(self):
         manual = (_build_package(self.folder) / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
-        self.assertIn("### Geräteproben", manual)
+        self.assertIn("### Device probes", manual)
         self.assertIn("verify-hermes-probe", manual)
         self.assertIn("aaf-probe-extra", manual)
         plain_parent = tempfile.mkdtemp(dir="/tmp")
         plain_manual = (_build_package(plain_parent, gate=False) / "MANUAL-MAC-CHECKS.md").read_text(
             encoding="utf-8"
         )
-        self.assertNotIn("### Geräteproben", plain_manual)
+        self.assertNotIn("### Device probes", plain_manual)
 
     def test_hpr11_profile_config_unchanged(self):
         self.assertEqual(_profile_config(), PROFILE_CONFIG_LEGACY)

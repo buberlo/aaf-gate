@@ -20,27 +20,27 @@ class DeviceCheckProfileSetTests(unittest.TestCase):
         ok = check_profile_set(home, ())
         self.assertTrue(ok["ok"])
         self.assertEqual(ok["present"], [])
-        missing = check_profile_set(home, ("kunde",))
-        self.assertIn("profile_missing:kunde", missing["issues"])
+        missing = check_profile_set(home, ("client",))
+        self.assertIn("profile_missing:client", missing["issues"])
 
     def test_ps02_allowed_kunde_present(self):
         folder = Path(tempfile.mkdtemp(dir="/tmp"))
         home = make_hermes_home(folder, "plugins:\n  enabled:\n    - aaf-gate\n")
-        make_profile_dir(home / "profiles" / "kunde")
+        make_profile_dir(home / "profiles" / "client")
         profiles = home / "profiles"
         profiles.mkdir(exist_ok=True)
-        ok = check_profile_set(home, ("kunde",))
+        ok = check_profile_set(home, ("client",))
         self.assertTrue(ok["ok"])
-        self.assertEqual(ok["present"], ["kunde"])
+        self.assertEqual(ok["present"], ["client"])
 
     def test_ps03_unexpected_profile(self):
         folder = Path(tempfile.mkdtemp(dir="/tmp"))
         home = make_hermes_home(folder, "plugins:\n  enabled:\n    - aaf-gate\n")
         (home / "profiles").mkdir()
-        make_profile_dir(home / "profiles" / "kunde")
-        make_profile_dir(home / "profiles" / "zweit")
-        bad = check_profile_set(home, ("kunde",))
-        self.assertIn("profile_unexpected:zweit", bad["issues"])
+        make_profile_dir(home / "profiles" / "client")
+        make_profile_dir(home / "profiles" / "second")
+        bad = check_profile_set(home, ("client",))
+        self.assertIn("profile_unexpected:second", bad["issues"])
 
     def test_ps04_file_and_symlink_entries(self):
         folder = Path(tempfile.mkdtemp(dir="/tmp"))
@@ -65,7 +65,7 @@ class DeviceCheckProfileSetTests(unittest.TestCase):
         self.assertEqual(bad["issues"], ["profiles_symlink"])
         invalid = check_profile_set(home, ("default",))
         self.assertEqual(invalid, {"error": "allowed_profile_invalid", "ok": False})
-        invalid2 = check_profile_set(home, ("Kunde!",))
+        invalid2 = check_profile_set(home, ("Client!",))
         self.assertEqual(invalid2, {"error": "allowed_profile_invalid", "ok": False})
 
     def test_ps06_run_device_checks_optional_and_strict(self):
@@ -76,7 +76,7 @@ class DeviceCheckProfileSetTests(unittest.TestCase):
         config_text = (package / "managed" / "config.yaml").read_text(encoding="utf-8")
         hermes_home = make_hermes_home(Path(folder), config_text)
         (hermes_home / "profiles").mkdir(exist_ok=True)
-        make_profile_dir(hermes_home / "profiles" / "kunde", config_text=config_text)
+        make_profile_dir(hermes_home / "profiles" / "client", config_text=config_text)
         dump = Path(folder) / "dump.txt"
         dump.write_text(GOOD_DUMP, encoding="utf-8")
         installed, pkg_hash, managed = runner.install_layout(folder, package, built)
@@ -98,12 +98,12 @@ class DeviceCheckProfileSetTests(unittest.TestCase):
         )
         without = run_device_checks(**base_kwargs)
         self.assertNotIn("profile_set", without["checks"])
-        make_profile_dir(hermes_home / "profiles" / "zweit", config_text=config_text)
-        strict = run_device_checks(**base_kwargs, allowed_profiles=("kunde",))
+        make_profile_dir(hermes_home / "profiles" / "second", config_text=config_text)
+        strict = run_device_checks(**base_kwargs, allowed_profiles=("client",))
         self.assertFalse(strict["checks"]["profile_set"]["ok"])
         self.assertFalse(strict["ok"])
 
-    def test_ps07_cli_profile_kunde_unexpected_zweit(self):
+    def test_ps07_cli_profile_kunde_unexpected_second(self):
         from test_devicecheck import DeviceCheckTests
 
         runner = DeviceCheckTests()
@@ -111,8 +111,8 @@ class DeviceCheckProfileSetTests(unittest.TestCase):
         config_text = (package / "managed" / "config.yaml").read_text(encoding="utf-8")
         hermes_home = make_hermes_home(Path(folder), config_text)
         (hermes_home / "profiles").mkdir(exist_ok=True)
-        make_profile_dir(hermes_home / "profiles" / "kunde", config_text=config_text)
-        make_profile_dir(hermes_home / "profiles" / "zweit", config_text=config_text)
+        make_profile_dir(hermes_home / "profiles" / "client", config_text=config_text)
+        make_profile_dir(hermes_home / "profiles" / "second", config_text=config_text)
         plugin = copy_plugin_tree()
         installed, pkg_hash, managed = runner.install_layout(folder, package, built)
         dump = Path(folder) / "dump.txt"
@@ -146,7 +146,7 @@ class DeviceCheckProfileSetTests(unittest.TestCase):
                 "--system-root",
                 tempfile.mkdtemp(dir="/tmp"),
                 "--profile",
-                "kunde",
+                "client",
             ],
             cwd=CORE,
             capture_output=True,
@@ -156,7 +156,7 @@ class DeviceCheckProfileSetTests(unittest.TestCase):
         body = json.loads(completed.stdout)
         self.assertEqual(
             body["checks"]["profile_set"]["issues"],
-            ["profile_unexpected:zweit"],
+            ["profile_unexpected:second"],
         )
 
 

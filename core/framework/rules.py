@@ -87,17 +87,17 @@ def decide(sources: list[dict], rules: dict) -> dict:
                     ignored.append(
                         {
                             "locator": locator,
-                            "reason": "quellentext_ist_keine_anweisung",
+                            "reason": "source_text_not_instruction",
                             "source_id": source["source_id"],
                         }
                     )
                     break
             non_supersede = re.findall(
-                r"ersetzt\s+([A-Za-z0-9_-]+)\s+nicht",
+                r"does not supersede\s+([A-Za-z0-9_-]+)",
                 text,
                 flags=re.IGNORECASE,
             )
-            for match in re.finditer(r"ersetzt\s+([A-Za-z0-9_-]+)", text, flags=re.IGNORECASE):
+            for match in re.finditer(r"supersedes\s+([A-Za-z0-9_-]+)", text, flags=re.IGNORECASE):
                 target = match.group(1)
                 if target in non_supersede:
                     continue
@@ -105,11 +105,11 @@ def decide(sources: list[dict], rules: dict) -> dict:
             for match in re.finditer(rules["quantity_pattern"], text):
                 claims.append(
                     {
-                        "claim_type": "pruefstuecke",
+                        "claim_type": "test_specimens",
                         "kind": "fact",
                         "references": [reference],
                         "reviewer_note": "",
-                        "statement": nfc(f"Prüfstücke: {match.group(1)}"),
+                        "statement": nfc(f"Test specimens: {match.group(1)}"),
                         "support_status": "supported",
                         "value": match.group(1),
                     }
@@ -129,7 +129,7 @@ def decide(sources: list[dict], rules: dict) -> dict:
         conflicts.append(
             {
                 "references": [claim["references"][0] for claim in active],
-                "type": "pruefstuecke",
+                "type": "test_specimens",
                 "values": sorted(values, key=int),
             }
         )
@@ -137,7 +137,7 @@ def decide(sources: list[dict], rules: dict) -> dict:
     if not date_values:
         open_questions.append(
             {
-                "detail": "Lieferdatum unbekannt",
+                "detail": "Delivery date unknown",
                 "references": open_markers,
                 "topic": "lieferdatum",
             }
@@ -150,23 +150,23 @@ def decide(sources: list[dict], rules: dict) -> dict:
     draft_parts = []
     if prefix:
         draft_parts.append(prefix)
-    draft_parts.append("Arbeitsvorbereitung synthetisch.")
+    draft_parts.append("Synthetic work preparation.")
     if conflicts:
         bits = []
         for claim in active:
             ref = claim["references"][0]
-            bits.append(f"{claim['value']} (Quelle {ref['source_id']}, Locator {ref['locator']})")
-        draft_parts.append("Prüfstücke: Konflikt zwischen " + " und ".join(bits) + ".")
-        draft_parts.append("Keine Menge übernommen.")
+            bits.append(f"{claim['value']} (Source {ref['source_id']}, Locator {ref['locator']})")
+        draft_parts.append("Test specimens: conflict between " + " and ".join(bits) + ".")
+        draft_parts.append("No quantity adopted.")
     elif facts:
-        draft_parts.append(f"Prüfstücke belegt: {facts[0]['statement']}.")
+        draft_parts.append(f"Test specimens documented: {facts[0]['statement']}.")
     else:
-        draft_parts.append("Keine belegte Menge.")
+        draft_parts.append("No documented quantity.")
     if open_questions:
-        draft_parts.append("Lieferdatum: offen.")
+        draft_parts.append("Delivery date: open.")
     if ignored:
-        draft_parts.append("Quellen mit Steueranweisungen wurden nicht ausgeführt.")
-    draft_parts.append("Keine stille Auflösung.")
+        draft_parts.append("Sources with control instructions were not executed.")
+    draft_parts.append("No silent resolution.")
     stored_claims = [_public_claim(claim) for claim in active]
     return {
         "claims": stored_claims,

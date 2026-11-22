@@ -118,7 +118,7 @@ class GateKeeperTests(unittest.TestCase):
         conn.close()
 
     def test_gk09_no_plaintext_target_in_audit(self):
-        secret = "geheim-ziel-4711"
+        secret = "secret-ziel-4711"
         out = self.keeper.check(
             "hermes-a",
             sample_request(target=secret),
@@ -191,10 +191,10 @@ class GateKeeperTests(unittest.TestCase):
         )
         pre = next(cb for name, cb in ctx.hooks if name == "pre_tool_call")
         post = next(cb for name, cb in ctx.hooks if name == "post_tool_call")
-        secret = "geheim-inhalt-9191"
+        secret = "secret-inhalt-9191"
         args = {"body": secret}
         pre("gmail", args, tool_call_id="tc-1")
-        post("gmail", {"body": "geändert"}, tool_call_id="tc-1")
+        post("gmail", {"body": "changed"}, tool_call_id="tc-1")
         rows = self._audit_rows("demo-a")
         self.assertEqual(len(rows), 2)
         self.assertEqual(rows[0]["operation"], "gate_decide")
@@ -205,7 +205,7 @@ class GateKeeperTests(unittest.TestCase):
         conn.close()
         blob = " ".join(str(row[k]) for row in rows for k in row.keys())
         self.assertNotIn(secret, blob)
-        self.assertNotIn("geändert", blob)
+        self.assertNotIn("changed", blob)
 
 
 if __name__ == "__main__":

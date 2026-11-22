@@ -1,0 +1,13 @@
+{
+  "template_id": "auto-service-appointment-intake",
+  "template_version": "1.1.0",
+  "synthetic": true,
+  "title": "Synthetic template: appointment intake and follow-up questions",
+  "fields": {
+    "shop_name": {"access": "customer_editable", "type": "string", "required": true},
+    "opening_hours": {"access": "customer_editable", "type": "string", "required": true},
+    "callback_hint": {"access": "customer_editable", "type": "string", "required": true},
+    "followup_questions": {"access": "locked", "type": "string", "required": true},
+    "allow_unattended_send": {"access": "fixed", "type": "boolean", "required": true, "value": false}
+  }
+}

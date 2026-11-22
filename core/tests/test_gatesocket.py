@@ -180,7 +180,7 @@ class GateSocketTests(unittest.TestCase):
         blocked = cb("gmail_read", {"q": "inbox"})
         self.assertEqual(
             blocked,
-            {"action": "block", "message": "Kern: verweigert (core_unreachable)"},
+            {"action": "block", "message": "Core: denied (core_unreachable)"},
         )
         conn = sqlite3.connect(db)
         conn.row_factory = sqlite3.Row

@@ -1,0 +1,27 @@
+{
+  "profile_id": "lead-scout-example-b",
+  "synthetic": true,
+  "placeholder": "B",
+  "template_id": "b2b-lead-research-client",
+  "template_version": "0.1.0",
+  "values": {
+    "client_label": "Client B",
+    "offer": "SYN: offer not documented",
+    "industries": [
+      "SYN: example industry B"
+    ],
+    "company_size": "SYN: not set",
+    "region": "SYN: not set",
+    "target_roles": [
+      "SYN: role B"
+    ],
+    "exclusions": [
+      "SYN: Ausschluss B"
+    ],
+    "tone": "Du",
+    "goal": "Produkt",
+    "account_char_limit": 250,
+    "activity_window_days": 14,
+    "approved_for_live_research": false
+  }
+}

@@ -43,7 +43,7 @@ class AppliancePinProvenanceTests(unittest.TestCase):
         self.plane = ConfigPlane(store, FixedClock("2026-11-12T16:00:00Z"))
         seed_config(store, (("konrad", "synth-tenant", "human", ("author",)),))
         self.plane.register_template("konrad", template_body())
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         self.commit = "a" * 40
 
     def test_pp01_without_hermes_source(self):
@@ -140,8 +140,8 @@ class AppliancePinProvenanceTests(unittest.TestCase):
         target = Path(self.folder) / "assumptions"
         build_appliance_package(self.plane, "konrad", "cfg-1", target)
         text = (target / "ASSUMPTIONS.md").read_text(encoding="utf-8")
-        marker = "Nicht belegt und deshalb nicht als Funktion dieses Pakets behauptet:"
-        line = "hermes_commit ist eine Angabe beim Paketbau"
+        marker = "Not documented and therefore not claimed as function of this package:"
+        line = "hermes_commit is a package-build input"
         self.assertIn(line, text)
         self.assertGreater(text.index(line), text.index(marker))
 

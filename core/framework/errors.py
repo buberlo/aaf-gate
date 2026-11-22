@@ -9,14 +9,14 @@ class LostResponse(Exception):
 
 
 MESSAGES = {
-    "INVALID_INPUT": "Eingabe ungültig.",
-    "FORBIDDEN": "Verweigert.",
-    "NOT_FOUND": "Nicht gefunden.",
-    "STALE_REVISION": "Revision veraltet.",
-    "STALE_RELEASE": "Konfigurations-Release veraltet.",
-    "IDEMPOTENCY_CONFLICT": "Idempotenzkonflikt.",
-    "APPROVAL_INVALID": "Freigabe ungültig.",
-    "INVALID_TRANSITION": "Übergang ungültig.",
-    "STORAGE_UNAVAILABLE": "Speicher nicht verfügbar.",
-    "CONFLICT": "Datenkonflikt.",
+    "INVALID_INPUT": "Invalid input.",
+    "FORBIDDEN": "Denied.",
+    "NOT_FOUND": "Not found.",
+    "STALE_REVISION": "Revision stale.",
+    "STALE_RELEASE": "Configuration release stale.",
+    "IDEMPOTENCY_CONFLICT": "Idempotency conflict.",
+    "APPROVAL_INVALID": "Approval invalid.",
+    "INVALID_TRANSITION": "Transition invalid.",
+    "STORAGE_UNAVAILABLE": "Storage unavailable.",
+    "CONFLICT": "Data conflict.",
 }

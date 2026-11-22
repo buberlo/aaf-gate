@@ -95,7 +95,7 @@ class GateAuditContextTests(unittest.TestCase):
         self.assertIsNone(row["before_state"])
 
     def test_ac04_no_plaintext_target_or_content(self):
-        secret = "geheim-thread-4711"
+        secret = "secret-thread-4711"
         tool = hermes_mcp.registered_name("gmail", "create_draft")
         content_hash = hash_value({"body": secret, "to": "z@example.invalid"})
         req = {

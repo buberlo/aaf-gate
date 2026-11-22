@@ -21,8 +21,8 @@ from test_devicecheck import CORE, make_hermes_home, make_profile_dir
 from test_dumpcheck import GOOD_DUMP, SHA
 
 OLD_POINT5 = (
-    "5. ~/.hermes/active_profile fehlt (Standardprofil) oder nennt das Kundenprofil dieses Pakets. "
-    "`verify-device --profile <name>` prüft das."
+    "5. ~/.hermes/active_profile is missing (default profile) or names this package's customer profile. "
+    "`verify-device --profile <name>` checks that."
 )
 
 
@@ -36,7 +36,7 @@ class ApplianceCustomerProfileTests(unittest.TestCase):
             (("konrad", "synth-tenant", "human", ("author",)),),
         )
         self.plane.register_template("konrad", template_body())
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
 
     def test_cp01_without_customer_profile(self):
         target = Path(self.folder) / "plain"
@@ -45,25 +45,25 @@ class ApplianceCustomerProfileTests(unittest.TestCase):
         self.assertIsNone(provenance.get("customer_profile"))
         manual = (target / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
         self.assertIn(OLD_POINT5, manual)
-        self.assertNotIn("Unter ~/.hermes/profiles/ liegt genau das Verzeichnis kunde", manual)
+        self.assertNotIn("Under ~/.hermes/profiles/ there is exactly the directory client", manual)
 
     def test_cp02_with_customer_profile_kunde(self):
-        target = Path(self.folder) / "kunde"
+        target = Path(self.folder) / "client"
         build_appliance_package(
             self.plane,
             "konrad",
             "cfg-1",
             target,
             gate_service=gate_service(),
-            customer_profile="kunde",
+            customer_profile="client",
         )
         provenance = json.loads((target / "provenance.json").read_text(encoding="utf-8"))
-        self.assertEqual(provenance["customer_profile"], "kunde")
+        self.assertEqual(provenance["customer_profile"], "client")
         manual = (target / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
         self.assertIn(
-            "5. ~/.hermes/active_profile fehlt (Standardprofil) oder nennt das Kundenprofil kunde. "
-            "Unter ~/.hermes/profiles/ liegt genau das Verzeichnis kunde. "
-            "verify-device prüft beides mit dem Profilnamen aus provenance.json.",
+            "5. ~/.hermes/active_profile is missing (default profile) or names customer profile client. "
+            "Under ~/.hermes/profiles/ there is exactly the directory client. "
+            "verify-device checks both with the profile name from provenance.json.",
             manual,
         )
 
@@ -74,11 +74,11 @@ class ApplianceCustomerProfileTests(unittest.TestCase):
         self.assertIsNone(provenance.get("customer_profile"))
         self.assertEqual(provenance.get("tenant_id"), "synth-tenant")
         assumptions = (target / "ASSUMPTIONS.md").read_text(encoding="utf-8")
-        self.assertIn("wird nicht aus tenant_id abgeleitet", assumptions)
+        self.assertIn("is not derived from tenant_id", assumptions)
 
     def test_cp03_invalid_customer_profile(self):
         target = Path(self.folder) / "bad"
-        for value in ("default", "Kunde!", ""):
+        for value in ("default", "Client!", ""):
             with self.assertRaises(ConfigError) as ctx:
                 build_appliance_package(
                     self.plane,
@@ -97,9 +97,9 @@ class ApplianceCustomerProfileTests(unittest.TestCase):
             "konrad",
             "cfg-1",
             package,
-            customer_profile="kunde",
+            customer_profile="client",
         )
-        self.assertEqual(package_customer_profile(package), (True, "kunde"))
+        self.assertEqual(package_customer_profile(package), (True, "client"))
         plain = Path(self.folder) / "plain"
         build_appliance_package(self.plane, "konrad", "cfg-1", plain)
         self.assertEqual(package_customer_profile(plain), (True, None))
@@ -137,13 +137,13 @@ class ApplianceCustomerProfileTests(unittest.TestCase):
             hermes_source=source,
             hermes_commit=SHA,
             plugin_dir=PLUGIN_SOURCE,
-            customer_profile="kunde",
+            customer_profile="client",
         )
         config_text = (pkg / "managed" / "config.yaml").read_text(encoding="utf-8")
         hermes_home = make_hermes_home(Path(folder), config_text)
         (hermes_home / "profiles").mkdir(exist_ok=True)
-        make_profile_dir(hermes_home / "profiles" / "kunde", config_text=config_text)
-        (hermes_home / "active_profile").write_text("kunde\n", encoding="utf-8")
+        make_profile_dir(hermes_home / "profiles" / "client", config_text=config_text)
+        (hermes_home / "active_profile").write_text("client\n", encoding="utf-8")
         installed, pkg_hash, managed = runner.install_layout(folder, pkg, built2)
         dump = Path(folder) / "dump.txt"
         dump.write_text(GOOD_DUMP, encoding="utf-8")
@@ -183,8 +183,8 @@ class ApplianceCustomerProfileTests(unittest.TestCase):
             env=env,
         )
         body = json.loads(completed.stdout)
-        self.assertEqual(body["checks"]["active_profile"]["expected"], "kunde")
-        self.assertEqual(body["checks"]["profile_set"]["allowed"], ["kunde"])
+        self.assertEqual(body["checks"]["active_profile"]["expected"], "client")
+        self.assertEqual(body["checks"]["profile_set"]["allowed"], ["client"])
 
     def test_cp06_cli_profile_mismatch(self):
         folder = tempfile.mkdtemp(dir="/tmp")
@@ -192,9 +192,9 @@ class ApplianceCustomerProfileTests(unittest.TestCase):
         plane = ConfigPlane(store, FixedClock("2026-11-12T16:00:00Z"))
         seed_config(store, (("konrad", "synth-tenant", "human", ("author",)),))
         plane.register_template("konrad", template_body())
-        plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         pkg = Path(folder) / "pkg"
-        build_appliance_package(plane, "konrad", "cfg-1", pkg, customer_profile="kunde")
+        build_appliance_package(plane, "konrad", "cfg-1", pkg, customer_profile="client")
         env = {"PATH": os.environ.get("PATH", "")}
         base = [
             sys.executable,
@@ -228,10 +228,10 @@ class ApplianceCustomerProfileTests(unittest.TestCase):
         self.assertEqual(wrong_profile.returncode, 2)
         self.assertEqual(
             json.loads(wrong_profile.stdout),
-            {"error": "profile_package_mismatch", "expected": "kunde", "ok": False},
+            {"error": "profile_package_mismatch", "expected": "client", "ok": False},
         )
         wrong_allowed = subprocess.run(
-            base + ["--allowed-profile", "kunde", "--allowed-profile", "zweit"],
+            base + ["--allowed-profile", "client", "--allowed-profile", "second"],
             cwd=CORE,
             capture_output=True,
             text=True,
@@ -240,7 +240,7 @@ class ApplianceCustomerProfileTests(unittest.TestCase):
         self.assertEqual(wrong_allowed.returncode, 2)
         self.assertEqual(
             json.loads(wrong_allowed.stdout),
-            {"error": "profile_package_mismatch", "expected": "kunde", "ok": False},
+            {"error": "profile_package_mismatch", "expected": "client", "ok": False},
         )
 
     def test_cp07_cli_default_without_customer_profile(self):

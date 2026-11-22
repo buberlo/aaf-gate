@@ -20,12 +20,12 @@ CLOCK = FixedClock("2026-11-14T11:45:00Z")
 
 
 def template_body():
-    return json.loads((TEMPLATE_DIR / "kfz-terminannahme" / "template.json").read_text(encoding="utf-8"))
+    return json.loads((TEMPLATE_DIR / "auto-service-appointment-intake" / "template.json").read_text(encoding="utf-8"))
 
 
 def modified_body():
     body = copy.deepcopy(template_body())
-    body["title"] = "Geändert im Gerätetest"
+    body["title"] = "Changed in device test"
     return body
 
 
@@ -63,7 +63,7 @@ class DeviceModeTests(unittest.TestCase):
         self.assertEqual(plane.mode, "development")
         self.assertIsNone(plane.expected)
         result = plane.register_template("konrad", modified_body())
-        self.assertEqual(result["template_id"], "kfz-terminannahme")
+        self.assertEqual(result["template_id"], "auto-service-appointment-intake")
 
     def test_dm03_missing_mode_file(self):
         missing = Path(self.folder) / "missing.json"
@@ -103,7 +103,7 @@ class DeviceModeTests(unittest.TestCase):
 
     def test_dm06_invalid_hashes_content_rejected(self):
         bad = Path(self.folder) / "bad-hashes.json"
-        bad.write_text(json.dumps({"kfz-terminannahme@1.1.0": "not-a-hash"}), encoding="utf-8")
+        bad.write_text(json.dumps({"auto-service-appointment-intake@1.1.0": "not-a-hash"}), encoding="utf-8")
         os.chmod(bad, 0o644)
         mode_path = self._write_mode({"mode": "appliance", "hashes_path": "bad-hashes.json"})
         with self.assertRaises(ConfigError) as ctx:

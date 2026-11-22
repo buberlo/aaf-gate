@@ -1,25 +1,23 @@
-# Profil lead-scout-example
+# lead-scout-example
 
-Status: Entwurf. Synthetisches Beispielprofil ohne Bezug zu einer realen Person. Kein Nachname, keine Telefonnummer und keine Adresse.
+Status: draft. Synthetic example profile, not a real customer.
 
-Zweck: Kundenprofil für eine Person, die für ihre Auftraggeber Kontakte sucht und Texte zum Kopieren braucht. Die Branche steckt in der Vorlage `b2b-lead-recherche`. Dieses Profil setzt nur ihre Arbeitsweise.
+Purpose: customer profile for someone who finds contacts for clients and needs copy-paste texts. Industry lives in template `b2b-lead-research`. This profile only sets their way of working.
 
-Belegt und hier verwendet: synthetischer Beispielname, Wunsch nach täglich bis zu 10 Kontakten je Auftraggeber, Nachrichten bis 300 Zeichen, kein Plattform-Login durch das System, Follow-up erst nach Annahme, Status nur nach menschlicher Bestätigung.
+Confirmed and used here: synthetic example name, wish for up to 10 contacts per client per day, messages up to 300 characters, no platform login by the system, follow-up only after acceptance, status only after human confirmation.
 
-Nicht bestätigt und deshalb mit `SYN` oder als Vorschlag markiert: Freitag als Briefingtag, Telegram als Kanal, lokaler Speicher, Zeichenstandard 200, die vier Auftraggeber A bis D.
+Not confirmed and marked `SYN` or as suggestion: Friday as briefing day, Telegram as channel, local storage, 200 character default, clients A–D.
 
-Aufgaben: siehe Vorlage. Die Unterprofile A bis D sind synthetische Platzhalter ohne echte Firmen.
+Tasks: drafts. No send, no login, no live research while approval stays false.
 
-Autonomie: Entwürfe. Kein Versand, kein Login, keine Live-Recherche, solange die Freigabe falsch bleibt.
+Autonomy: drafts. No send, no login, no live research while `approved_for_live_research` stays false.
 
-Gesperrt: Limits, Quellenpflicht, Sperrliste, `linkedin.com`, Login, Versand, Follow-up-Regel, Telegram ohne Personendaten, Recherchefreigabe je Auftraggeber.
+Editable: name, briefing day, storage, daily count up to 10, default character limit up to 300, and in child profiles target description within enums.
 
-Änderbar: Name, Briefingtag, Ablage, Tageszahl bis 10, Standard-Zeichenlimit bis 300, und in den Unterprofilen die Zielbeschreibung innerhalb der Enums.
+Release: new version author role only. Customer role fails on locked fields. Tests verify that.
 
-Freigabe: neue Release nur durch die Autorrolle. Eine Kundenrolle scheitert an gesperrten Feldern. Das prüfen die Tests.
+Child profiles in `client/`: synthetic placeholders A–D.
 
-Konnektoren: keine eingerichtete Verbindung. Computer Use: nicht vorgesehen.
+Limits: core enforces fields. It does not count real messages, detect duplicates, or switch a browser block in Hermes. Those runtime rules stay open.
 
-Grenzen: Der Kern erzwingt die Felder. Er zählt keine echte Nachricht, erkennt keine Dublette und schaltet keine Browser-Sperre in Hermes. Diese Laufzeitregeln bleiben offen.
-
-Offen: Aufbewahrung, Provider, ob die Recherchefreigabe später selbst gesetzt werden darf, und ob getrennte Benutzerkonten je Auftraggeber nötig sind.
+Open: retention, provider, whether research approval may be set later, and whether separate user accounts per client are needed.

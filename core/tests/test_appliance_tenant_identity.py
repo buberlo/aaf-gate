@@ -28,8 +28,8 @@ class ApplianceTenantIdentityTests(unittest.TestCase):
         body = template_body()
         self.plane.register_template("konrad", body)
         self.plane.register_template("mira", body)
-        self.plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-k")
-        self.plane.release("mira", "cfg-werk", "kfz-terminannahme", "1.1.0", initial_values(), "rel-m")
+        self.plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-k")
+        self.plane.release("mira", "cfg-werk", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-m")
         self.document_k = self.plane.release_record("konrad", "cfg-1")["document"]
         self.document_m = self.plane.release_record("mira", "cfg-werk")["document"]
 
@@ -56,19 +56,19 @@ class ApplianceTenantIdentityTests(unittest.TestCase):
             "konrad",
             "cfg-1",
             named,
-            customer_profile="kunde",
+            customer_profile="client",
         )
         lines_named = dry_run_lines(named)
         mode_named = next(i for i, line in enumerate(lines_named) if line.startswith("device_mode "))
-        self.assertEqual(lines_named[mode_named + 3], "customer_profile kunde")
+        self.assertEqual(lines_named[mode_named + 3], "customer_profile client")
 
     def test_ti03_package_identity_fields(self):
         target = Path(self.folder) / "pkg"
-        build_appliance_package(self.plane, "konrad", "cfg-1", target, customer_profile="kunde")
+        build_appliance_package(self.plane, "konrad", "cfg-1", target, customer_profile="client")
         identity = package_identity(target)
         self.assertEqual(identity["tenant_id"], self.document_k["tenant_id"])
         self.assertEqual(identity["config_id"], self.document_k["config_id"])
-        self.assertEqual(identity["customer_profile"], "kunde")
+        self.assertEqual(identity["customer_profile"], "client")
 
     def test_ti04_package_identity_invalid_provenance_values(self):
         target = Path(self.folder) / "pkg"

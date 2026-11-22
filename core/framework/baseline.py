@@ -123,7 +123,7 @@ def _attach_net_fields(entry, schema_version, review_values, min_samples):
     n_review = len(review_values) if schema_version == 2 else 0
     entry["review_samples"] = n_review
     if schema_version == 1 or n_review == 0:
-        entry["net_basis"] = "pruefzeit_nicht_gemessen"
+        entry["net_basis"] = "check_time_not_measured"
         entry["median_review_minutes"] = None
         entry["net_minutes"] = None
         return

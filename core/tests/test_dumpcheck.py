@@ -57,7 +57,7 @@ class DumpCheckTests(unittest.TestCase):
         plane = ConfigPlane(store, FixedClock("2026-11-12T16:00:00Z"))
         seed_config(store, (("konrad", "synth-tenant", "human", ("author",)),))
         plane.register_template("konrad", template_body())
-        plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         source = write_pin_fixture(Path(tempfile.mkdtemp(dir="/tmp")))
         package = Path(folder) / "pkg"
         build_appliance_package(
@@ -153,14 +153,14 @@ class DumpCheckTests(unittest.TestCase):
         plane = ConfigPlane(store, FixedClock("2026-11-12T16:00:00Z"))
         seed_config(store, (("konrad", "synth-tenant", "human", ("author",)),))
         plane.register_template("konrad", template_body())
-        plane.release("konrad", "cfg-1", "kfz-terminannahme", "1.1.0", initial_values(), "rel-1")
+        plane.release("konrad", "cfg-1", "auto-service-appointment-intake", "1.1.0", initial_values(), "rel-1")
         target = Path(folder) / "pkg"
         build_appliance_package(plane, "konrad", "cfg-1", target)
         manual = (target / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
         self.assertIn("verify-hermes-dump /tmp/hermes-dump.txt", manual)
         assumptions = (target / "ASSUMPTIONS.md").read_text(encoding="utf-8")
-        marker = "Nicht belegt und deshalb nicht als Funktion dieses Pakets behauptet:"
-        line = "verify-hermes-dump wertet nur die Zeile version: aus"
+        marker = "Not documented and therefore not claimed as function of this package:"
+        line = "verify-hermes-dump only parses the version: line"
         self.assertIn(line, assumptions)
         self.assertGreater(assumptions.index(line), assumptions.index(marker))
 

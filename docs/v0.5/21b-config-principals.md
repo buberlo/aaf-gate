@@ -1,13 +1,13 @@
-# ConfigPlane und Principals (Entwurf v0.5, Schritt 21b)
+# ConfigPlane and principals (draft v0.5, step 21b)
 
-| Operation | Rolle |
+| Operation | Role |
 |-----------|--------|
 | register_template, release, rollback | author |
-| apply_changes, active, release_record | author oder customer (apply: author vor customer) |
+| apply_changes, active, release_record | author or customer (apply: author before customer) |
 
-- Agent-Principals dürfen keine schreibende Config-Operation ausführen; Lesen mit passender Bindung bleibt möglich.
-- Jede abgelehnte schreibende Operation wird auditiert (principal_kind, acting_role, error_code FORBIDDEN).
-- Veraltetes role_bindings-Schema ohne author/customer im CHECK bricht beim Öffnen mit schema_role_bindings_outdated ab, ohne stillen Umbau.
-- Offen: Idempotenzschlüssel je Principal (Backlog 67).
+- Agent principals cannot perform writing config operations; read with matching binding remains allowed.
+- Every rejected write is audited (`principal_kind`, `acting_role`, error_code `FORBIDDEN`).
+- Outdated `role_bindings` schema without author/customer in CHECK fails on open with `schema_role_bindings_outdated`, without silent migration.
+- Open: idempotency key per principal (backlog 67).
 
-Status: implementiert und getestet im PR-Branch, nicht produktiv freigegeben.
+Status: implemented and tested on PR branch, not released for production.
