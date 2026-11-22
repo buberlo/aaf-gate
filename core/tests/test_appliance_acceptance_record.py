@@ -97,7 +97,7 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
         self.assertIn("ACCEPTANCE-RECORD.md", section)
         self.assertIn("verify-device", section)
         self.assertNotIn("CuaDriver", section)
-        self.assertIn("Mail is sent only after confirmation by a human", section)
+        self.assertNotIn("Mail is sent only after confirmation by a human", section)
 
     def test_ar08_step_order_backup(self):
         order = list(ACCEPTANCE_STEP_ORDER)
