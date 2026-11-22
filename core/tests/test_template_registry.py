@@ -42,7 +42,7 @@ class TemplateRegistryTests(unittest.TestCase):
         expected = expected_hashes(HASHES_PATH)
         plane = ConfigPlane(self.store, CLOCK, expected=expected)
         body = copy.deepcopy(template_body())
-        body["title"] = "Geänderte Terminannahme"
+        body["title"] = "Changed appointment intake"
         with self.assertRaises(ConfigError) as ctx:
             plane.register_template("konrad", body)
         self.assertEqual(ctx.exception.code, "TEMPLATE_HASH_MISMATCH")

@@ -140,8 +140,8 @@ class AppliancePinProvenanceTests(unittest.TestCase):
         target = Path(self.folder) / "assumptions"
         build_appliance_package(self.plane, "konrad", "cfg-1", target)
         text = (target / "ASSUMPTIONS.md").read_text(encoding="utf-8")
-        marker = "Nicht belegt und deshalb nicht als Funktion dieses Pakets behauptet:"
-        line = "hermes_commit ist eine Angabe beim Paketbau"
+        marker = "Not documented and therefore not claimed as function of this package:"
+        line = "hermes_commit is a package-build input"
         self.assertIn(line, text)
         self.assertGreater(text.index(line), text.index(marker))
 

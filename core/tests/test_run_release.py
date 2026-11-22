@@ -27,7 +27,7 @@ def template_body():
 
 def initial_values():
     return {
-        "callback_hint": "Wir rufen zurück, sobald ein Termin frei ist.",
+        "callback_hint": "We call back as soon as a slot is available.",
         "followup_questions": "Welche Arbeit? Welches Kennzeichen? Wann passt es?",
         "opening_hours": "Mo-Fr 8-17",
         "shop_name": "Synth-Werkstatt",

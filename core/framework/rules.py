@@ -109,7 +109,7 @@ def decide(sources: list[dict], rules: dict) -> dict:
                         "kind": "fact",
                         "references": [reference],
                         "reviewer_note": "",
-                        "statement": nfc(f"Prüfstücke: {match.group(1)}"),
+                        "statement": nfc(f"Test specimens: {match.group(1)}"),
                         "support_status": "supported",
                         "value": match.group(1),
                     }
@@ -137,7 +137,7 @@ def decide(sources: list[dict], rules: dict) -> dict:
     if not date_values:
         open_questions.append(
             {
-                "detail": "Lieferdatum unbekannt",
+                "detail": "Delivery date unknown",
                 "references": open_markers,
                 "topic": "lieferdatum",
             }
@@ -150,23 +150,23 @@ def decide(sources: list[dict], rules: dict) -> dict:
     draft_parts = []
     if prefix:
         draft_parts.append(prefix)
-    draft_parts.append("Arbeitsvorbereitung synthetisch.")
+    draft_parts.append("Synthetic work preparation.")
     if conflicts:
         bits = []
         for claim in active:
             ref = claim["references"][0]
             bits.append(f"{claim['value']} (Quelle {ref['source_id']}, Locator {ref['locator']})")
-        draft_parts.append("Prüfstücke: Konflikt zwischen " + " und ".join(bits) + ".")
-        draft_parts.append("Keine Menge übernommen.")
+        draft_parts.append("Test specimens: conflict between " + " and ".join(bits) + ".")
+        draft_parts.append("No quantity adopted.")
     elif facts:
-        draft_parts.append(f"Prüfstücke belegt: {facts[0]['statement']}.")
+        draft_parts.append(f"Test specimens documented: {facts[0]['statement']}.")
     else:
-        draft_parts.append("Keine belegte Menge.")
+        draft_parts.append("No documented quantity.")
     if open_questions:
-        draft_parts.append("Lieferdatum: offen.")
+        draft_parts.append("Delivery date: open.")
     if ignored:
-        draft_parts.append("Quellen mit Steueranweisungen wurden nicht ausgeführt.")
-    draft_parts.append("Keine stille Auflösung.")
+        draft_parts.append("Sources with control instructions were not executed.")
+    draft_parts.append("No silent resolution.")
     stored_claims = [_public_claim(claim) for claim in active]
     return {
         "claims": stored_claims,

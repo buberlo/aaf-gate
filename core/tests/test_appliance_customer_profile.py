@@ -21,8 +21,8 @@ from test_devicecheck import CORE, make_hermes_home, make_profile_dir
 from test_dumpcheck import GOOD_DUMP, SHA
 
 OLD_POINT5 = (
-    "5. ~/.hermes/active_profile fehlt (Standardprofil) oder nennt das Kundenprofil dieses Pakets. "
-    "`verify-device --profile <name>` prüft das."
+    "5. ~/.hermes/active_profile is missing (default profile) or names this package's customer profile. "
+    "`verify-device --profile <name>` checks that."
 )
 
 
@@ -45,7 +45,7 @@ class ApplianceCustomerProfileTests(unittest.TestCase):
         self.assertIsNone(provenance.get("customer_profile"))
         manual = (target / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
         self.assertIn(OLD_POINT5, manual)
-        self.assertNotIn("Unter ~/.hermes/profiles/ liegt genau das Verzeichnis kunde", manual)
+        self.assertNotIn("Under ~/.hermes/profiles/ there is exactly the directory kunde", manual)
 
     def test_cp02_with_customer_profile_kunde(self):
         target = Path(self.folder) / "kunde"
@@ -61,9 +61,9 @@ class ApplianceCustomerProfileTests(unittest.TestCase):
         self.assertEqual(provenance["customer_profile"], "kunde")
         manual = (target / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
         self.assertIn(
-            "5. ~/.hermes/active_profile fehlt (Standardprofil) oder nennt das Kundenprofil kunde. "
-            "Unter ~/.hermes/profiles/ liegt genau das Verzeichnis kunde. "
-            "verify-device prüft beides mit dem Profilnamen aus provenance.json.",
+            "5. ~/.hermes/active_profile is missing (default profile) or names customer profile kunde. "
+            "Under ~/.hermes/profiles/ there is exactly the directory kunde. "
+            "verify-device checks both with the profile name from provenance.json.",
             manual,
         )
 
@@ -74,7 +74,7 @@ class ApplianceCustomerProfileTests(unittest.TestCase):
         self.assertIsNone(provenance.get("customer_profile"))
         self.assertEqual(provenance.get("tenant_id"), "synth-tenant")
         assumptions = (target / "ASSUMPTIONS.md").read_text(encoding="utf-8")
-        self.assertIn("wird nicht aus tenant_id abgeleitet", assumptions)
+        self.assertIn("is not derived from tenant_id", assumptions)
 
     def test_cp03_invalid_customer_profile(self):
         target = Path(self.folder) / "bad"

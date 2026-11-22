@@ -136,7 +136,7 @@ class RelayCheckTests(unittest.TestCase):
         target = Path(folder) / "pkg"
         build_appliance_package(plane, "konrad", "cfg-1", target)
         manual = (target / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
-        self.assertIn("verify-relay` meldet als Kunden- und als Agentenkonto ok true", manual)
+        self.assertIn("verify-relay` reports ok true as customer and agent account", manual)
 
 
 if __name__ == "__main__":

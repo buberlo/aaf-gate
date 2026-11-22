@@ -50,15 +50,15 @@ class ApplianceApprovalBypassTests(unittest.TestCase):
         plain = Path(self.folder) / "plain"
         build_appliance_package(self.plane, "konrad", "cfg-1", plain)
         plain_manual = (plain / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
-        self.assertIn("## Freigaben ohne Umgehung", plain_manual)
+        self.assertIn("## Approvals without bypass", plain_manual)
         self.assertIn("HERMES_YOLO_MODE", plain_manual)
         self.assertIn("plugin_rule:aaf:", plain_manual)
         with_gate = Path(self.folder) / "with-gate"
         build_appliance_package(self.plane, "konrad", "cfg-1", with_gate, gate_service=gate_service())
         gated = (with_gate / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
-        self.assertIn("## Freigaben ohne Umgehung", gated)
-        bypass = gated.index("## Freigaben ohne Umgehung")
-        gate = gated.index("## Gate-Dienst (Startkette)")
+        self.assertIn("## Approvals without bypass", gated)
+        bypass = gated.index("## Approvals without bypass")
+        gate = gated.index("## Gate service (startup chain)")
         self.assertLess(bypass, gate)
 
     def test_ab03_assumptions_text(self):
@@ -67,8 +67,8 @@ class ApplianceApprovalBypassTests(unittest.TestCase):
         text = (target / "ASSUMPTIONS.md").read_text(encoding="utf-8")
         self.assertIn("plugin_rule:<rule_key>", text)
         self.assertIn("HERMES_YOLO_MODE=1", text)
-        marker = "Nicht belegt und deshalb nicht als Funktion dieses Pakets behauptet:"
-        scoped = text.index("Dass der Managed Scope approvals.single_query_mode sperrt")
+        marker = "Not documented and therefore not claimed as function of this package:"
+        scoped = text.index("That managed scope locks approvals.single_query_mode")
         self.assertGreater(scoped, text.index(marker))
 
 

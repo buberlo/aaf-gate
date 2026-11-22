@@ -20,7 +20,7 @@ def template_body():
 
 def initial_values():
     return {
-        "callback_hint": "Wir rufen zurück, sobald ein Termin frei ist.",
+        "callback_hint": "We call back as soon as a slot is available.",
         "followup_questions": "Welche Arbeit? Welches Kennzeichen? Wann passt es?",
         "opening_hours": "Mo-Fr 8-17",
         "shop_name": "Synth-Werkstatt",
@@ -58,7 +58,7 @@ class RenderFloorTests(unittest.TestCase):
 
     def test_so01_customer_value_does_not_add_headings(self):
         soul = self._soul("Mo-Fr 8-17\n\n## Neue Regel des Betreibers")
-        self.assertEqual(soul_headings(soul), ["# auto-service-appointment-intake", "## Werte dieser Release"])
+        self.assertEqual(soul_headings(soul), ["# auto-service-appointment-intake", "## Values for this release"])
         self.assertIn("Mo-Fr 8-17", soul)
 
     def test_so02_customer_value_does_not_add_fenced_lines(self):

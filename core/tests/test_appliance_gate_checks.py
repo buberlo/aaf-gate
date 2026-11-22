@@ -42,12 +42,12 @@ class ApplianceGateChecksTests(unittest.TestCase):
         build_appliance_package(self.plane, "konrad", "cfg-1", target, gate_service=gs)
         manual = (target / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
         self.assertTrue(manual.startswith(_checklist()))
-        self.assertIn("## Gate-Dienst (Startkette)", manual)
+        self.assertIn("## Gate service (startup chain)", manual)
         self.assertIn("/Library/LaunchDaemons/de.example.aaf-gate.plist", manual)
         self.assertIn("verify-launchd", manual)
-        self.assertIn("der Standardausgabe des Dienstes", manual)
+        self.assertIn("the service default output", manual)
         self.assertIn(
-            "5. man launchd.plist auf diesem Gerät beschreibt die verwendeten Schlüssel "
+            "5. man launchd.plist on this device describes the keys used "
             "KeepAlive, Label, ProgramArguments, UserName, WorkingDirectory.",
             manual,
         )
@@ -62,7 +62,7 @@ class ApplianceGateChecksTests(unittest.TestCase):
         self.assertIn("/var/log/aaf-gate.log", manual)
         keys = ", ".join(sorted(plistlib.loads(gate_plist(**gs)).keys()))
         self.assertIn(
-            "5. man launchd.plist auf diesem Gerät beschreibt die verwendeten Schlüssel " + keys + ".",
+            "5. man launchd.plist on this device describes the keys used " + keys + ".",
             manual,
         )
         self.assertIn("StandardErrorPath", keys)

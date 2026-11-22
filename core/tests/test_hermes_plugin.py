@@ -97,7 +97,7 @@ class HermesPluginTests(unittest.TestCase):
     def test_hp03_hash_value_equivalence(self):
         values = [
             {"nested": {"a": 1, "b": ["x", "y"]}},
-            {"text": "Grüße"},
+            {"text": "Greetings"},
             [1, 2, 3],
             {"n": 42, "f": 1.5},
             {},
@@ -152,14 +152,14 @@ class HermesPluginTests(unittest.TestCase):
             self.plugin.register(bare)
             self.assertEqual(
                 bare.hooks[0][1]("gmail", {"x": 1})["message"],
-                "Kern: verweigert (gate_socket_unconfigured)",
+                "Core: denied (gate_socket_unconfigured)",
             )
         with patch.dict(os.environ, {"AAF_GATE_SOCKET": "/tmp/ignored.sock"}):
             self.plugin.register(ctx)
         self.assertEqual(len(ctx.hooks), 1)
         self.assertEqual(ctx.hooks[0][0], "pre_tool_call")
         out = ctx.hooks[0][1]("gmail", {"x": 1})
-        self.assertEqual(out["message"], "Kern: verweigert (gate_socket_unconfigured)")
+        self.assertEqual(out["message"], "Core: denied (gate_socket_unconfigured)")
 
     def test_hp07_e2e_socket(self):
         folder = tempfile.mkdtemp(dir="/tmp")
@@ -205,7 +205,7 @@ class HermesPluginTests(unittest.TestCase):
         self.plugin.register(ctx)
         pre = next(cb for name, cb in ctx.hooks if name == "pre_tool_call")
         out = pre("gmail", {"id": "1"})
-        self.assertEqual(out["message"], "Kern: verweigert (core_unreachable)")
+        self.assertEqual(out["message"], "Core: denied (core_unreachable)")
 
     def test_hp09_post_equivalence_with_framework(self):
         plugin_reports = []
@@ -341,7 +341,7 @@ class HermesPluginTests(unittest.TestCase):
                 self.plugin.register(ctx)
             self.assertEqual(len(ctx.hooks), 1)
             out = ctx.hooks[0][1]("gmail", {"x": 1})
-            self.assertEqual(out["message"], "Kern: verweigert (gate_socket_unconfigured)")
+            self.assertEqual(out["message"], "Core: denied (gate_socket_unconfigured)")
         finally:
             server.close()
 
@@ -350,12 +350,12 @@ class HermesPluginTests(unittest.TestCase):
         with patch.dict(os.environ, {"AAF_GATE_SOCKET": "/tmp/nope.sock"}):
             self.plugin.register(ctx_int)
         out_int = ctx_int.hooks[0][1]("gmail", {"x": 1})
-        self.assertEqual(out_int["message"], "Kern: verweigert (gate_socket_unconfigured)")
+        self.assertEqual(out_int["message"], "Core: denied (gate_socket_unconfigured)")
         ctx_err = ConfigFakeCtx(get_config_raises=RuntimeError("boom"))
         with patch.dict(os.environ, {"AAF_GATE_SOCKET": "/tmp/nope.sock"}):
             self.plugin.register(ctx_err)
         out_err = ctx_err.hooks[0][1]("gmail", {"x": 1})
-        self.assertEqual(out_err["message"], "Kern: verweigert (gate_socket_unconfigured)")
+        self.assertEqual(out_err["message"], "Core: denied (gate_socket_unconfigured)")
 
     def test_hp14_config_none_and_no_get_config_block_env(self):
         folder = tempfile.mkdtemp(dir="/tmp")
@@ -369,14 +369,14 @@ class HermesPluginTests(unittest.TestCase):
                 self.plugin.register(ctx)
             pre = next(cb for name, cb in ctx.hooks if name == "pre_tool_call")
             out = pre("gmail_read", {"id": "1"})
-            self.assertEqual(out["message"], "Kern: verweigert (gate_socket_unconfigured)")
+            self.assertEqual(out["message"], "Core: denied (gate_socket_unconfigured)")
             bare = FakeCtx()
             with patch.dict(os.environ, {"AAF_GATE_SOCKET": sock_path}):
                 self.plugin.register(bare)
             pre_bare = next(cb for name, cb in bare.hooks if name == "pre_tool_call")
             self.assertEqual(
                 pre_bare("gmail_read", {"id": "2"})["message"],
-                "Kern: verweigert (gate_socket_unconfigured)",
+                "Core: denied (gate_socket_unconfigured)",
             )
         finally:
             server.close()
@@ -392,7 +392,7 @@ class HermesPluginTests(unittest.TestCase):
             with patch.dict(os.environ, {"AAF_GATE_SOCKET": sock_path}):
                 self.plugin.register(ctx)
             out = ctx.hooks[0][1]("gmail", {"x": 1})
-            self.assertEqual(out["message"], "Kern: verweigert (gate_socket_unconfigured)")
+            self.assertEqual(out["message"], "Core: denied (gate_socket_unconfigured)")
         finally:
             server.close()
 
@@ -421,7 +421,7 @@ class HermesPluginTests(unittest.TestCase):
                 with patch.dict(os.environ, {"AAF_GATE_SOCKET": "/tmp/ignored.sock"}):
                     self.plugin.register(ctx)
                 out = ctx.hooks[0][1]("gmail", {"x": 1})
-                self.assertEqual(out["message"], "Kern: verweigert (gate_socket_unconfigured)")
+                self.assertEqual(out["message"], "Core: denied (gate_socket_unconfigured)")
 
     def test_hp15_no_config_schema_or_set_config(self):
         text = YAML_PATH.read_text(encoding="utf-8")

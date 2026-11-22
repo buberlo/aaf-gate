@@ -176,7 +176,7 @@ class DeviceCheckGateTenantTests(unittest.TestCase):
         init_gate_db(gs["db"], gs["principal"], "synth-tenant", out=io.StringIO())
         manual = (package / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
         self.assertIn(
-            " mit --tenant synth-tenant --package <Paketverzeichnis>",
+            " with --tenant synth-tenant --package <package directory>",
             manual,
         )
         managed_text = (package / "managed" / "config.yaml").read_text(encoding="utf-8")

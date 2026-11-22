@@ -5,7 +5,7 @@
   "captured_at": "2026-11-08T11:00:00Z",
   "synthetic": true,
   "segments": [
-    {"locator": "p1", "text": "Materialprüfung: 20 Prüfstücke."},
+    {"locator": "p1", "text": "Material inspection: 20 test specimens."},
     {"locator": "p2", "text": "Lieferdatum noch offen."}
   ]
 }

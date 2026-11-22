@@ -159,8 +159,8 @@ class DumpCheckTests(unittest.TestCase):
         manual = (target / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
         self.assertIn("verify-hermes-dump /tmp/hermes-dump.txt", manual)
         assumptions = (target / "ASSUMPTIONS.md").read_text(encoding="utf-8")
-        marker = "Nicht belegt und deshalb nicht als Funktion dieses Pakets behauptet:"
-        line = "verify-hermes-dump wertet nur die Zeile version: aus"
+        marker = "Not documented and therefore not claimed as function of this package:"
+        line = "verify-hermes-dump only parses the version: line"
         self.assertIn(line, assumptions)
         self.assertGreater(assumptions.index(line), assumptions.index(marker))
 

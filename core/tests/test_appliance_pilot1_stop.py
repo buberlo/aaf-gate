@@ -50,8 +50,8 @@ class AppliancePilot1StopTests(unittest.TestCase):
         self.manual_plain = (plain_target / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
 
     def test_ps01_stop_probe_steps_present(self):
-        anchor = self.pilot.index("Grenze: Der Anker belegt nur")
-        probe = self.pilot.index("### Stopp-Probe", anchor)
+        anchor = self.pilot.index("Limit: The anchor only attests")
+        probe = self.pilot.index("### Stop probe", anchor)
         self.assertGreater(probe, anchor)
         tail = self.pilot[probe:]
         for step in range(1, 10):
@@ -61,17 +61,17 @@ class AppliancePilot1StopTests(unittest.TestCase):
         section = _pilot1_checklist_section(
             self.gs.get("server", "gmail"), self.gs["db"], self.tenant
         )
-        prefix, _rest = section.split("### Stopp-Probe", 1)
+        prefix, _rest = section.split("### Stop probe", 1)
         self.assertTrue(prefix.endswith(
-            "Grenze: Der Anker belegt nur, dass das Gate-Audit bis zu seiner Sequenz nicht zurückgesetzt oder umgeschrieben wurde. Er belegt nicht, dass jeder Vorgang protokolliert wurde. Ereignisse, die vor dem Schreiben unterdrückt wurden, erkennt er nicht.\n\n"
+            "Limit: The anchor only attests the gate audit was not reset or rewritten up to its sequence. It does not attest every operation was logged. Events suppressed before write are not detected.\n\n"
         ))
         self.assertIn("4. `python3 -m framework.cli gate-audit --db ", prefix)
-        self.assertIn("6. Bei jeder Abnahme:", prefix)
-        stop_at = self.pilot.index("### Stopp-Probe")
-        self.assertGreater(stop_at, self.pilot.index("6. Bei jeder Abnahme:"))
+        self.assertIn("6. On each acceptance:", prefix)
+        stop_at = self.pilot.index("### Stop probe")
+        self.assertGreater(stop_at, self.pilot.index("6. On each acceptance:"))
 
     def test_ps03_stop_commands_executable(self):
-        block = self.pilot.split("### Stopp-Probe", 1)[1]
+        block = self.pilot.split("### Stop probe", 1)[1]
         matches = re.findall(r"^S(\d+)\. `([^`]+)`", block, re.MULTILINE)
         self.assertEqual(len(matches), 8)
         init_gate_db(self.gs["db"], self.gs["principal"], self.tenant, out=io.StringIO())
@@ -94,8 +94,8 @@ class AppliancePilot1StopTests(unittest.TestCase):
             ),
         }
         for step, command in matches:
-            command = command.replace("<Kunden-Principal>", "cust-stop")
-            command = command.replace("<Betreiber-Principal>", "konrad-stop")
+            command = command.replace("<customer principal>", "cust-stop")
+            command = command.replace("<operator principal>", "konrad-stop")
             self.assertTrue(command.startswith(prefix))
             argv = shlex.split(command[len(prefix) :])
             buf = io.StringIO()
@@ -107,7 +107,7 @@ class AppliancePilot1StopTests(unittest.TestCase):
             self.assertTrue(check(body), msg="step S" + step)
 
     def test_ps04_no_stop_without_gate_service(self):
-        self.assertNotIn("### Stopp-Probe", self.manual_plain)
+        self.assertNotIn("### Stop probe", self.manual_plain)
 
     def test_ps05_docs(self):
         root = Path(__file__).resolve().parents[2]

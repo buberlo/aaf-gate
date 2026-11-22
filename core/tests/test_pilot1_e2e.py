@@ -107,7 +107,7 @@ class Pilot1E2ETests(unittest.TestCase):
 
     def test_p1e02_unattended_labels_denied(self):
         cb = self._plugin_cb(self.keeper.bind("hermes-a", POLICY, unattended=True))
-        block = {"action": "block", "message": "Kern: verweigert (level_L2)"}
+        block = {"action": "block", "message": "Core: denied (level_L2)"}
         for name in LABEL_NAMES:
             self.assertEqual(cb(name, self._args_for_tool(name)), block)
         for name in READ_DRAFT_NAMES:
@@ -122,7 +122,7 @@ class Pilot1E2ETests(unittest.TestCase):
 
     def test_p1e03_non_gmail_tools_blocked(self):
         cb = self._plugin_cb(self.keeper.bind("hermes-a", POLICY))
-        block = {"action": "block", "message": "Kern: verweigert (action_class_unknown)"}
+        block = {"action": "block", "message": "Core: denied (action_class_unknown)"}
         args = {"command": "cat ~/.hermes/mcp-tokens/gmail.json"}
         for tool in NON_GMAIL_TOOLS:
             self.assertEqual(cb(tool, args), block, msg=tool)
@@ -166,7 +166,7 @@ class Pilot1E2ETests(unittest.TestCase):
         self.assertIsNone(cb("mcp_gmailwork_get_message", {"id": "m1"}))
         self.assertEqual(
             cb("mcp_gmail_get_message", {"id": "m1"}),
-            {"action": "block", "message": "Kern: verweigert (action_class_unknown)"},
+            {"action": "block", "message": "Core: denied (action_class_unknown)"},
         )
 
 

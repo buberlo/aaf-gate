@@ -88,9 +88,9 @@ class HookCheckFailClosedTests(unittest.TestCase):
         issues = verify_hermes_home(home)
         self.assertFalse(any(item.startswith("shell_hooks") for item in issues))
         assumptions = (target / "ASSUMPTIONS.md").read_text(encoding="utf-8")
-        self.assertIn("plugins.disabled hat immer Vorrang", assumptions)
-        marker = "Nicht belegt und deshalb nicht als Funktion dieses Pakets behauptet:"
-        scoped = "Dass der Managed Scope plugins.enabled sperrt"
+        self.assertIn("plugins.disabled always takes precedence", assumptions)
+        marker = "Not documented and therefore not claimed as function of this package:"
+        scoped = "That managed scope locks plugins.enabled"
         self.assertIn(scoped, assumptions)
         self.assertGreater(assumptions.index(scoped), assumptions.index(marker))
 

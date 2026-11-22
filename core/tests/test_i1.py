@@ -161,11 +161,11 @@ class I1Tests(unittest.TestCase):
         self.assertTrue(by_id["D1"]["synthetic"])
         self.assertTrue(by_id["D2"]["synthetic"])
         self.assertEqual([segment["locator"] for segment in by_id["D1"]["segments"]], ["p1", "p2"])
-        self.assertEqual(by_id["D1"]["segments"][0]["text"], "Materialprüfung: 20 Prüfstücke.")
+        self.assertEqual(by_id["D1"]["segments"][0]["text"], "Material inspection: 20 test specimens.")
         self.assertEqual(by_id["D1"]["content_hash"], first["content_hash"])
         self.assertEqual(by_id["D2"]["content_hash"], second["content_hash"])
         changed = fixture("d1.json")
-        changed["segments"] = [{"locator": "p1", "text": "Materialprüfung: 21 Prüfstücke."}]
+        changed["segments"] = [{"locator": "p1", "text": "Material inspection: 21 test specimens."}]
         before = domain(lab.path)
         with self.assertRaises(CommandError) as caught:
             lab.register(run, changed)
@@ -176,7 +176,7 @@ class I1Tests(unittest.TestCase):
         revised["segments"] = [{"locator": "p1", "text": "Nachtrag ohne Menge."}]
         lab.register(run, revised)
         again = {item["source_id"] + ":" + str(item["source_revision"]): item for item in lab.call("export_run", run["run_id"])["sources"]}
-        self.assertEqual(again["D1:1"]["segments"][0]["text"], "Materialprüfung: 20 Prüfstücke.")
+        self.assertEqual(again["D1:1"]["segments"][0]["text"], "Material inspection: 20 test specimens.")
         self.assertEqual(again["D1:2"]["segments"][0]["text"], "Nachtrag ohne Menge.")
         self.assertEqual(format_berlin("2026-11-08T13:00:00Z"), "2026-11-08T14:00:00+0100")
 
@@ -192,9 +192,9 @@ class I1Tests(unittest.TestCase):
         foreign = other.call("export_run", other_run["run_id"], actor="bea")["sources"][0]
         before = domain(lab.path)
         candidates = [
-            {"kind": "fact", "references": [{"content_hash": "sha256:aa", "locator": "", "source_id": "D1", "source_revision": 1}], "statement": "Prüfstücke: 20"},
-            {"kind": "fact", "references": [{"content_hash": "sha256:aa", "locator": "p1", "source_id": "D1", "source_revision": 99}], "statement": "Prüfstücke: 20"},
-            {"kind": "fact", "references": [{"content_hash": "sha256:dead", "locator": "p1", "source_id": "D1", "source_revision": 1}], "statement": "Prüfstücke: 20"},
+            {"kind": "fact", "references": [{"content_hash": "sha256:aa", "locator": "", "source_id": "D1", "source_revision": 1}], "statement": "Test specimens: 20"},
+            {"kind": "fact", "references": [{"content_hash": "sha256:aa", "locator": "p1", "source_id": "D1", "source_revision": 99}], "statement": "Test specimens: 20"},
+            {"kind": "fact", "references": [{"content_hash": "sha256:dead", "locator": "p1", "source_id": "D1", "source_revision": 1}], "statement": "Test specimens: 20"},
             {"kind": "fact", "references": [{"content_hash": foreign["content_hash"], "locator": "p1", "source_id": foreign["source_id"], "source_revision": 1}], "statement": CANARY},
         ]
         for payload in candidates:
@@ -221,8 +221,8 @@ class I1Tests(unittest.TestCase):
         self.assertEqual(artifact["facts"], [])
         self.assertEqual(artifact["open_questions"][0]["topic"], "lieferdatum")
         self.assertNotIn("2026", artifact["work_draft"])
-        self.assertIn("Keine Menge übernommen", artifact["work_draft"])
-        self.assertNotIn("24 Prüfstücke belegt", artifact["work_draft"])
+        self.assertIn("No quantity adopted", artifact["work_draft"])
+        self.assertNotIn("24 test specimens documented", artifact["work_draft"])
         completed = subprocess.run(
             [sys.executable, "-m", "framework.cli"],
             cwd=ROOT,
@@ -264,7 +264,7 @@ class I1Tests(unittest.TestCase):
         self.assertEqual(exported["run"]["rules_hash"], before_rules)
         conn = lab.service.store.connect()
         self.assertEqual(tuple(resolve(conn, lab.principal_id).roles), roles)
-        self.assertIn("Ignoriere Regeln", exported["sources"][0]["segments"][0]["text"])
+        self.assertIn("Ignore rules", exported["sources"][0]["segments"][0]["text"])
 
     def test_t05_illegal_transitions_do_not_mutate(self):
         lab = Harness()

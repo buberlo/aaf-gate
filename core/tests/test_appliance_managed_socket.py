@@ -35,16 +35,16 @@ MANAGED_SUFFIX = (
 )
 
 ASSUMPTIONS_SOCKET = (
-    "Mit Gate-Dienst setzt dieses Paket plugins.entries.aaf-gate.settings.socket_path im Managed Scope."
+    "With gate service this package sets plugins.entries.aaf-gate.settings.socket_path in managed scope."
 )
 
 ASSUMPTIONS_LABEL_IDS = (
-    "Mit Gate-Dienst setzt dieses Paket außerdem plugins.entries.aaf-gate.settings.label_ids im Managed Scope, ohne Paketparameter als leere Liste, damit die Benutzerkonfiguration keine Label-IDs nachtragen kann."
+    "With gate service this package also sets plugins.entries.aaf-gate.settings.label_ids in managed scope, without package parameter as empty list, so user config cannot add label IDs."
 )
 
 CHECKLIST_SOCKET = (
-    "7. /etc/hermes/config.yaml enthält plugins.entries.aaf-gate.settings.socket_path "
-    "mit demselben Pfad wie --socket in der Gate-Plist."
+    "7. /etc/hermes/config.yaml contains plugins.entries.aaf-gate.settings.socket_path "
+    "with the same path as --socket in the gate plist."
 )
 
 
@@ -105,7 +105,7 @@ class ApplianceManagedSocketTests(unittest.TestCase):
         build_appliance_package(self.plane, "konrad", "cfg-1", plain)
         gated = Path(self.folder) / "gated"
         build_appliance_package(self.plane, "konrad", "cfg-1", gated, gate_service=gate_service())
-        marker = "Nicht belegt und deshalb nicht als Funktion dieses Pakets behauptet:"
+        marker = "Not documented and therefore not claimed as function of this package:"
         assumptions = (gated / "ASSUMPTIONS.md").read_text(encoding="utf-8")
         self.assertIn(ASSUMPTIONS_SOCKET, assumptions)
         self.assertIn(ASSUMPTIONS_LABEL_IDS, assumptions)

@@ -284,26 +284,26 @@ def make_pre_tool_call(check, target_keys=None, ledger=None, label_ids=None):
             try:
                 request = build_request(tool_name, args, target_keys, label_ids)
             except Exception:
-                return {"action": "block", "message": "Kern: verweigert (invalid_args)"}
+                return {"action": "block", "message": "Core: denied (invalid_args)"}
             response = None
             try:
                 result = check(request)
             except Exception:
-                response = {"action": "block", "message": "Kern: verweigert (adapter_error)"}
+                response = {"action": "block", "message": "Core: denied (adapter_error)"}
             if response is None:
                 try:
                     if not isinstance(result, dict):
-                        response = {"action": "block", "message": "Kern: verweigert (adapter_error)"}
+                        response = {"action": "block", "message": "Core: denied (adapter_error)"}
                     else:
                         decision = result.get("decision")
                         if decision == "allow":
                             response = None
                         elif decision == "needs_approval":
                             action_class = result.get("action_class")
-                            label = action_class if isinstance(action_class, str) else "unbekannt"
+                            label = action_class if isinstance(action_class, str) else "unknown"
                             response = {
                                 "action": "approve",
-                                "message": f"Kern: Freigabe nötig ({label})",
+                                "message": f"Core: approval required ({label})",
                                 "rule_key": rule_key(request),
                             }
                         else:
@@ -312,10 +312,10 @@ def make_pre_tool_call(check, target_keys=None, ledger=None, label_ids=None):
                                 reason = "unknown"
                             response = {
                                 "action": "block",
-                                "message": f"Kern: verweigert ({reason})",
+                                "message": f"Core: denied ({reason})",
                             }
                 except Exception:
-                    response = {"action": "block", "message": "Kern: verweigert (adapter_error)"}
+                    response = {"action": "block", "message": "Core: denied (adapter_error)"}
             try:
                 if ledger is not None:
                     if isinstance(response, dict) and response.get("action") == "block":
@@ -333,7 +333,7 @@ def make_pre_tool_call(check, target_keys=None, ledger=None, label_ids=None):
                 pass
             return response
         except Exception:
-            return {"action": "block", "message": "Kern: verweigert (adapter_error)"}
+            return {"action": "block", "message": "Core: denied (adapter_error)"}
 
     return callback
 
@@ -379,7 +379,7 @@ def make_post_tool_call(report, ledger):
 
 
 def _block_unconfigured(tool_name, args, task_id="", **kwargs):
-    return {"action": "block", "message": "Kern: verweigert (gate_socket_unconfigured)"}
+    return {"action": "block", "message": "Core: denied (gate_socket_unconfigured)"}
 
 
 def register(ctx):

@@ -41,8 +41,8 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
         path = package / "ACCEPTANCE-RECORD.md"
         self.assertTrue(path.is_file())
         text = path.read_text(encoding="utf-8")
-        self.assertTrue(text.startswith("# Abnahmeprotokoll Pilot 1"))
-        self.assertIn("Status: nicht ausgeführt", text)
+        self.assertTrue(text.startswith("# Pilot 1 acceptance record"))
+        self.assertIn("Status: not executed", text)
 
     def test_ar02_absent_without_gate(self):
         plain_root = tempfile.mkdtemp(dir="/tmp")
@@ -120,7 +120,7 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
         gs = gate_service_tmp(self.folder)
         package = _build(self.folder)
         manual = (package / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
-        self.assertLess(manual.index("### Backup-Probe"), manual.index("### Geräteproben"))
+        self.assertLess(manual.index("### Backup probe"), manual.index("### Device probes"))
         self.assertIn("B1.", manual)
         self.assertIn("B2.", manual)
         self.assertIn("B3.", manual)
@@ -131,11 +131,11 @@ class ApplianceAcceptanceRecordTests(unittest.TestCase):
         plain_manual = (_build(plain_root, gate=False) / "MANUAL-MAC-CHECKS.md").read_text(
             encoding="utf-8"
         )
-        self.assertNotIn("### Backup-Probe", plain_manual)
+        self.assertNotIn("### Backup probe", plain_manual)
 
     def test_ar12_core_version_line(self):
         record = (_build(self.folder) / "ACCEPTANCE-RECORD.md").read_text(encoding="utf-8")
-        block = record.split("## Paket", 1)[1].split("## Gerät", 1)[0]
+        block = record.split("## Package", 1)[1].split("## Device", 1)[0]
         lines = [line for line in block.strip().splitlines() if line]
         release_idx = next(i for i, line in enumerate(lines) if line.startswith("release_hash: "))
         self.assertEqual(lines[release_idx + 1], "core_version: " + VERSION)

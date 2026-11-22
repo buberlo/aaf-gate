@@ -31,22 +31,22 @@ class ApplianceHooksSectionTests(unittest.TestCase):
         target = Path(self.folder) / "plain"
         build_appliance_package(self.plane, "konrad", "cfg-1", target)
         manual = (target / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
-        self.assertIn("## Fremde Hooks", manual)
+        self.assertIn("## Foreign hooks", manual)
         self.assertIn("verify-hooks ~/.hermes", manual)
         self.assertIn("~/.hermes/profiles/", manual)
-        self.assertIn("plugins.enabled enthält nur aaf-gate", manual)
-        bypass = manual.index("## Freigaben ohne Umgehung")
-        foreign = manual.index("## Fremde Hooks")
+        self.assertIn("plugins.enabled contains only aaf-gate", manual)
+        bypass = manual.index("## Approvals without bypass")
+        foreign = manual.index("## Foreign hooks")
         self.assertLess(bypass, foreign)
 
     def test_fh02_gated_section_order(self):
         target = Path(self.folder) / "gated"
         build_appliance_package(self.plane, "konrad", "cfg-1", target, gate_service=gate_service())
         manual = (target / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
-        bypass = manual.index("## Freigaben ohne Umgehung")
-        foreign = manual.index("## Fremde Hooks")
-        relay = manual.index("## NeMo Relay und Telemetrie")
-        gate = manual.index("## Gate-Dienst (Startkette)")
+        bypass = manual.index("## Approvals without bypass")
+        foreign = manual.index("## Foreign hooks")
+        relay = manual.index("## NeMo relay and telemetry")
+        gate = manual.index("## Gate service (startup chain)")
         pilot = manual.index("## Pilot 1:")
         self.assertLess(bypass, foreign)
         self.assertLess(foreign, relay)
@@ -57,10 +57,10 @@ class ApplianceHooksSectionTests(unittest.TestCase):
         target = Path(self.folder) / "assumptions"
         build_appliance_package(self.plane, "konrad", "cfg-1", target)
         text = (target / "ASSUMPTIONS.md").read_text(encoding="utf-8")
-        self.assertIn("HERMES_SAFE_MODE überspringt sie nicht", text)
+        self.assertIn("HERMES_SAFE_MODE does not skip them", text)
         self.assertIn("modify", text)
-        marker = "Nicht belegt und deshalb nicht als Funktion dieses Pakets behauptet:"
-        verify_line = "Dass verify-hooks jede YAML-Schreibweise"
+        marker = "Not documented and therefore not claimed as function of this package:"
+        verify_line = "That verify-hooks recognizes every YAML spelling"
         self.assertIn(verify_line, text)
         self.assertGreater(text.index(verify_line), text.index(marker))
 

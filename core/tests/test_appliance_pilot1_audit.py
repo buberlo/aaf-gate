@@ -21,11 +21,11 @@ from test_appliance_package import initial_values, template_body
 
 def _legacy_pilot1_prefix(server):
     lines = [
-        "## Pilot 1: Gmail über das Gate (Server " + server + ")",
+        "## Pilot 1: Gmail via gate (Server " + server + ")",
         "",
-        "Die aufzubewahrenden Ausgabezeilen werden in ACCEPTANCE-RECORD.md dieses Pakets eingetragen.",
+        "Output lines to keep are entered in this package's ACCEPTANCE-RECORD.md.",
         "",
-        "Die Werkzeugliste von Hermes zeigt genau diese Gmail-Werkzeuge, jeweils mit der Klasse, die das Gate erwartet:",
+        "Hermes tool list shows exactly these Gmail tools, each with the class the gate expects:",
     ]
     for tool in sorted(hermes_mcp.GMAIL_MCP_TOOLS):
         name = hermes_mcp.registered_name(server, tool)
@@ -35,14 +35,14 @@ def _legacy_pilot1_prefix(server):
         hermes_mcp.PILOT1_CLASSES[t] == "send" or "send" in t for t in hermes_mcp.GMAIL_MCP_TOOLS
     )
     if has_send:
-        lines.append("Achtung: Die Liste enthält ein Werkzeug zum Senden.")
+        lines.append("Warning: The list includes a send tool.")
     else:
-        lines.append("Ein Werkzeug zum Senden ist nicht dabei.")
+        lines.append("No send tool is included.")
     lines.extend(
         [
-            "1. Ein Aufruf eines Werkzeugs, das nicht in dieser Liste steht, wird vom Gate mit action_class_unknown abgelehnt. Die Audit-Zeile nennt diesen Grund.",
-            "2. Ein Lesezugriff und ein Entwurf erzeugen je eine Audit-Zeile mit der Entscheidung des Gates.",
-            "3. Im unbeaufsichtigten Betrieb wird ein Werkzeug der Klasse internal_write abgelehnt.",
+            "1. A call to a tool not on this list is denied by the gate with action_class_unknown. The audit line names this reason.",
+            "2. A read and a draft each produce an audit line with the gate decision.",
+            "3. In unattended operation a tool of class internal_write is denied.",
             "",
         ]
     )
@@ -85,10 +85,10 @@ class AppliancePilot1AuditTests(unittest.TestCase):
         self.assertIn("gate-audit --db " + self.gs["db"], self.pilot)
         self.assertIn("--tenant " + self.tenant, self.pilot)
         three = self.pilot.index(
-            "3. Im unbeaufsichtigten Betrieb wird ein Werkzeug der Klasse internal_write abgelehnt."
+            "3. In unattended operation a tool of class internal_write is denied."
         )
         four = self.pilot.index("4. `python3 -m framework.cli gate-audit")
-        five = self.pilot.index("5. Am Ende der Pilotphase: `python3 -m framework.cli gate-audit")
+        five = self.pilot.index("5. At end of pilot phase: `python3 -m framework.cli gate-audit")
         self.assertLess(three, four)
         self.assertLess(four, five)
 
@@ -114,11 +114,11 @@ class AppliancePilot1AuditTests(unittest.TestCase):
         self.assertTrue(body["ok"])
 
     def test_pa04_point5_summary_runs(self):
-        match = re.search(r"^5\. Am Ende der Pilotphase: `([^`]+)`", self.pilot, re.MULTILINE)
+        match = re.search(r"^5\. At end of pilot phase: `([^`]+)`", self.pilot, re.MULTILINE)
         self.assertIsNotNone(match)
         command = match.group(1)
-        command = command.replace("<Start UTC>", "2026-01-01T00:00:00Z")
-        command = command.replace("<Ende UTC>", "2027-01-01T00:00:00Z")
+        command = command.replace("<start UTC>", "2026-01-01T00:00:00Z")
+        command = command.replace("<end UTC>", "2027-01-01T00:00:00Z")
         prefix = "python3 -m framework.cli "
         self.assertTrue(command.startswith(prefix))
         argv = shlex.split(command[len(prefix) :])

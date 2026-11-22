@@ -84,10 +84,10 @@ class AppliancePluginsDisabledTests(unittest.TestCase):
 
     def test_pdis03_assumptions(self):
         text = (self.target / "ASSUMPTIONS.md").read_text(encoding="utf-8")
-        self.assertIn("disk-cleanup, raft-platform und security-guidance Tool-Hooks", text)
-        self.assertNotIn("nur disk-cleanup und security-guidance", text)
-        marker = "Nicht belegt und deshalb nicht als Funktion dieses Pakets behauptet:"
-        submodule = "Dass mitgelieferte Plugins Hooks nur über ctx.register_hook anmelden"
+        self.assertIn("disk-cleanup, raft-platform and security-guidance register tool hooks", text)
+        self.assertNotIn("only disk-cleanup and security-guidance", text)
+        marker = "Not documented and therefore not claimed as function of this package:"
+        submodule = "That bundled plugins register hooks only via ctx.register_hook"
         self.assertIn(submodule, text)
         self.assertGreater(text.index(submodule), text.index(marker))
 

@@ -21,7 +21,7 @@ def template_body():
 
 def initial_values():
     return {
-        "callback_hint": "Wir rufen zurück, sobald ein Termin frei ist.",
+        "callback_hint": "We call back as soon as a slot is available.",
         "followup_questions": "Welche Arbeit? Welches Kennzeichen? Wann passt es?",
         "opening_hours": "Mo-Fr 8-17",
         "shop_name": "Synth-Werkstatt",
@@ -67,7 +67,7 @@ class AppliancePackageTests(unittest.TestCase):
         manifest = (first / "distribution" / "distribution.yaml").read_text(encoding="utf-8")
         self.assertIn('name: "auto-service-appointment-intake"', manifest)
         assumptions = (first / "ASSUMPTIONS.md").read_text(encoding="utf-8")
-        self.assertIn("nicht belegt", assumptions.lower())
+        self.assertIn("not documented", assumptions.lower())
         self.assertIn("macOS", assumptions)
         script = (first / "provision_dry_run.py").read_text(encoding="utf-8")
         self.assertNotIn("subprocess", script)

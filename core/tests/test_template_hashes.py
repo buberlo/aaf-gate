@@ -23,7 +23,7 @@ def template_body():
 
 def initial_values():
     return {
-        "callback_hint": "Wir rufen zurück, sobald ein Termin frei ist.",
+        "callback_hint": "We call back as soon as a slot is available.",
         "followup_questions": "Welche Arbeit? Welches Kennzeichen? Wann passt es?",
         "opening_hours": "Mo-Fr 8-17",
         "shop_name": "Synth-Werkstatt",
@@ -42,7 +42,7 @@ class TemplateHashTests(unittest.TestCase):
     def test_th02_modified_template_raises_mismatch(self):
         expected = expected_hashes(HASHES_PATH)
         body = copy.deepcopy(template_body())
-        body["title"] = "Geänderte Terminannahme"
+        body["title"] = "Changed appointment intake"
         with self.assertRaises(ConfigError) as ctx:
             check_template(body, expected)
         self.assertEqual(ctx.exception.code, "TEMPLATE_HASH_MISMATCH")

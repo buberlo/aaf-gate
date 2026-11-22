@@ -25,7 +25,7 @@ def template_body():
 
 def modified_body():
     body = copy.deepcopy(template_body())
-    body["title"] = "Geändert im Gerätetest"
+    body["title"] = "Changed in device test"
     return body
 
 

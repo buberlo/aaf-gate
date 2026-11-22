@@ -347,8 +347,8 @@ class DeviceCheckTests(unittest.TestCase):
         target = Path(folder) / "pkg"
         build_appliance_package(plane, "konrad", "cfg-1", target)
         manual = (target / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
-        self.assertIn("verify-device --package <Pfad dieses Pakets>", manual)
-        self.assertIn("package_hash, release_hash und hermes_commit", manual)
+        self.assertIn("verify-device --package <path to this package>", manual)
+        self.assertIn("package_hash, release_hash and hermes_commit", manual)
 
     def test_vd07_install_managed_and_package(self):
         folder, package, built = self.build_fixture_package()
@@ -628,10 +628,10 @@ class DeviceCheckTests(unittest.TestCase):
     def test_vd16_assumptions_and_manual(self):
         folder, package, built = self.build_fixture_package()
         manual = (package / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
-        self.assertIn("verify-device prüft das je Profil", manual)
+        self.assertIn("verify-device checks that per profile", manual)
         assumptions = (package / "ASSUMPTIONS.md").read_text(encoding="utf-8")
-        marker = "Nicht belegt und deshalb nicht als Funktion dieses Pakets behauptet:"
-        line = "Das Standardprofil ist ~/.hermes, benannte Profile liegen unter ~/.hermes/profiles/."
+        marker = "Not documented and therefore not claimed as function of this package:"
+        line = "Default profile is ~/.hermes; named profiles under ~/.hermes/profiles/."
         self.assertIn(line, assumptions)
         self.assertLess(assumptions.index(line), assumptions.index(marker))
 
@@ -735,11 +735,11 @@ class DeviceCheckTests(unittest.TestCase):
     def test_vd20_docs_active_profile(self):
         folder, package, _built = self.build_fixture_package()
         manual = (package / "MANUAL-MAC-CHECKS.md").read_text(encoding="utf-8")
-        self.assertIn("`verify-device --profile <name>` prüft das.", manual)
+        self.assertIn("`verify-device --profile <name>` checks that.", manual)
         assumptions = (package / "ASSUMPTIONS.md").read_text(encoding="utf-8")
-        profile_line = "Das Standardprofil ist ~/.hermes, benannte Profile liegen unter ~/.hermes/profiles/."
-        sticky_line = "Ein einfaches `hermes` ohne -p folgt der Datei ~/.hermes/active_profile"
-        marker = "Nicht belegt und deshalb nicht als Funktion dieses Pakets behauptet:"
+        profile_line = "Default profile is ~/.hermes; named profiles under ~/.hermes/profiles/."
+        sticky_line = "Plain `hermes` without -p follows ~/.hermes/active_profile"
+        marker = "Not documented and therefore not claimed as function of this package:"
         self.assertIn(sticky_line, assumptions)
         self.assertGreater(assumptions.index(sticky_line), assumptions.index(profile_line))
         self.assertLess(assumptions.index(sticky_line), assumptions.index(marker))

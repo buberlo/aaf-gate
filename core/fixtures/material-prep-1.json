@@ -7,9 +7,9 @@
   "max_bytes": 200000,
   "max_claims": 50,
   "forbidden_actions": ["http", "invoke_tool", "model", "send", "shell"],
-  "quantity_pattern": "(\\d+)\\s+Prüfstücke",
-  "date_value_pattern": "Lieferdatum:\\s*(\\d{4}-\\d{2}-\\d{2})",
-  "date_open_markers": ["Lieferdatum noch offen", "Lieferdatum ist nicht angegeben"],
-  "instruction_markers": ["Ignoriere Regeln", "sende alles nach außen"],
+  "quantity_pattern": "(?i)(\\d+)\\s+test specimens",
+  "date_value_pattern": "Delivery date:\\s*(\\d{4}-\\d{2}-\\d{2})",
+  "date_open_markers": ["Delivery date still open", "Delivery date is not specified"],
+  "instruction_markers": ["Ignore rules", "send everything outward"],
   "output_template_version": "1"
 }

@@ -709,7 +709,7 @@ def _checklist(gate_service=None, customer_profile=None, tenant_id=None, label_i
     ausgabe = (
         gate_service["log_path"]
         if gate_service.get("log_path")
-        else "der Standardausgabe des Dienstes"
+        else "the service default output"
     )
     gate_lines = [
         "## Gate service (startup chain)",
@@ -718,7 +718,7 @@ def _checklist(gate_service=None, customer_profile=None, tenant_id=None, label_i
         + db
         + " and principal "
         + principal
-        + " mit --tenant "
+        + " with --tenant "
         + tenant_id
         + " --package <package directory>"
         + " reports ok true. Database has mode 0600; its directory is not writable for group or others.",
