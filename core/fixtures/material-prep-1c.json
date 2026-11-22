@@ -1,0 +1,15 @@
+{
+  "schema_version": "0.2-draft",
+  "module_id": "material-prep-1",
+  "module_version": "1",
+  "rules_version": "material-prep-1c",
+  "max_documents": 3,
+  "max_bytes": 200000,
+  "max_claims": 50,
+  "forbidden_actions": ["approve", "http", "invoke_tool", "model", "send", "shell"],
+  "quantity_pattern": "(\\d+)\\s+Prüfstücke",
+  "date_value_pattern": "Lieferdatum:\\s*(\\d{4}-\\d{2}-\\d{2})",
+  "date_open_markers": ["Lieferdatum noch offen", "Lieferdatum ist nicht angegeben"],
+  "instruction_markers": ["Ignoriere Regeln", "sende alles nach außen"],
+  "output_template_version": "1"
+}

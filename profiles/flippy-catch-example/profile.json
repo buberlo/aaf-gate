@@ -1,0 +1,45 @@
+{
+  "profile_id": "flippy-catch-example",
+  "synthetic": true,
+  "note": "Marken- und Produktnamen stammen aus der öffentlichen Spezifikation vom 12.11.2026. Mit SYN gekennzeichnete Werte sind Platzhalter.",
+  "template_id": "ecommerce-produktverkauf",
+  "template_version": "0.3.0",
+  "values": {
+    "brand_name": "Flippy / Flippy Catch",
+    "product_catalog": [
+      "Flippy S",
+      "Flippy L",
+      "Flippy Family Pack",
+      "Flippy Bounce-Ball",
+      "Flippy Ersatzball L",
+      "Flippy Pocket Ersatzball",
+      "Flippy Baumwoll-Saeckchen",
+      "Flippy Halter S"
+    ],
+    "brand_voice": "SYN: Du, vom Beispielbetreiber zu bestaetigen",
+    "target_audiences": [
+      "Kinder und Jugendliche",
+      "Eltern",
+      "Schulen und Jugendeinrichtungen",
+      "Geschenkkäufer"
+    ],
+    "competitor_set": ["SYN: Kendama", "SYN: Yo-Yo", "SYN: Diabolo"],
+    "seed_keywords": ["SYN: Geschicklichkeitsspiel", "SYN: Fangspiel"],
+    "retailer_segments": ["SYN: Spielwarenfachhandel", "SYN: Geschenkläden"],
+    "retailer_exclusions": [],
+    "report_weekday": "Montag",
+    "reorder_point_hint": "SYN: Meldebestand je Produkt vom Beispielbetreiber zu nennen",
+    "review_alert_max_stars": 3,
+    "service_text_blocks": "SYN: Textbausteine noch nicht geliefert",
+    "marketplaces": ["flippy-catch.com", "Amazon, ASIN offen"],
+    "data_access_mode": "manual_csv",
+    "claims_blocklist": [
+      "Bestseller-Rang",
+      "ungepruefte Patent- oder Lernaussage",
+      "Rabatt gegen Bewertung"
+    ],
+    "blocked_automation_domains": ["amazon.de", "amazon.com"],
+    "pii_in_reports": false,
+    "toy_safety_checklist": "Entwurf, keine Rechtsauskunft: Altersangabe, Warnhinweis, Herstellerangabe und belegbare Werbeaussage je Produkt gegen Shop, Marktplatz und Haendlerseite halten."
+  }
+}

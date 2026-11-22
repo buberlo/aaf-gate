@@ -1,0 +1,25 @@
+{
+  "profile_id": "lead-scout-example",
+  "synthetic": true,
+  "confirmed_by_customer": false,
+  "template_id": "b2b-lead-recherche",
+  "template_version": "0.3.0",
+  "values": {
+    "operator_name": "Beispielperson",
+    "briefing_weekday": "Freitag",
+    "results_storage": "SYN: lokaler JSON-Store und CSV-Export, nicht bestaetigt",
+    "control_channel": "telegram",
+    "daily_limit_per_client": 10,
+    "daily_limit_max": 10,
+    "request_char_limit_default": 200,
+    "request_char_limit_max": 300,
+    "score_weights": "firma:40; rolle:30; anlass:30",
+    "activity_categories": ["kuerzlich aktiv", "aeltere Aktivitaet", "keine Aktivitaet gesehen", "nicht pruefbar"],
+    "allowed_source_types": ["Firmenwebsite", "News", "Presse", "Stellenanzeige", "offene Websuche"],
+    "blocked_domains": ["linkedin.com"],
+    "require_source_per_claim": true,
+    "followup_requires_accept": true,
+    "objection_blocklist_enabled": true,
+    "telegram_pii_allowed": false
+  }
+}

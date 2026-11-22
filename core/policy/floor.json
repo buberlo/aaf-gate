@@ -1,0 +1,4 @@
+{
+  "schema_version": "policy-0.1-draft",
+  "forbidden_operations": ["http", "invoke_tool", "model", "send", "shell"]
+}

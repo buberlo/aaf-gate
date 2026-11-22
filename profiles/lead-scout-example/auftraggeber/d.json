@@ -1,0 +1,21 @@
+{
+  "profile_id": "lead-scout-example-d",
+  "synthetic": true,
+  "placeholder": "D",
+  "template_id": "b2b-lead-recherche-auftraggeber",
+  "template_version": "0.1.0",
+  "values": {
+    "client_label": "Auftraggeber D",
+    "offer": "SYN: Angebot nicht belegt",
+    "industries": ["SYN: Beispielbranche D"],
+    "company_size": "SYN: nicht festgelegt",
+    "region": "SYN: nicht festgelegt",
+    "target_roles": ["SYN: Rolle D"],
+    "exclusions": ["SYN: Ausschluss D"],
+    "tone": "Sie",
+    "goal": "Austausch",
+    "account_char_limit": 180,
+    "activity_window_days": 60,
+    "approved_for_live_research": false
+  }
+}

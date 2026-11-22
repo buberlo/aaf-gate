@@ -1,0 +1,11 @@
+{
+  "source_id": "D1",
+  "source_revision": 1,
+  "origin_label": "synthetisch:fixture",
+  "captured_at": "2026-11-08T11:00:00Z",
+  "synthetic": true,
+  "segments": [
+    {"locator": "p1", "text": "Materialprüfung: 20 Prüfstücke."},
+    {"locator": "p2", "text": "Lieferdatum noch offen."}
+  ]
+}
