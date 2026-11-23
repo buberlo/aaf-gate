@@ -1,5 +1,9 @@
 # aaf-gate
 
+## Community-owned project / Maintainers wanted
+
+This repository is published under the [Apache License 2.0](LICENSE) as a foundation for others to build on. Konrad Kern is not actively maintaining it; the repo remains under his GitHub account with no archive and no org transfer planned for now. You may use, fork, modify, and sell derivatives under the license terms. Contributors who show sustained, high-quality work can request write or maintainer access as described in [GOVERNANCE.md](GOVERNANCE.md). Spirit: here is the idea—build on it.
+
 Deterministic policy gate, kill switch, call limits and tamper-evident audit for existing AI agent runtimes. **Not an agent of its own.** Models, providers and the agent loop are not reimplemented. The primary runtime is [Hermes Agent](https://github.com/NousResearch/hermes-agent) (pinned at v0.23.1 for the Mac mini appliance track). Adapters can target other runtimes later.
 
 Core version **1.0.0rc1** (v1 candidate). See [CHANGELOG.md](CHANGELOG.md), [docs/v1/STATUS.md](docs/v1/STATUS.md) and [docs/v1/INSTALLATION-AND-OPERATIONS.md](docs/v1/INSTALLATION-AND-OPERATIONS.md).

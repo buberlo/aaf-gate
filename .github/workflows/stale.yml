@@ -1,0 +1,35 @@
+name: Mark stale issues and pull requests
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v11
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          days-before-stale: 400
+          days-before-close: 30
+          stale-issue-message: >-
+            This issue has been marked stale due to long inactivity. It will be
+            closed in 30 days unless there is new activity. Issues labeled
+            pinned, good first issue, help wanted, or security are exempt.
+          stale-pr-message: >-
+            This pull request has been marked stale due to long inactivity. It
+            will be closed in 30 days unless there is new activity.
+          close-issue-message: >-
+            This issue was closed due to prolonged inactivity. Reopen or open a
+            new issue if the topic is still relevant.
+          close-pr-message: >-
+            This pull request was closed due to prolonged inactivity.
+          exempt-issue-labels: pinned,good first issue,help wanted,security
+          exempt-pr-labels: pinned,good first issue,help wanted,security
+          operations-per-run: 100

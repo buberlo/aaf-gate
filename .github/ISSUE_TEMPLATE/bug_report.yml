@@ -1,0 +1,47 @@
+name: Bug report
+description: Report incorrect behavior, test failures, or documentation that does not match the code
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please search existing issues first.
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: What you expected vs what you observed
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Commands, config, or test name if applicable
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Core version
+      description: Output of `cd core && python3 -m framework.cli version` if relevant
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - core / gate
+        - CLI
+        - Hermes adapter
+        - templates or profiles
+        - documentation
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Additional context
+      description: Logs, environment (OS, Python version), screenshots
